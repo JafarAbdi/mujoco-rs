@@ -1,0 +1,8 @@
+<mujoco>
+  <worldbody>
+    <body name="body0">
+      <freejoin />
+    </body>
+  </worldbody>
+</mujoco>
+

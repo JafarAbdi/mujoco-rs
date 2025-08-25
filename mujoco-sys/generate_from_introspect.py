@@ -1,0 +1,280 @@
+"""A script that uses MuJoCo's introspection module to generate MuJoCo Rust bindings."""
+
+import sys
+import os
+import re
+import pathlib
+
+if len(sys.argv) != 2:
+    print("Usage: python generate_from_introspect.py <path_to_mujoco>")
+    sys.exit(1)
+
+mujoco_path = sys.argv[1]
+sys.path.append(os.path.abspath(f"{mujoco_path}/python/mujoco"))
+
+from introspect import structs
+from introspect import functions
+
+FILE_DIR = pathlib.Path(__file__).parent
+
+RUST_TYPES = {
+    "int": "usize",
+    "float": "f32",
+    "uint64_t": "u64",
+    "mjtByte": "u8",
+    "size_t": "usize",
+    "uintptr_t": "usize",
+}
+RUST_POINTER_TYPES = {
+    "int": "i32",
+    "char": "i8",
+}
+RUST_ARRAY_TYPES = {
+    "int": "i32",
+}
+
+
+def camel_to_snake(camel_str):
+    """Convert camelCase to snake_case"""
+    # Insert underscore before uppercase letters (except at start)
+    snake_str = re.sub("([a-z0-9])([A-Z])", r"\1_\2", camel_str)
+    return snake_str.lower()
+
+
+def save_file(filename, header, accessors, footer):
+    output_path = FILE_DIR / ".." / "mujoco" / "src" / filename
+    with open(output_path, "w") as f:
+        f.write(header)
+        for accessor in accessors:
+            f.write(f"    {accessor}\n")
+        f.write(footer)
+
+
+def generate_value_accessor(field):
+    rust_type = RUST_TYPES.get(field.type.name, field.type.name)
+    cast_type = f"as {rust_type}"
+    includes = []
+    if rust_type == field.type.name:
+        cast_type = ""
+        includes.append(rust_type)
+    return (
+        f"pub fn {field.name}(&self) -> {rust_type} {{ self.raw().{field.name} {cast_type} }}",
+        includes,
+    )
+
+
+def generate_array_accessor(field):
+    array_type_name = field.type.inner_type.name
+    rust_type = RUST_ARRAY_TYPES.get(
+        array_type_name, RUST_TYPES.get(array_type_name, array_type_name)
+    )
+    includes = []
+    if rust_type == array_type_name:
+        includes.append(rust_type)
+    return (
+        f"""pub fn {field.name}(&self) -> &[{rust_type};{field.type.extents[0]}] {{
+            &self.raw().{field.name}
+    }}""",
+        includes,
+    )
+
+
+# mjModel accessors
+model_struct = structs.STRUCTS["mjModel"]
+model_accessors = []
+model_includes = set(["mjtNum"])
+model_fields = set()
+
+for field in model_struct.fields:
+    model_fields.add(field.name)
+    match type(field.type):
+        case structs.ValueType:
+            accessor, includes = generate_value_accessor(field)
+            model_includes.update(includes)
+            model_accessors.append(accessor)
+
+        case structs.PointerType:
+            pointee_type = field.type.inner_type.name
+            rust_type = RUST_POINTER_TYPES.get(
+                pointee_type, RUST_TYPES.get(pointee_type, pointee_type)
+            )
+            if rust_type == pointee_type:
+                model_includes.add(rust_type)
+            if field.array_extent is None and field.type.inner_type.name == "void":
+                print(f"mjModel: Skipping void pointer field: {field.name}")
+                continue
+            array_extents = []
+            for extent in field.array_extent:
+                if isinstance(extent, int):
+                    array_extents.append(str(extent))
+                elif extent in model_fields:
+                    array_extents.append(f"self.{extent}()")
+                elif extent.startswith("mjN"):
+                    NAME_OVERRIDE = {"mjNTEXROLE": "mjtTextureRole::mjNTEXROLE"}
+                    array_extents.append(
+                        f"(mujoco_sys::{NAME_OVERRIDE.get(extent, extent)} as usize)"
+                    )
+                elif "*" in extent:
+                    left_part, right_part = extent.split("*")
+                    array_extents.extend([f"self.{left_part}()", str(right_part)])
+                else:
+                    raise NotImplementedError(
+                        f"Unsupported array extent: {field.array_extent}"
+                    )
+            array_extent = " * ".join(array_extents)
+            model_accessors.append(
+                f"""pub fn {field.name}(&self) -> &[{rust_type}] {{
+    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
+    unsafe {{
+        std::slice::from_raw_parts(self.raw().{field.name}, {array_extent})
+    }}
+}}"""
+            )
+            model_accessors.append(
+                f"""pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
+    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
+    unsafe {{
+        std::slice::from_raw_parts_mut(self.raw_mut().{field.name}, self.{field.array_extent[0]}())
+        }}
+}}"""
+            )
+
+        case structs.ArrayType:
+            accessor, includes = generate_array_accessor(field)
+            model_includes.update(includes)
+            model_accessors.append(accessor)
+        case _:
+            raise NotImplementedError(f"Unsupported field type: {field}")
+
+model_includes.discard("void")
+model_header = f"""//! Auto-generated Model accessor functions
+//! Generated by generate_from_introspect.py - DO NOT EDIT MANUALLY
+
+use crate::Model;
+use mujoco_sys::{{{', '.join(model_includes)}}};
+
+#[allow(non_snake_case)]
+impl Model {{
+"""
+footer = "}\n"
+
+# mjData accessors
+data_struct = structs.STRUCTS["mjData"]
+data_accessors = []
+data_includes = set(["mjtNum"])
+
+for field in data_struct.fields:
+    match type(field.type):
+        case structs.ValueType:
+            accessor, includes = generate_value_accessor(field)
+            data_includes.update(includes)
+            data_accessors.append(accessor)
+
+        case structs.PointerType:
+            pointee_type = field.type.inner_type.name
+            rust_type = RUST_POINTER_TYPES.get(
+                pointee_type, RUST_TYPES.get(pointee_type, pointee_type)
+            )
+            if rust_type == pointee_type:
+                data_includes.add(rust_type)
+            if field.array_extent is None and field.type.inner_type.name == "void":
+                print(f"mjData: Skipping void pointer field: {field.name}")
+                continue
+            array_extent = (
+                f"self.model.{field.array_extent[0]}()"
+                if field.array_extent[0] in model_fields
+                else f"self.{field.array_extent[0]}()"
+            )
+            if len(field.array_extent) > 1:
+                assert len(field.array_extent) == 2
+                if isinstance(field.array_extent[1], int):
+                    array_extent = f"{array_extent} * {field.array_extent[1]}"
+                elif field.array_extent[1] in model_fields:
+                    array_extent = (
+                        f"{array_extent} * self.model.{field.array_extent[1]}()"
+                    )
+                else:
+                    raise NotImplementedError(
+                        f"Unsupported array extent: {field.array_extent[1]}"
+                    )
+            # TODO: Should we use .as_chunks_unchecked::<3>() for 2D arrays with extent 3?
+            # The return type would be &[[T; 3]]
+            data_accessors.append(
+                f"""pub fn {field.name}(&self) -> &[{rust_type}] {{
+    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
+    unsafe {{
+        std::slice::from_raw_parts(self.raw().{field.name}, {array_extent})
+    }}
+}}"""
+            )
+            data_accessors.append(
+                f"""pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
+    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
+    unsafe {{
+        std::slice::from_raw_parts_mut(self.raw_mut().{field.name}, {array_extent})
+        }}
+}}"""
+            )
+
+        case structs.ArrayType:
+            accessor, includes = generate_array_accessor(field)
+            data_includes.update(includes)
+            data_accessors.append(accessor)
+
+        case _:
+            raise NotImplementedError(f"Unsupported field type: {field}")
+
+data_includes.discard("void")
+
+data_header = f"""//! Auto-generated Data accessor functions
+//! Generated by generate_from_introspect.py - DO NOT EDIT MANUALLY
+
+use crate::Data;
+use mujoco_sys::{{{', '.join(data_includes)}}};
+
+#[allow(non_snake_case)]
+impl<'a> Data<'a> {{
+"""
+
+save_file("model_struct.rs", model_header, model_accessors, footer)
+save_file("data_struct.rs", data_header, data_accessors, footer)
+
+data_functions = []
+
+for function_name, function in functions.FUNCTIONS.items():
+    if len(function.parameters) != 2:
+        continue
+    first_param, second_param = function.parameters
+    if (
+        not isinstance(first_param.type, structs.PointerType)
+        or first_param.type.inner_type.name != "mjModel"
+        or not first_param.type.inner_type.is_const
+    ):
+        continue
+    if (
+        not isinstance(second_param.type, structs.PointerType)
+        or second_param.type.inner_type.name != "mjData"
+    ):
+        continue
+    assert (
+        not second_param.type.inner_type.is_const
+    ), f"Second parameter to {function.name} should be non-const"
+    assert (
+        function.return_type.name == "void"
+    ), f"Function {function.name} should return void"
+
+    function_name = camel_to_snake(function.name)
+    data_functions.append(
+        f"""pub fn {function_name}(data: &mut Data) {{
+        unsafe {{
+            mujoco_sys::{function.name}(data.model.as_ptr(), data.as_mut_ptr());
+        }}
+    }}"""
+    )
+data_functions_header = f"""//! Auto-generated Data functions
+//! Generated by generate_from_introspect.py - DO NOT EDIT MANUALLY
+
+use crate::Data;
+"""
+
+save_file("data_functions.rs", data_functions_header, data_functions, "")

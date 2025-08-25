@@ -1,0 +1,17 @@
+[package]
+name        = "mujoco-sys"
+version     = "3.3.5"
+edition     = "2024"
+description = "FFI bindings to MuJoCo"
+readme      = "README.md"
+repository  = "https://github.com/JafarAbdi/mujoco-rs"
+homepage    = "https://github.com/JafarAbdi/mujoco-rs"
+links       = "mujoco"
+
+[features]
+default         = ["vendored-mujoco"]
+vendored-mujoco = []
+
+[build-dependencies]
+cc         = "1.2.34"
+pkg-config = "0.3.32"

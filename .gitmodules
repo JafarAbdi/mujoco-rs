@@ -1,0 +1,24 @@
+[submodule "mujoco-sys/mujoco"]
+	path = mujoco-sys/mujoco
+	url = https://github.com/google-deepmind/mujoco.git
+[submodule "mujoco-sys/tinyxml2"]
+	path = mujoco-sys/tinyxml2
+	url = https://github.com/leethomason/tinyxml2
+[submodule "mujoco-sys/libccd"]
+	path = mujoco-sys/libccd
+	url = https://github.com/danfis/libccd
+[submodule "mujoco-sys/tinyobjloader"]
+	path = mujoco-sys/tinyobjloader
+	url = https://github.com/tinyobjloader/tinyobjloader/
+[submodule "mujoco-sys/TriangleMeshDistance"]
+	path = mujoco-sys/TriangleMeshDistance
+	url = https://github.com/InteractiveComputerGraphics/TriangleMeshDistance.git
+[submodule "mujoco-sys/MarchingCubeCpp"]
+	path = mujoco-sys/MarchingCubeCpp
+	url = https://github.com/aparis69/MarchingCubeCpp
+[submodule "mujoco-sys/qhull"]
+	path = mujoco-sys/qhull
+	url = https://github.com/qhull/qhull
+[submodule "mujoco-sys/lodepng"]
+	path = mujoco-sys/lodepng
+	url = https://github.com/lvandeve/lodepng

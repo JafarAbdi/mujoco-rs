@@ -1,0 +1,12 @@
+[package]
+name    = "mujoco"
+version = "3.3.5"
+edition = "2024"
+readme  = "README.md"
+
+[features]
+vendored-mujoco = ["mujoco-sys/vendored-mujoco"]
+default         = ["vendored-mujoco"]
+
+[dependencies]
+mujoco-sys = { version = "3.3.5", path = "../mujoco-sys", default-features = false }
