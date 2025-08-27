@@ -276,217 +276,131 @@ impl Model {
 
     /// qpos values at default pose
     pub fn qpos0(&self) -> &[mjtNum] {
-        assert!(!self.raw().qpos0.is_null(), "Pointer qpos0 is null");
         unsafe { std::slice::from_raw_parts(self.raw().qpos0, self.nq()) }
     }
 
     /// reference pose for springs
     pub fn qpos_spring(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().qpos_spring.is_null(),
-            "Pointer qpos_spring is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().qpos_spring, self.nq()) }
     }
 
     /// id of body's parent
     pub fn body_parentid(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_parentid.is_null(),
-            "Pointer body_parentid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_parentid, self.nbody()) }
     }
 
     /// id of root above body
     pub fn body_rootid(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_rootid.is_null(),
-            "Pointer body_rootid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_rootid, self.nbody()) }
     }
 
     /// id of body that this body is welded to
     pub fn body_weldid(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_weldid.is_null(),
-            "Pointer body_weldid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_weldid, self.nbody()) }
     }
 
     /// id of mocap data; -1: none
     pub fn body_mocapid(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_mocapid.is_null(),
-            "Pointer body_mocapid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_mocapid, self.nbody()) }
     }
 
     /// number of joints for this body
     pub fn body_jntnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_jntnum.is_null(),
-            "Pointer body_jntnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_jntnum, self.nbody()) }
     }
 
     /// start addr of joints; -1: no joints
     pub fn body_jntadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_jntadr.is_null(),
-            "Pointer body_jntadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_jntadr, self.nbody()) }
     }
 
     /// number of motion degrees of freedom
     pub fn body_dofnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_dofnum.is_null(),
-            "Pointer body_dofnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_dofnum, self.nbody()) }
     }
 
     /// start addr of dofs; -1: no dofs
     pub fn body_dofadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_dofadr.is_null(),
-            "Pointer body_dofadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_dofadr, self.nbody()) }
     }
 
     /// id of body's kinematic tree; -1: static
     pub fn body_treeid(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_treeid.is_null(),
-            "Pointer body_treeid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_treeid, self.nbody()) }
     }
 
     /// number of geoms
     pub fn body_geomnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_geomnum.is_null(),
-            "Pointer body_geomnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_geomnum, self.nbody()) }
     }
 
     /// start addr of geoms; -1: no geoms
     pub fn body_geomadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_geomadr.is_null(),
-            "Pointer body_geomadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_geomadr, self.nbody()) }
     }
 
     /// 1: diag M; 2: diag M, sliders only
     pub fn body_simple(&self) -> &[u8] {
-        assert!(
-            !self.raw().body_simple.is_null(),
-            "Pointer body_simple is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_simple, self.nbody()) }
     }
 
     /// same frame as inertia (mjtSameframe)
     pub fn body_sameframe(&self) -> &[u8] {
-        assert!(
-            !self.raw().body_sameframe.is_null(),
-            "Pointer body_sameframe is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_sameframe, self.nbody()) }
     }
 
     /// position offset rel. to parent body
     pub fn body_pos(&self) -> &[mjtNum] {
-        assert!(!self.raw().body_pos.is_null(), "Pointer body_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().body_pos, self.nbody() * 3) }
     }
 
     /// orientation offset rel. to parent body
     pub fn body_quat(&self) -> &[mjtNum] {
-        assert!(!self.raw().body_quat.is_null(), "Pointer body_quat is null");
         unsafe { std::slice::from_raw_parts(self.raw().body_quat, self.nbody() * 4) }
     }
 
     /// local position of center of mass
     pub fn body_ipos(&self) -> &[mjtNum] {
-        assert!(!self.raw().body_ipos.is_null(), "Pointer body_ipos is null");
         unsafe { std::slice::from_raw_parts(self.raw().body_ipos, self.nbody() * 3) }
     }
 
     /// local orientation of inertia ellipsoid
     pub fn body_iquat(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().body_iquat.is_null(),
-            "Pointer body_iquat is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_iquat, self.nbody() * 4) }
     }
 
     /// mass
     pub fn body_mass(&self) -> &[mjtNum] {
-        assert!(!self.raw().body_mass.is_null(), "Pointer body_mass is null");
         unsafe { std::slice::from_raw_parts(self.raw().body_mass, self.nbody()) }
     }
 
     /// mass of subtree starting at this body
     pub fn body_subtreemass(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().body_subtreemass.is_null(),
-            "Pointer body_subtreemass is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_subtreemass, self.nbody()) }
     }
 
     /// diagonal inertia in ipos/iquat frame
     pub fn body_inertia(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().body_inertia.is_null(),
-            "Pointer body_inertia is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_inertia, self.nbody() * 3) }
     }
 
     /// mean inv inert in qpos0 (trn, rot)
     pub fn body_invweight0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().body_invweight0.is_null(),
-            "Pointer body_invweight0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_invweight0, self.nbody() * 2) }
     }
 
     /// antigravity force, units of body weight
     pub fn body_gravcomp(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().body_gravcomp.is_null(),
-            "Pointer body_gravcomp is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_gravcomp, self.nbody()) }
     }
 
     /// MAX over all geom margins
     pub fn body_margin(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().body_margin.is_null(),
-            "Pointer body_margin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_margin, self.nbody()) }
     }
 
     /// user data
     pub fn body_user(&self) -> &[mjtNum] {
-        assert!(!self.raw().body_user.is_null(), "Pointer body_user is null");
         unsafe {
             std::slice::from_raw_parts(self.raw().body_user, self.nbody() * self.nuser_body())
         }
@@ -494,172 +408,111 @@ impl Model {
 
     /// plugin instance id; -1: not in use
     pub fn body_plugin(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_plugin.is_null(),
-            "Pointer body_plugin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_plugin, self.nbody()) }
     }
 
     /// OR over all geom contypes
     pub fn body_contype(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_contype.is_null(),
-            "Pointer body_contype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_contype, self.nbody()) }
     }
 
     /// OR over all geom conaffinities
     pub fn body_conaffinity(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_conaffinity.is_null(),
-            "Pointer body_conaffinity is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_conaffinity, self.nbody()) }
     }
 
     /// address of bvh root
     pub fn body_bvhadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_bvhadr.is_null(),
-            "Pointer body_bvhadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_bvhadr, self.nbody()) }
     }
 
     /// number of bounding volumes
     pub fn body_bvhnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().body_bvhnum.is_null(),
-            "Pointer body_bvhnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().body_bvhnum, self.nbody()) }
     }
 
     /// depth in the bounding volume hierarchy
     pub fn bvh_depth(&self) -> &[i32] {
-        assert!(!self.raw().bvh_depth.is_null(), "Pointer bvh_depth is null");
         unsafe { std::slice::from_raw_parts(self.raw().bvh_depth, self.nbvh()) }
     }
 
     /// left and right children in tree
     pub fn bvh_child(&self) -> &[i32] {
-        assert!(!self.raw().bvh_child.is_null(), "Pointer bvh_child is null");
         unsafe { std::slice::from_raw_parts(self.raw().bvh_child, self.nbvh() * 2) }
     }
 
     /// geom or elem id of node; -1: non-leaf
     pub fn bvh_nodeid(&self) -> &[i32] {
-        assert!(
-            !self.raw().bvh_nodeid.is_null(),
-            "Pointer bvh_nodeid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().bvh_nodeid, self.nbvh()) }
     }
 
     /// local bounding box (center, size)
     pub fn bvh_aabb(&self) -> &[mjtNum] {
-        assert!(!self.raw().bvh_aabb.is_null(), "Pointer bvh_aabb is null");
         unsafe { std::slice::from_raw_parts(self.raw().bvh_aabb, self.nbvhstatic() * 6) }
     }
 
     /// depth in the octree
     pub fn oct_depth(&self) -> &[i32] {
-        assert!(!self.raw().oct_depth.is_null(), "Pointer oct_depth is null");
         unsafe { std::slice::from_raw_parts(self.raw().oct_depth, self.noct()) }
     }
 
     /// children of octree node
     pub fn oct_child(&self) -> &[i32] {
-        assert!(!self.raw().oct_child.is_null(), "Pointer oct_child is null");
         unsafe { std::slice::from_raw_parts(self.raw().oct_child, self.noct() * 8) }
     }
 
     /// octree node bounding box (center, size)
     pub fn oct_aabb(&self) -> &[mjtNum] {
-        assert!(!self.raw().oct_aabb.is_null(), "Pointer oct_aabb is null");
         unsafe { std::slice::from_raw_parts(self.raw().oct_aabb, self.noct() * 6) }
     }
 
     /// octree interpolation coefficients
     pub fn oct_coeff(&self) -> &[mjtNum] {
-        assert!(!self.raw().oct_coeff.is_null(), "Pointer oct_coeff is null");
         unsafe { std::slice::from_raw_parts(self.raw().oct_coeff, self.noct() * 8) }
     }
 
     /// type of joint (mjtJoint)
     pub fn jnt_type(&self) -> &[i32] {
-        assert!(!self.raw().jnt_type.is_null(), "Pointer jnt_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().jnt_type, self.njnt()) }
     }
 
     /// start addr in 'qpos' for joint's data
     pub fn jnt_qposadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().jnt_qposadr.is_null(),
-            "Pointer jnt_qposadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_qposadr, self.njnt()) }
     }
 
     /// start addr in 'qvel' for joint's data
     pub fn jnt_dofadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().jnt_dofadr.is_null(),
-            "Pointer jnt_dofadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_dofadr, self.njnt()) }
     }
 
     /// id of joint's body
     pub fn jnt_bodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().jnt_bodyid.is_null(),
-            "Pointer jnt_bodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_bodyid, self.njnt()) }
     }
 
     /// group for visibility
     pub fn jnt_group(&self) -> &[i32] {
-        assert!(!self.raw().jnt_group.is_null(), "Pointer jnt_group is null");
         unsafe { std::slice::from_raw_parts(self.raw().jnt_group, self.njnt()) }
     }
 
     /// does joint have limits
     pub fn jnt_limited(&self) -> &[u8] {
-        assert!(
-            !self.raw().jnt_limited.is_null(),
-            "Pointer jnt_limited is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_limited, self.njnt()) }
     }
 
     /// does joint have actuator force limits
     pub fn jnt_actfrclimited(&self) -> &[u8] {
-        assert!(
-            !self.raw().jnt_actfrclimited.is_null(),
-            "Pointer jnt_actfrclimited is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_actfrclimited, self.njnt()) }
     }
 
     /// is gravcomp force applied via actuators
     pub fn jnt_actgravcomp(&self) -> &[u8] {
-        assert!(
-            !self.raw().jnt_actgravcomp.is_null(),
-            "Pointer jnt_actgravcomp is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_actgravcomp, self.njnt()) }
     }
 
     /// constraint solver reference: limit
     pub fn jnt_solref(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().jnt_solref.is_null(),
-            "Pointer jnt_solref is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().jnt_solref,
@@ -670,10 +523,6 @@ impl Model {
 
     /// constraint solver impedance: limit
     pub fn jnt_solimp(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().jnt_solimp.is_null(),
-            "Pointer jnt_solimp is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().jnt_solimp,
@@ -684,109 +533,71 @@ impl Model {
 
     /// local anchor position
     pub fn jnt_pos(&self) -> &[mjtNum] {
-        assert!(!self.raw().jnt_pos.is_null(), "Pointer jnt_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().jnt_pos, self.njnt() * 3) }
     }
 
     /// local joint axis
     pub fn jnt_axis(&self) -> &[mjtNum] {
-        assert!(!self.raw().jnt_axis.is_null(), "Pointer jnt_axis is null");
         unsafe { std::slice::from_raw_parts(self.raw().jnt_axis, self.njnt() * 3) }
     }
 
     /// stiffness coefficient
     pub fn jnt_stiffness(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().jnt_stiffness.is_null(),
-            "Pointer jnt_stiffness is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_stiffness, self.njnt()) }
     }
 
     /// joint limits
     pub fn jnt_range(&self) -> &[mjtNum] {
-        assert!(!self.raw().jnt_range.is_null(), "Pointer jnt_range is null");
         unsafe { std::slice::from_raw_parts(self.raw().jnt_range, self.njnt() * 2) }
     }
 
     /// range of total actuator force
     pub fn jnt_actfrcrange(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().jnt_actfrcrange.is_null(),
-            "Pointer jnt_actfrcrange is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_actfrcrange, self.njnt() * 2) }
     }
 
     /// min distance for limit detection
     pub fn jnt_margin(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().jnt_margin.is_null(),
-            "Pointer jnt_margin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().jnt_margin, self.njnt()) }
     }
 
     /// user data
     pub fn jnt_user(&self) -> &[mjtNum] {
-        assert!(!self.raw().jnt_user.is_null(), "Pointer jnt_user is null");
         unsafe { std::slice::from_raw_parts(self.raw().jnt_user, self.njnt() * self.nuser_jnt()) }
     }
 
     /// id of dof's body
     pub fn dof_bodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().dof_bodyid.is_null(),
-            "Pointer dof_bodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_bodyid, self.nv()) }
     }
 
     /// id of dof's joint
     pub fn dof_jntid(&self) -> &[i32] {
-        assert!(!self.raw().dof_jntid.is_null(), "Pointer dof_jntid is null");
         unsafe { std::slice::from_raw_parts(self.raw().dof_jntid, self.nv()) }
     }
 
     /// id of dof's parent; -1: none
     pub fn dof_parentid(&self) -> &[i32] {
-        assert!(
-            !self.raw().dof_parentid.is_null(),
-            "Pointer dof_parentid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_parentid, self.nv()) }
     }
 
     /// id of dof's kinematic tree
     pub fn dof_treeid(&self) -> &[i32] {
-        assert!(
-            !self.raw().dof_treeid.is_null(),
-            "Pointer dof_treeid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_treeid, self.nv()) }
     }
 
     /// dof address in M-diagonal
     pub fn dof_Madr(&self) -> &[i32] {
-        assert!(!self.raw().dof_Madr.is_null(), "Pointer dof_Madr is null");
         unsafe { std::slice::from_raw_parts(self.raw().dof_Madr, self.nv()) }
     }
 
     /// number of consecutive simple dofs
     pub fn dof_simplenum(&self) -> &[i32] {
-        assert!(
-            !self.raw().dof_simplenum.is_null(),
-            "Pointer dof_simplenum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_simplenum, self.nv()) }
     }
 
     /// constraint solver reference:frictionloss
     pub fn dof_solref(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().dof_solref.is_null(),
-            "Pointer dof_solref is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().dof_solref,
@@ -797,10 +608,6 @@ impl Model {
 
     /// constraint solver impedance:frictionloss
     pub fn dof_solimp(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().dof_solimp.is_null(),
-            "Pointer dof_solimp is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().dof_solimp,
@@ -811,157 +618,91 @@ impl Model {
 
     /// dof friction loss
     pub fn dof_frictionloss(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().dof_frictionloss.is_null(),
-            "Pointer dof_frictionloss is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_frictionloss, self.nv()) }
     }
 
     /// dof armature inertia/mass
     pub fn dof_armature(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().dof_armature.is_null(),
-            "Pointer dof_armature is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_armature, self.nv()) }
     }
 
     /// damping coefficient
     pub fn dof_damping(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().dof_damping.is_null(),
-            "Pointer dof_damping is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_damping, self.nv()) }
     }
 
     /// diag. inverse inertia in qpos0
     pub fn dof_invweight0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().dof_invweight0.is_null(),
-            "Pointer dof_invweight0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().dof_invweight0, self.nv()) }
     }
 
     /// diag. inertia in qpos0
     pub fn dof_M0(&self) -> &[mjtNum] {
-        assert!(!self.raw().dof_M0.is_null(), "Pointer dof_M0 is null");
         unsafe { std::slice::from_raw_parts(self.raw().dof_M0, self.nv()) }
     }
 
     /// geometric type (mjtGeom)
     pub fn geom_type(&self) -> &[i32] {
-        assert!(!self.raw().geom_type.is_null(), "Pointer geom_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_type, self.ngeom()) }
     }
 
     /// geom contact type
     pub fn geom_contype(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_contype.is_null(),
-            "Pointer geom_contype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_contype, self.ngeom()) }
     }
 
     /// geom contact affinity
     pub fn geom_conaffinity(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_conaffinity.is_null(),
-            "Pointer geom_conaffinity is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_conaffinity, self.ngeom()) }
     }
 
     /// contact dimensionality (1, 3, 4, 6)
     pub fn geom_condim(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_condim.is_null(),
-            "Pointer geom_condim is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_condim, self.ngeom()) }
     }
 
     /// id of geom's body
     pub fn geom_bodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_bodyid.is_null(),
-            "Pointer geom_bodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_bodyid, self.ngeom()) }
     }
 
     /// id of geom's mesh/hfield; -1: none
     pub fn geom_dataid(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_dataid.is_null(),
-            "Pointer geom_dataid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_dataid, self.ngeom()) }
     }
 
     /// material id for rendering; -1: none
     pub fn geom_matid(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_matid.is_null(),
-            "Pointer geom_matid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_matid, self.ngeom()) }
     }
 
     /// group for visibility
     pub fn geom_group(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_group.is_null(),
-            "Pointer geom_group is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_group, self.ngeom()) }
     }
 
     /// geom contact priority
     pub fn geom_priority(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_priority.is_null(),
-            "Pointer geom_priority is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_priority, self.ngeom()) }
     }
 
     /// plugin instance id; -1: not in use
     pub fn geom_plugin(&self) -> &[i32] {
-        assert!(
-            !self.raw().geom_plugin.is_null(),
-            "Pointer geom_plugin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_plugin, self.ngeom()) }
     }
 
     /// same frame as body (mjtSameframe)
     pub fn geom_sameframe(&self) -> &[u8] {
-        assert!(
-            !self.raw().geom_sameframe.is_null(),
-            "Pointer geom_sameframe is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_sameframe, self.ngeom()) }
     }
 
     /// mixing coef for solref/imp in geom pair
     pub fn geom_solmix(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().geom_solmix.is_null(),
-            "Pointer geom_solmix is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_solmix, self.ngeom()) }
     }
 
     /// constraint solver reference: contact
     pub fn geom_solref(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().geom_solref.is_null(),
-            "Pointer geom_solref is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().geom_solref,
@@ -972,10 +713,6 @@ impl Model {
 
     /// constraint solver impedance: contact
     pub fn geom_solimp(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().geom_solimp.is_null(),
-            "Pointer geom_solimp is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().geom_solimp,
@@ -986,67 +723,46 @@ impl Model {
 
     /// geom-specific size parameters
     pub fn geom_size(&self) -> &[mjtNum] {
-        assert!(!self.raw().geom_size.is_null(), "Pointer geom_size is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_size, self.ngeom() * 3) }
     }
 
     /// bounding box, (center, size)
     pub fn geom_aabb(&self) -> &[mjtNum] {
-        assert!(!self.raw().geom_aabb.is_null(), "Pointer geom_aabb is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_aabb, self.ngeom() * 6) }
     }
 
     /// radius of bounding sphere
     pub fn geom_rbound(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().geom_rbound.is_null(),
-            "Pointer geom_rbound is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_rbound, self.ngeom()) }
     }
 
     /// local position offset rel. to body
     pub fn geom_pos(&self) -> &[mjtNum] {
-        assert!(!self.raw().geom_pos.is_null(), "Pointer geom_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_pos, self.ngeom() * 3) }
     }
 
     /// local orientation offset rel. to body
     pub fn geom_quat(&self) -> &[mjtNum] {
-        assert!(!self.raw().geom_quat.is_null(), "Pointer geom_quat is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_quat, self.ngeom() * 4) }
     }
 
     /// friction for (slide, spin, roll)
     pub fn geom_friction(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().geom_friction.is_null(),
-            "Pointer geom_friction is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_friction, self.ngeom() * 3) }
     }
 
     /// detect contact if dist<margin
     pub fn geom_margin(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().geom_margin.is_null(),
-            "Pointer geom_margin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().geom_margin, self.ngeom()) }
     }
 
     /// include in solver if dist<margin-gap
     pub fn geom_gap(&self) -> &[mjtNum] {
-        assert!(!self.raw().geom_gap.is_null(), "Pointer geom_gap is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_gap, self.ngeom()) }
     }
 
     /// fluid interaction parameters
     pub fn geom_fluid(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().geom_fluid.is_null(),
-            "Pointer geom_fluid is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().geom_fluid,
@@ -1057,7 +773,6 @@ impl Model {
 
     /// user data
     pub fn geom_user(&self) -> &[mjtNum] {
-        assert!(!self.raw().geom_user.is_null(), "Pointer geom_user is null");
         unsafe {
             std::slice::from_raw_parts(self.raw().geom_user, self.ngeom() * self.nuser_geom())
         }
@@ -1065,73 +780,51 @@ impl Model {
 
     /// rgba when material is omitted
     pub fn geom_rgba(&self) -> &[f32] {
-        assert!(!self.raw().geom_rgba.is_null(), "Pointer geom_rgba is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_rgba, self.ngeom() * 4) }
     }
 
     /// geom type for rendering (mjtGeom)
     pub fn site_type(&self) -> &[i32] {
-        assert!(!self.raw().site_type.is_null(), "Pointer site_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().site_type, self.nsite()) }
     }
 
     /// id of site's body
     pub fn site_bodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().site_bodyid.is_null(),
-            "Pointer site_bodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().site_bodyid, self.nsite()) }
     }
 
     /// material id for rendering; -1: none
     pub fn site_matid(&self) -> &[i32] {
-        assert!(
-            !self.raw().site_matid.is_null(),
-            "Pointer site_matid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().site_matid, self.nsite()) }
     }
 
     /// group for visibility
     pub fn site_group(&self) -> &[i32] {
-        assert!(
-            !self.raw().site_group.is_null(),
-            "Pointer site_group is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().site_group, self.nsite()) }
     }
 
     /// same frame as body (mjtSameframe)
     pub fn site_sameframe(&self) -> &[u8] {
-        assert!(
-            !self.raw().site_sameframe.is_null(),
-            "Pointer site_sameframe is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().site_sameframe, self.nsite()) }
     }
 
     /// geom size for rendering
     pub fn site_size(&self) -> &[mjtNum] {
-        assert!(!self.raw().site_size.is_null(), "Pointer site_size is null");
         unsafe { std::slice::from_raw_parts(self.raw().site_size, self.nsite() * 3) }
     }
 
     /// local position offset rel. to body
     pub fn site_pos(&self) -> &[mjtNum] {
-        assert!(!self.raw().site_pos.is_null(), "Pointer site_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().site_pos, self.nsite() * 3) }
     }
 
     /// local orientation offset rel. to body
     pub fn site_quat(&self) -> &[mjtNum] {
-        assert!(!self.raw().site_quat.is_null(), "Pointer site_quat is null");
         unsafe { std::slice::from_raw_parts(self.raw().site_quat, self.nsite() * 4) }
     }
 
     /// user data
     pub fn site_user(&self) -> &[mjtNum] {
-        assert!(!self.raw().site_user.is_null(), "Pointer site_user is null");
         unsafe {
             std::slice::from_raw_parts(self.raw().site_user, self.nsite() * self.nuser_site())
         }
@@ -1139,355 +832,216 @@ impl Model {
 
     /// rgba when material is omitted
     pub fn site_rgba(&self) -> &[f32] {
-        assert!(!self.raw().site_rgba.is_null(), "Pointer site_rgba is null");
         unsafe { std::slice::from_raw_parts(self.raw().site_rgba, self.nsite() * 4) }
     }
 
     /// camera tracking mode (mjtCamLight)
     pub fn cam_mode(&self) -> &[i32] {
-        assert!(!self.raw().cam_mode.is_null(), "Pointer cam_mode is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_mode, self.ncam()) }
     }
 
     /// id of camera's body
     pub fn cam_bodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().cam_bodyid.is_null(),
-            "Pointer cam_bodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().cam_bodyid, self.ncam()) }
     }
 
     /// id of targeted body; -1: none
     pub fn cam_targetbodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().cam_targetbodyid.is_null(),
-            "Pointer cam_targetbodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().cam_targetbodyid, self.ncam()) }
     }
 
     /// position rel. to body frame
     pub fn cam_pos(&self) -> &[mjtNum] {
-        assert!(!self.raw().cam_pos.is_null(), "Pointer cam_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_pos, self.ncam() * 3) }
     }
 
     /// orientation rel. to body frame
     pub fn cam_quat(&self) -> &[mjtNum] {
-        assert!(!self.raw().cam_quat.is_null(), "Pointer cam_quat is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_quat, self.ncam() * 4) }
     }
 
     /// global position rel. to sub-com in qpos0
     pub fn cam_poscom0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().cam_poscom0.is_null(),
-            "Pointer cam_poscom0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().cam_poscom0, self.ncam() * 3) }
     }
 
     /// global position rel. to body in qpos0
     pub fn cam_pos0(&self) -> &[mjtNum] {
-        assert!(!self.raw().cam_pos0.is_null(), "Pointer cam_pos0 is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_pos0, self.ncam() * 3) }
     }
 
     /// global orientation in qpos0
     pub fn cam_mat0(&self) -> &[mjtNum] {
-        assert!(!self.raw().cam_mat0.is_null(), "Pointer cam_mat0 is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_mat0, self.ncam() * 9) }
     }
 
     /// orthographic camera; 0: no, 1: yes
     pub fn cam_orthographic(&self) -> &[i32] {
-        assert!(
-            !self.raw().cam_orthographic.is_null(),
-            "Pointer cam_orthographic is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().cam_orthographic, self.ncam()) }
     }
 
     /// y field-of-view (ortho ? len : deg)
     pub fn cam_fovy(&self) -> &[mjtNum] {
-        assert!(!self.raw().cam_fovy.is_null(), "Pointer cam_fovy is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_fovy, self.ncam()) }
     }
 
     /// inter-pupilary distance
     pub fn cam_ipd(&self) -> &[mjtNum] {
-        assert!(!self.raw().cam_ipd.is_null(), "Pointer cam_ipd is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_ipd, self.ncam()) }
     }
 
     /// resolution: pixels [width, height]
     pub fn cam_resolution(&self) -> &[i32] {
-        assert!(
-            !self.raw().cam_resolution.is_null(),
-            "Pointer cam_resolution is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().cam_resolution, self.ncam() * 2) }
     }
 
     /// sensor size: length [width, height]
     pub fn cam_sensorsize(&self) -> &[f32] {
-        assert!(
-            !self.raw().cam_sensorsize.is_null(),
-            "Pointer cam_sensorsize is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().cam_sensorsize, self.ncam() * 2) }
     }
 
     /// [focal length; principal point]
     pub fn cam_intrinsic(&self) -> &[f32] {
-        assert!(
-            !self.raw().cam_intrinsic.is_null(),
-            "Pointer cam_intrinsic is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().cam_intrinsic, self.ncam() * 4) }
     }
 
     /// user data
     pub fn cam_user(&self) -> &[mjtNum] {
-        assert!(!self.raw().cam_user.is_null(), "Pointer cam_user is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_user, self.ncam() * self.nuser_cam()) }
     }
 
     /// light tracking mode (mjtCamLight)
     pub fn light_mode(&self) -> &[i32] {
-        assert!(
-            !self.raw().light_mode.is_null(),
-            "Pointer light_mode is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_mode, self.nlight()) }
     }
 
     /// id of light's body
     pub fn light_bodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().light_bodyid.is_null(),
-            "Pointer light_bodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_bodyid, self.nlight()) }
     }
 
     /// id of targeted body; -1: none
     pub fn light_targetbodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().light_targetbodyid.is_null(),
-            "Pointer light_targetbodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_targetbodyid, self.nlight()) }
     }
 
     /// spot, directional, etc. (mjtLightType)
     pub fn light_type(&self) -> &[i32] {
-        assert!(
-            !self.raw().light_type.is_null(),
-            "Pointer light_type is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_type, self.nlight()) }
     }
 
     /// texture id for image lights
     pub fn light_texid(&self) -> &[i32] {
-        assert!(
-            !self.raw().light_texid.is_null(),
-            "Pointer light_texid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_texid, self.nlight()) }
     }
 
     /// does light cast shadows
     pub fn light_castshadow(&self) -> &[u8] {
-        assert!(
-            !self.raw().light_castshadow.is_null(),
-            "Pointer light_castshadow is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_castshadow, self.nlight()) }
     }
 
     /// light radius for soft shadows
     pub fn light_bulbradius(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_bulbradius.is_null(),
-            "Pointer light_bulbradius is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_bulbradius, self.nlight()) }
     }
 
     /// intensity, in candela
     pub fn light_intensity(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_intensity.is_null(),
-            "Pointer light_intensity is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_intensity, self.nlight()) }
     }
 
     /// range of effectiveness
     pub fn light_range(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_range.is_null(),
-            "Pointer light_range is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_range, self.nlight()) }
     }
 
     /// is light on
     pub fn light_active(&self) -> &[u8] {
-        assert!(
-            !self.raw().light_active.is_null(),
-            "Pointer light_active is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_active, self.nlight()) }
     }
 
     /// position rel. to body frame
     pub fn light_pos(&self) -> &[mjtNum] {
-        assert!(!self.raw().light_pos.is_null(), "Pointer light_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().light_pos, self.nlight() * 3) }
     }
 
     /// direction rel. to body frame
     pub fn light_dir(&self) -> &[mjtNum] {
-        assert!(!self.raw().light_dir.is_null(), "Pointer light_dir is null");
         unsafe { std::slice::from_raw_parts(self.raw().light_dir, self.nlight() * 3) }
     }
 
     /// global position rel. to sub-com in qpos0
     pub fn light_poscom0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().light_poscom0.is_null(),
-            "Pointer light_poscom0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_poscom0, self.nlight() * 3) }
     }
 
     /// global position rel. to body in qpos0
     pub fn light_pos0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().light_pos0.is_null(),
-            "Pointer light_pos0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_pos0, self.nlight() * 3) }
     }
 
     /// global direction in qpos0
     pub fn light_dir0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().light_dir0.is_null(),
-            "Pointer light_dir0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_dir0, self.nlight() * 3) }
     }
 
     /// OpenGL attenuation (quadratic model)
     pub fn light_attenuation(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_attenuation.is_null(),
-            "Pointer light_attenuation is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_attenuation, self.nlight() * 3) }
     }
 
     /// OpenGL cutoff
     pub fn light_cutoff(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_cutoff.is_null(),
-            "Pointer light_cutoff is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_cutoff, self.nlight()) }
     }
 
     /// OpenGL exponent
     pub fn light_exponent(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_exponent.is_null(),
-            "Pointer light_exponent is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_exponent, self.nlight()) }
     }
 
     /// ambient rgb (alpha=1)
     pub fn light_ambient(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_ambient.is_null(),
-            "Pointer light_ambient is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_ambient, self.nlight() * 3) }
     }
 
     /// diffuse rgb (alpha=1)
     pub fn light_diffuse(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_diffuse.is_null(),
-            "Pointer light_diffuse is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_diffuse, self.nlight() * 3) }
     }
 
     /// specular rgb (alpha=1)
     pub fn light_specular(&self) -> &[f32] {
-        assert!(
-            !self.raw().light_specular.is_null(),
-            "Pointer light_specular is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().light_specular, self.nlight() * 3) }
     }
 
     /// flex contact type
     pub fn flex_contype(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_contype.is_null(),
-            "Pointer flex_contype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_contype, self.nflex()) }
     }
 
     /// flex contact affinity
     pub fn flex_conaffinity(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_conaffinity.is_null(),
-            "Pointer flex_conaffinity is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_conaffinity, self.nflex()) }
     }
 
     /// contact dimensionality (1, 3, 4, 6)
     pub fn flex_condim(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_condim.is_null(),
-            "Pointer flex_condim is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_condim, self.nflex()) }
     }
 
     /// flex contact priority
     pub fn flex_priority(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_priority.is_null(),
-            "Pointer flex_priority is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_priority, self.nflex()) }
     }
 
     /// mix coef for solref/imp in contact pair
     pub fn flex_solmix(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_solmix.is_null(),
-            "Pointer flex_solmix is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_solmix, self.nflex()) }
     }
 
     /// constraint solver reference: contact
     pub fn flex_solref(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_solref.is_null(),
-            "Pointer flex_solref is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().flex_solref,
@@ -1498,10 +1052,6 @@ impl Model {
 
     /// constraint solver impedance: contact
     pub fn flex_solimp(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_solimp.is_null(),
-            "Pointer flex_solimp is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().flex_solimp,
@@ -1512,1078 +1062,631 @@ impl Model {
 
     /// friction for (slide, spin, roll)
     pub fn flex_friction(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_friction.is_null(),
-            "Pointer flex_friction is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_friction, self.nflex() * 3) }
     }
 
     /// detect contact if dist<margin
     pub fn flex_margin(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_margin.is_null(),
-            "Pointer flex_margin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_margin, self.nflex()) }
     }
 
     /// include in solver if dist<margin-gap
     pub fn flex_gap(&self) -> &[mjtNum] {
-        assert!(!self.raw().flex_gap.is_null(), "Pointer flex_gap is null");
         unsafe { std::slice::from_raw_parts(self.raw().flex_gap, self.nflex()) }
     }
 
     /// internal flex collision enabled
     pub fn flex_internal(&self) -> &[u8] {
-        assert!(
-            !self.raw().flex_internal.is_null(),
-            "Pointer flex_internal is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_internal, self.nflex()) }
     }
 
     /// self collision mode (mjtFlexSelf)
     pub fn flex_selfcollide(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_selfcollide.is_null(),
-            "Pointer flex_selfcollide is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_selfcollide, self.nflex()) }
     }
 
     /// number of active element layers, 3D only
     pub fn flex_activelayers(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_activelayers.is_null(),
-            "Pointer flex_activelayers is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_activelayers, self.nflex()) }
     }
 
     /// 1: lines, 2: triangles, 3: tetrahedra
     pub fn flex_dim(&self) -> &[i32] {
-        assert!(!self.raw().flex_dim.is_null(), "Pointer flex_dim is null");
         unsafe { std::slice::from_raw_parts(self.raw().flex_dim, self.nflex()) }
     }
 
     /// material id for rendering
     pub fn flex_matid(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_matid.is_null(),
-            "Pointer flex_matid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_matid, self.nflex()) }
     }
 
     /// group for visibility
     pub fn flex_group(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_group.is_null(),
-            "Pointer flex_group is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_group, self.nflex()) }
     }
 
     /// interpolation (0: vertex, 1: nodes)
     pub fn flex_interp(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_interp.is_null(),
-            "Pointer flex_interp is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_interp, self.nflex()) }
     }
 
     /// first node address
     pub fn flex_nodeadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_nodeadr.is_null(),
-            "Pointer flex_nodeadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_nodeadr, self.nflex()) }
     }
 
     /// number of nodes
     pub fn flex_nodenum(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_nodenum.is_null(),
-            "Pointer flex_nodenum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_nodenum, self.nflex()) }
     }
 
     /// first vertex address
     pub fn flex_vertadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_vertadr.is_null(),
-            "Pointer flex_vertadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_vertadr, self.nflex()) }
     }
 
     /// number of vertices
     pub fn flex_vertnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_vertnum.is_null(),
-            "Pointer flex_vertnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_vertnum, self.nflex()) }
     }
 
     /// first edge address
     pub fn flex_edgeadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_edgeadr.is_null(),
-            "Pointer flex_edgeadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_edgeadr, self.nflex()) }
     }
 
     /// number of edges
     pub fn flex_edgenum(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_edgenum.is_null(),
-            "Pointer flex_edgenum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_edgenum, self.nflex()) }
     }
 
     /// first element address
     pub fn flex_elemadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_elemadr.is_null(),
-            "Pointer flex_elemadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_elemadr, self.nflex()) }
     }
 
     /// number of elements
     pub fn flex_elemnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_elemnum.is_null(),
-            "Pointer flex_elemnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_elemnum, self.nflex()) }
     }
 
     /// first element vertex id address
     pub fn flex_elemdataadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_elemdataadr.is_null(),
-            "Pointer flex_elemdataadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_elemdataadr, self.nflex()) }
     }
 
     /// first element edge id address
     pub fn flex_elemedgeadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_elemedgeadr.is_null(),
-            "Pointer flex_elemedgeadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_elemedgeadr, self.nflex()) }
     }
 
     /// number of shells
     pub fn flex_shellnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_shellnum.is_null(),
-            "Pointer flex_shellnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_shellnum, self.nflex()) }
     }
 
     /// first shell data address
     pub fn flex_shelldataadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_shelldataadr.is_null(),
-            "Pointer flex_shelldataadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_shelldataadr, self.nflex()) }
     }
 
     /// first evpair address
     pub fn flex_evpairadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_evpairadr.is_null(),
-            "Pointer flex_evpairadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_evpairadr, self.nflex()) }
     }
 
     /// number of evpairs
     pub fn flex_evpairnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_evpairnum.is_null(),
-            "Pointer flex_evpairnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_evpairnum, self.nflex()) }
     }
 
     /// address in flex_texcoord; -1: none
     pub fn flex_texcoordadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_texcoordadr.is_null(),
-            "Pointer flex_texcoordadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_texcoordadr, self.nflex()) }
     }
 
     /// node body ids
     pub fn flex_nodebodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_nodebodyid.is_null(),
-            "Pointer flex_nodebodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_nodebodyid, self.nflexnode()) }
     }
 
     /// vertex body ids
     pub fn flex_vertbodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_vertbodyid.is_null(),
-            "Pointer flex_vertbodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_vertbodyid, self.nflexvert()) }
     }
 
     /// edge vertex ids (2 per edge)
     pub fn flex_edge(&self) -> &[i32] {
-        assert!(!self.raw().flex_edge.is_null(), "Pointer flex_edge is null");
         unsafe { std::slice::from_raw_parts(self.raw().flex_edge, self.nflexedge() * 2) }
     }
 
     /// adjacent vertex ids (dim=2 only)
     pub fn flex_edgeflap(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_edgeflap.is_null(),
-            "Pointer flex_edgeflap is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_edgeflap, self.nflexedge() * 2) }
     }
 
     /// element vertex ids (dim+1 per elem)
     pub fn flex_elem(&self) -> &[i32] {
-        assert!(!self.raw().flex_elem.is_null(), "Pointer flex_elem is null");
         unsafe { std::slice::from_raw_parts(self.raw().flex_elem, self.nflexelemdata()) }
     }
 
     /// element texture coordinates (dim+1)
     pub fn flex_elemtexcoord(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_elemtexcoord.is_null(),
-            "Pointer flex_elemtexcoord is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_elemtexcoord, self.nflexelemdata()) }
     }
 
     /// element edge ids
     pub fn flex_elemedge(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_elemedge.is_null(),
-            "Pointer flex_elemedge is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_elemedge, self.nflexelemedge()) }
     }
 
     /// element distance from surface, 3D only
     pub fn flex_elemlayer(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_elemlayer.is_null(),
-            "Pointer flex_elemlayer is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_elemlayer, self.nflexelem()) }
     }
 
     /// shell fragment vertex ids (dim per frag)
     pub fn flex_shell(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_shell.is_null(),
-            "Pointer flex_shell is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_shell, self.nflexshelldata()) }
     }
 
     /// (element, vertex) collision pairs
     pub fn flex_evpair(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_evpair.is_null(),
-            "Pointer flex_evpair is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_evpair, self.nflexevpair() * 2) }
     }
 
     /// vertex positions in local body frames
     pub fn flex_vert(&self) -> &[mjtNum] {
-        assert!(!self.raw().flex_vert.is_null(), "Pointer flex_vert is null");
         unsafe { std::slice::from_raw_parts(self.raw().flex_vert, self.nflexvert() * 3) }
     }
 
     /// vertex positions in qpos0 on [0, 1]^d
     pub fn flex_vert0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_vert0.is_null(),
-            "Pointer flex_vert0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_vert0, self.nflexvert() * 3) }
     }
 
     /// node positions in local body frames
     pub fn flex_node(&self) -> &[mjtNum] {
-        assert!(!self.raw().flex_node.is_null(), "Pointer flex_node is null");
         unsafe { std::slice::from_raw_parts(self.raw().flex_node, self.nflexnode() * 3) }
     }
 
     /// Cartesian node positions in qpos0
     pub fn flex_node0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_node0.is_null(),
-            "Pointer flex_node0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_node0, self.nflexnode() * 3) }
     }
 
     /// edge lengths in qpos0
     pub fn flexedge_length0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flexedge_length0.is_null(),
-            "Pointer flexedge_length0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flexedge_length0, self.nflexedge()) }
     }
 
     /// edge inv. weight in qpos0
     pub fn flexedge_invweight0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flexedge_invweight0.is_null(),
-            "Pointer flexedge_invweight0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flexedge_invweight0, self.nflexedge()) }
     }
 
     /// radius around primitive element
     pub fn flex_radius(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_radius.is_null(),
-            "Pointer flex_radius is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_radius, self.nflex()) }
     }
 
     /// finite element stiffness matrix
     pub fn flex_stiffness(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_stiffness.is_null(),
-            "Pointer flex_stiffness is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_stiffness, self.nflexelem() * 21) }
     }
 
     /// bending stiffness
     pub fn flex_bending(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_bending.is_null(),
-            "Pointer flex_bending is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_bending, self.nflexedge() * 16) }
     }
 
     /// Rayleigh's damping coefficient
     pub fn flex_damping(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_damping.is_null(),
-            "Pointer flex_damping is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_damping, self.nflex()) }
     }
 
     /// edge stiffness
     pub fn flex_edgestiffness(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_edgestiffness.is_null(),
-            "Pointer flex_edgestiffness is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_edgestiffness, self.nflex()) }
     }
 
     /// edge damping
     pub fn flex_edgedamping(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().flex_edgedamping.is_null(),
-            "Pointer flex_edgedamping is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_edgedamping, self.nflex()) }
     }
 
     /// is edge equality constraint defined
     pub fn flex_edgeequality(&self) -> &[u8] {
-        assert!(
-            !self.raw().flex_edgeequality.is_null(),
-            "Pointer flex_edgeequality is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_edgeequality, self.nflex()) }
     }
 
     /// are all verices in the same body
     pub fn flex_rigid(&self) -> &[u8] {
-        assert!(
-            !self.raw().flex_rigid.is_null(),
-            "Pointer flex_rigid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_rigid, self.nflex()) }
     }
 
     /// are both edge vertices in same body
     pub fn flexedge_rigid(&self) -> &[u8] {
-        assert!(
-            !self.raw().flexedge_rigid.is_null(),
-            "Pointer flexedge_rigid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flexedge_rigid, self.nflexedge()) }
     }
 
     /// are all vertex coordinates (0,0,0)
     pub fn flex_centered(&self) -> &[u8] {
-        assert!(
-            !self.raw().flex_centered.is_null(),
-            "Pointer flex_centered is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_centered, self.nflex()) }
     }
 
     /// render flex skin with flat shading
     pub fn flex_flatskin(&self) -> &[u8] {
-        assert!(
-            !self.raw().flex_flatskin.is_null(),
-            "Pointer flex_flatskin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_flatskin, self.nflex()) }
     }
 
     /// address of bvh root; -1: no bvh
     pub fn flex_bvhadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_bvhadr.is_null(),
-            "Pointer flex_bvhadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_bvhadr, self.nflex()) }
     }
 
     /// number of bounding volumes
     pub fn flex_bvhnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().flex_bvhnum.is_null(),
-            "Pointer flex_bvhnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_bvhnum, self.nflex()) }
     }
 
     /// rgba when material is omitted
     pub fn flex_rgba(&self) -> &[f32] {
-        assert!(!self.raw().flex_rgba.is_null(), "Pointer flex_rgba is null");
         unsafe { std::slice::from_raw_parts(self.raw().flex_rgba, self.nflex() * 4) }
     }
 
     /// vertex texture coordinates
     pub fn flex_texcoord(&self) -> &[f32] {
-        assert!(
-            !self.raw().flex_texcoord.is_null(),
-            "Pointer flex_texcoord is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().flex_texcoord, self.nflextexcoord() * 2) }
     }
 
     /// first vertex address
     pub fn mesh_vertadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_vertadr.is_null(),
-            "Pointer mesh_vertadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_vertadr, self.nmesh()) }
     }
 
     /// number of vertices
     pub fn mesh_vertnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_vertnum.is_null(),
-            "Pointer mesh_vertnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_vertnum, self.nmesh()) }
     }
 
     /// first face address
     pub fn mesh_faceadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_faceadr.is_null(),
-            "Pointer mesh_faceadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_faceadr, self.nmesh()) }
     }
 
     /// number of faces
     pub fn mesh_facenum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_facenum.is_null(),
-            "Pointer mesh_facenum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_facenum, self.nmesh()) }
     }
 
     /// address of bvh root
     pub fn mesh_bvhadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_bvhadr.is_null(),
-            "Pointer mesh_bvhadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_bvhadr, self.nmesh()) }
     }
 
     /// number of bvh
     pub fn mesh_bvhnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_bvhnum.is_null(),
-            "Pointer mesh_bvhnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_bvhnum, self.nmesh()) }
     }
 
     /// address of octree root
     pub fn mesh_octadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_octadr.is_null(),
-            "Pointer mesh_octadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_octadr, self.nmesh()) }
     }
 
     /// number of octree nodes
     pub fn mesh_octnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_octnum.is_null(),
-            "Pointer mesh_octnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_octnum, self.nmesh()) }
     }
 
     /// first normal address
     pub fn mesh_normaladr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_normaladr.is_null(),
-            "Pointer mesh_normaladr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_normaladr, self.nmesh()) }
     }
 
     /// number of normals
     pub fn mesh_normalnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_normalnum.is_null(),
-            "Pointer mesh_normalnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_normalnum, self.nmesh()) }
     }
 
     /// texcoord data address; -1: no texcoord
     pub fn mesh_texcoordadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_texcoordadr.is_null(),
-            "Pointer mesh_texcoordadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_texcoordadr, self.nmesh()) }
     }
 
     /// number of texcoord
     pub fn mesh_texcoordnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_texcoordnum.is_null(),
-            "Pointer mesh_texcoordnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_texcoordnum, self.nmesh()) }
     }
 
     /// graph data address; -1: no graph
     pub fn mesh_graphadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_graphadr.is_null(),
-            "Pointer mesh_graphadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_graphadr, self.nmesh()) }
     }
 
     /// vertex positions for all meshes
     pub fn mesh_vert(&self) -> &[f32] {
-        assert!(!self.raw().mesh_vert.is_null(), "Pointer mesh_vert is null");
         unsafe { std::slice::from_raw_parts(self.raw().mesh_vert, self.nmeshvert() * 3) }
     }
 
     /// normals for all meshes
     pub fn mesh_normal(&self) -> &[f32] {
-        assert!(
-            !self.raw().mesh_normal.is_null(),
-            "Pointer mesh_normal is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_normal, self.nmeshnormal() * 3) }
     }
 
     /// vertex texcoords for all meshes
     pub fn mesh_texcoord(&self) -> &[f32] {
-        assert!(
-            !self.raw().mesh_texcoord.is_null(),
-            "Pointer mesh_texcoord is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_texcoord, self.nmeshtexcoord() * 2) }
     }
 
     /// vertex face data
     pub fn mesh_face(&self) -> &[i32] {
-        assert!(!self.raw().mesh_face.is_null(), "Pointer mesh_face is null");
         unsafe { std::slice::from_raw_parts(self.raw().mesh_face, self.nmeshface() * 3) }
     }
 
     /// normal face data
     pub fn mesh_facenormal(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_facenormal.is_null(),
-            "Pointer mesh_facenormal is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_facenormal, self.nmeshface() * 3) }
     }
 
     /// texture face data
     pub fn mesh_facetexcoord(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_facetexcoord.is_null(),
-            "Pointer mesh_facetexcoord is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_facetexcoord, self.nmeshface() * 3) }
     }
 
     /// convex graph data
     pub fn mesh_graph(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_graph.is_null(),
-            "Pointer mesh_graph is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_graph, self.nmeshgraph()) }
     }
 
     /// scaling applied to asset vertices
     pub fn mesh_scale(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().mesh_scale.is_null(),
-            "Pointer mesh_scale is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_scale, self.nmesh() * 3) }
     }
 
     /// translation applied to asset vertices
     pub fn mesh_pos(&self) -> &[mjtNum] {
-        assert!(!self.raw().mesh_pos.is_null(), "Pointer mesh_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().mesh_pos, self.nmesh() * 3) }
     }
 
     /// rotation applied to asset vertices
     pub fn mesh_quat(&self) -> &[mjtNum] {
-        assert!(!self.raw().mesh_quat.is_null(), "Pointer mesh_quat is null");
         unsafe { std::slice::from_raw_parts(self.raw().mesh_quat, self.nmesh() * 4) }
     }
 
     /// address of asset path for mesh; -1: none
     pub fn mesh_pathadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_pathadr.is_null(),
-            "Pointer mesh_pathadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_pathadr, self.nmesh()) }
     }
 
     /// number of polygons per mesh
     pub fn mesh_polynum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polynum.is_null(),
-            "Pointer mesh_polynum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polynum, self.nmesh()) }
     }
 
     /// first polygon address per mesh
     pub fn mesh_polyadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polyadr.is_null(),
-            "Pointer mesh_polyadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polyadr, self.nmesh()) }
     }
 
     /// all polygon normals
     pub fn mesh_polynormal(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().mesh_polynormal.is_null(),
-            "Pointer mesh_polynormal is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polynormal, self.nmeshpoly() * 3) }
     }
 
     /// polygon vertex start address
     pub fn mesh_polyvertadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polyvertadr.is_null(),
-            "Pointer mesh_polyvertadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polyvertadr, self.nmeshpoly()) }
     }
 
     /// number of vertices per polygon
     pub fn mesh_polyvertnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polyvertnum.is_null(),
-            "Pointer mesh_polyvertnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polyvertnum, self.nmeshpoly()) }
     }
 
     /// all polygon vertices
     pub fn mesh_polyvert(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polyvert.is_null(),
-            "Pointer mesh_polyvert is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polyvert, self.nmeshpolyvert()) }
     }
 
     /// first polygon address per vertex
     pub fn mesh_polymapadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polymapadr.is_null(),
-            "Pointer mesh_polymapadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polymapadr, self.nmeshvert()) }
     }
 
     /// number of polygons per vertex
     pub fn mesh_polymapnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polymapnum.is_null(),
-            "Pointer mesh_polymapnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polymapnum, self.nmeshvert()) }
     }
 
     /// vertex to polygon map
     pub fn mesh_polymap(&self) -> &[i32] {
-        assert!(
-            !self.raw().mesh_polymap.is_null(),
-            "Pointer mesh_polymap is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mesh_polymap, self.nmeshpolymap()) }
     }
 
     /// skin material id; -1: none
     pub fn skin_matid(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_matid.is_null(),
-            "Pointer skin_matid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_matid, self.nskin()) }
     }
 
     /// group for visibility
     pub fn skin_group(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_group.is_null(),
-            "Pointer skin_group is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_group, self.nskin()) }
     }
 
     /// skin rgba
     pub fn skin_rgba(&self) -> &[f32] {
-        assert!(!self.raw().skin_rgba.is_null(), "Pointer skin_rgba is null");
         unsafe { std::slice::from_raw_parts(self.raw().skin_rgba, self.nskin() * 4) }
     }
 
     /// inflate skin in normal direction
     pub fn skin_inflate(&self) -> &[f32] {
-        assert!(
-            !self.raw().skin_inflate.is_null(),
-            "Pointer skin_inflate is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_inflate, self.nskin()) }
     }
 
     /// first vertex address
     pub fn skin_vertadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_vertadr.is_null(),
-            "Pointer skin_vertadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_vertadr, self.nskin()) }
     }
 
     /// number of vertices
     pub fn skin_vertnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_vertnum.is_null(),
-            "Pointer skin_vertnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_vertnum, self.nskin()) }
     }
 
     /// texcoord data address; -1: no texcoord
     pub fn skin_texcoordadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_texcoordadr.is_null(),
-            "Pointer skin_texcoordadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_texcoordadr, self.nskin()) }
     }
 
     /// first face address
     pub fn skin_faceadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_faceadr.is_null(),
-            "Pointer skin_faceadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_faceadr, self.nskin()) }
     }
 
     /// number of faces
     pub fn skin_facenum(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_facenum.is_null(),
-            "Pointer skin_facenum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_facenum, self.nskin()) }
     }
 
     /// first bone in skin
     pub fn skin_boneadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_boneadr.is_null(),
-            "Pointer skin_boneadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_boneadr, self.nskin()) }
     }
 
     /// number of bones in skin
     pub fn skin_bonenum(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_bonenum.is_null(),
-            "Pointer skin_bonenum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonenum, self.nskin()) }
     }
 
     /// vertex positions for all skin meshes
     pub fn skin_vert(&self) -> &[f32] {
-        assert!(!self.raw().skin_vert.is_null(), "Pointer skin_vert is null");
         unsafe { std::slice::from_raw_parts(self.raw().skin_vert, self.nskinvert() * 3) }
     }
 
     /// vertex texcoords for all skin meshes
     pub fn skin_texcoord(&self) -> &[f32] {
-        assert!(
-            !self.raw().skin_texcoord.is_null(),
-            "Pointer skin_texcoord is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_texcoord, self.nskintexvert() * 2) }
     }
 
     /// triangle faces for all skin meshes
     pub fn skin_face(&self) -> &[i32] {
-        assert!(!self.raw().skin_face.is_null(), "Pointer skin_face is null");
         unsafe { std::slice::from_raw_parts(self.raw().skin_face, self.nskinface() * 3) }
     }
 
     /// first vertex in each bone
     pub fn skin_bonevertadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_bonevertadr.is_null(),
-            "Pointer skin_bonevertadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonevertadr, self.nskinbone()) }
     }
 
     /// number of vertices in each bone
     pub fn skin_bonevertnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_bonevertnum.is_null(),
-            "Pointer skin_bonevertnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonevertnum, self.nskinbone()) }
     }
 
     /// bind pos of each bone
     pub fn skin_bonebindpos(&self) -> &[f32] {
-        assert!(
-            !self.raw().skin_bonebindpos.is_null(),
-            "Pointer skin_bonebindpos is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonebindpos, self.nskinbone() * 3) }
     }
 
     /// bind quat of each bone
     pub fn skin_bonebindquat(&self) -> &[f32] {
-        assert!(
-            !self.raw().skin_bonebindquat.is_null(),
-            "Pointer skin_bonebindquat is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonebindquat, self.nskinbone() * 4) }
     }
 
     /// body id of each bone
     pub fn skin_bonebodyid(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_bonebodyid.is_null(),
-            "Pointer skin_bonebodyid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonebodyid, self.nskinbone()) }
     }
 
     /// mesh ids of vertices in each bone
     pub fn skin_bonevertid(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_bonevertid.is_null(),
-            "Pointer skin_bonevertid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonevertid, self.nskinbonevert()) }
     }
 
     /// weights of vertices in each bone
     pub fn skin_bonevertweight(&self) -> &[f32] {
-        assert!(
-            !self.raw().skin_bonevertweight.is_null(),
-            "Pointer skin_bonevertweight is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_bonevertweight, self.nskinbonevert()) }
     }
 
     /// address of asset path for skin; -1: none
     pub fn skin_pathadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().skin_pathadr.is_null(),
-            "Pointer skin_pathadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().skin_pathadr, self.nskin()) }
     }
 
     /// (x, y, z_top, z_bottom)
     pub fn hfield_size(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().hfield_size.is_null(),
-            "Pointer hfield_size is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().hfield_size, self.nhfield() * 4) }
     }
 
     /// number of rows in grid
     pub fn hfield_nrow(&self) -> &[i32] {
-        assert!(
-            !self.raw().hfield_nrow.is_null(),
-            "Pointer hfield_nrow is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().hfield_nrow, self.nhfield()) }
     }
 
     /// number of columns in grid
     pub fn hfield_ncol(&self) -> &[i32] {
-        assert!(
-            !self.raw().hfield_ncol.is_null(),
-            "Pointer hfield_ncol is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().hfield_ncol, self.nhfield()) }
     }
 
     /// address in hfield_data
     pub fn hfield_adr(&self) -> &[i32] {
-        assert!(
-            !self.raw().hfield_adr.is_null(),
-            "Pointer hfield_adr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().hfield_adr, self.nhfield()) }
     }
 
     /// elevation data
     pub fn hfield_data(&self) -> &[f32] {
-        assert!(
-            !self.raw().hfield_data.is_null(),
-            "Pointer hfield_data is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().hfield_data, self.nhfielddata()) }
     }
 
     /// address of hfield asset path; -1: none
     pub fn hfield_pathadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().hfield_pathadr.is_null(),
-            "Pointer hfield_pathadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().hfield_pathadr, self.nhfield()) }
     }
 
     /// texture type (mjtTexture)
     pub fn tex_type(&self) -> &[i32] {
-        assert!(!self.raw().tex_type.is_null(), "Pointer tex_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().tex_type, self.ntex()) }
     }
 
     /// texture colorspace (mjtColorSpace)
     pub fn tex_colorspace(&self) -> &[i32] {
-        assert!(
-            !self.raw().tex_colorspace.is_null(),
-            "Pointer tex_colorspace is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tex_colorspace, self.ntex()) }
     }
 
     /// number of rows in texture image
     pub fn tex_height(&self) -> &[i32] {
-        assert!(
-            !self.raw().tex_height.is_null(),
-            "Pointer tex_height is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tex_height, self.ntex()) }
     }
 
     /// number of columns in texture image
     pub fn tex_width(&self) -> &[i32] {
-        assert!(!self.raw().tex_width.is_null(), "Pointer tex_width is null");
         unsafe { std::slice::from_raw_parts(self.raw().tex_width, self.ntex()) }
     }
 
     /// number of channels in texture image
     pub fn tex_nchannel(&self) -> &[i32] {
-        assert!(
-            !self.raw().tex_nchannel.is_null(),
-            "Pointer tex_nchannel is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tex_nchannel, self.ntex()) }
     }
 
     /// start address in tex_data
     pub fn tex_adr(&self) -> &[i32] {
-        assert!(!self.raw().tex_adr.is_null(), "Pointer tex_adr is null");
         unsafe { std::slice::from_raw_parts(self.raw().tex_adr, self.ntex()) }
     }
 
     /// pixel values
     pub fn tex_data(&self) -> &[u8] {
-        assert!(!self.raw().tex_data.is_null(), "Pointer tex_data is null");
         unsafe { std::slice::from_raw_parts(self.raw().tex_data, self.ntexdata()) }
     }
 
     /// address of texture asset path; -1: none
     pub fn tex_pathadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().tex_pathadr.is_null(),
-            "Pointer tex_pathadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tex_pathadr, self.ntex()) }
     }
 
     /// indices of textures; -1: none
     pub fn mat_texid(&self) -> &[i32] {
-        assert!(!self.raw().mat_texid.is_null(), "Pointer mat_texid is null");
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().mat_texid,
@@ -2594,121 +1697,71 @@ impl Model {
 
     /// make texture cube uniform
     pub fn mat_texuniform(&self) -> &[u8] {
-        assert!(
-            !self.raw().mat_texuniform.is_null(),
-            "Pointer mat_texuniform is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_texuniform, self.nmat()) }
     }
 
     /// texture repetition for 2d mapping
     pub fn mat_texrepeat(&self) -> &[f32] {
-        assert!(
-            !self.raw().mat_texrepeat.is_null(),
-            "Pointer mat_texrepeat is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_texrepeat, self.nmat() * 2) }
     }
 
     /// emission (x rgb)
     pub fn mat_emission(&self) -> &[f32] {
-        assert!(
-            !self.raw().mat_emission.is_null(),
-            "Pointer mat_emission is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_emission, self.nmat()) }
     }
 
     /// specular (x white)
     pub fn mat_specular(&self) -> &[f32] {
-        assert!(
-            !self.raw().mat_specular.is_null(),
-            "Pointer mat_specular is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_specular, self.nmat()) }
     }
 
     /// shininess coef
     pub fn mat_shininess(&self) -> &[f32] {
-        assert!(
-            !self.raw().mat_shininess.is_null(),
-            "Pointer mat_shininess is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_shininess, self.nmat()) }
     }
 
     /// reflectance (0: disable)
     pub fn mat_reflectance(&self) -> &[f32] {
-        assert!(
-            !self.raw().mat_reflectance.is_null(),
-            "Pointer mat_reflectance is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_reflectance, self.nmat()) }
     }
 
     /// metallic coef
     pub fn mat_metallic(&self) -> &[f32] {
-        assert!(
-            !self.raw().mat_metallic.is_null(),
-            "Pointer mat_metallic is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_metallic, self.nmat()) }
     }
 
     /// roughness coef
     pub fn mat_roughness(&self) -> &[f32] {
-        assert!(
-            !self.raw().mat_roughness.is_null(),
-            "Pointer mat_roughness is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().mat_roughness, self.nmat()) }
     }
 
     /// rgba
     pub fn mat_rgba(&self) -> &[f32] {
-        assert!(!self.raw().mat_rgba.is_null(), "Pointer mat_rgba is null");
         unsafe { std::slice::from_raw_parts(self.raw().mat_rgba, self.nmat() * 4) }
     }
 
     /// contact dimensionality
     pub fn pair_dim(&self) -> &[i32] {
-        assert!(!self.raw().pair_dim.is_null(), "Pointer pair_dim is null");
         unsafe { std::slice::from_raw_parts(self.raw().pair_dim, self.npair()) }
     }
 
     /// id of geom1
     pub fn pair_geom1(&self) -> &[i32] {
-        assert!(
-            !self.raw().pair_geom1.is_null(),
-            "Pointer pair_geom1 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().pair_geom1, self.npair()) }
     }
 
     /// id of geom2
     pub fn pair_geom2(&self) -> &[i32] {
-        assert!(
-            !self.raw().pair_geom2.is_null(),
-            "Pointer pair_geom2 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().pair_geom2, self.npair()) }
     }
 
     /// body1 << 16 + body2
     pub fn pair_signature(&self) -> &[i32] {
-        assert!(
-            !self.raw().pair_signature.is_null(),
-            "Pointer pair_signature is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().pair_signature, self.npair()) }
     }
 
     /// solver reference: contact normal
     pub fn pair_solref(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().pair_solref.is_null(),
-            "Pointer pair_solref is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().pair_solref,
@@ -2719,10 +1772,6 @@ impl Model {
 
     /// solver reference: contact friction
     pub fn pair_solreffriction(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().pair_solreffriction.is_null(),
-            "Pointer pair_solreffriction is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().pair_solreffriction,
@@ -2733,10 +1782,6 @@ impl Model {
 
     /// solver impedance: contact
     pub fn pair_solimp(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().pair_solimp.is_null(),
-            "Pointer pair_solimp is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().pair_solimp,
@@ -2747,76 +1792,51 @@ impl Model {
 
     /// detect contact if dist<margin
     pub fn pair_margin(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().pair_margin.is_null(),
-            "Pointer pair_margin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().pair_margin, self.npair()) }
     }
 
     /// include in solver if dist<margin-gap
     pub fn pair_gap(&self) -> &[mjtNum] {
-        assert!(!self.raw().pair_gap.is_null(), "Pointer pair_gap is null");
         unsafe { std::slice::from_raw_parts(self.raw().pair_gap, self.npair()) }
     }
 
     /// tangent1, 2, spin, roll1, 2
     pub fn pair_friction(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().pair_friction.is_null(),
-            "Pointer pair_friction is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().pair_friction, self.npair() * 5) }
     }
 
     /// body1 << 16 + body2
     pub fn exclude_signature(&self) -> &[i32] {
-        assert!(
-            !self.raw().exclude_signature.is_null(),
-            "Pointer exclude_signature is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().exclude_signature, self.nexclude()) }
     }
 
     /// constraint type (mjtEq)
     pub fn eq_type(&self) -> &[i32] {
-        assert!(!self.raw().eq_type.is_null(), "Pointer eq_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().eq_type, self.neq()) }
     }
 
     /// id of object 1
     pub fn eq_obj1id(&self) -> &[i32] {
-        assert!(!self.raw().eq_obj1id.is_null(), "Pointer eq_obj1id is null");
         unsafe { std::slice::from_raw_parts(self.raw().eq_obj1id, self.neq()) }
     }
 
     /// id of object 2
     pub fn eq_obj2id(&self) -> &[i32] {
-        assert!(!self.raw().eq_obj2id.is_null(), "Pointer eq_obj2id is null");
         unsafe { std::slice::from_raw_parts(self.raw().eq_obj2id, self.neq()) }
     }
 
     /// type of both objects (mjtObj)
     pub fn eq_objtype(&self) -> &[i32] {
-        assert!(
-            !self.raw().eq_objtype.is_null(),
-            "Pointer eq_objtype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().eq_objtype, self.neq()) }
     }
 
     /// initial enable/disable constraint state
     pub fn eq_active0(&self) -> &[u8] {
-        assert!(
-            !self.raw().eq_active0.is_null(),
-            "Pointer eq_active0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().eq_active0, self.neq()) }
     }
 
     /// constraint solver reference
     pub fn eq_solref(&self) -> &[mjtNum] {
-        assert!(!self.raw().eq_solref.is_null(), "Pointer eq_solref is null");
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().eq_solref,
@@ -2827,7 +1847,6 @@ impl Model {
 
     /// constraint solver impedance
     pub fn eq_solimp(&self) -> &[mjtNum] {
-        assert!(!self.raw().eq_solimp.is_null(), "Pointer eq_solimp is null");
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().eq_solimp,
@@ -2838,7 +1857,6 @@ impl Model {
 
     /// numeric data for constraint
     pub fn eq_data(&self) -> &[mjtNum] {
-        assert!(!self.raw().eq_data.is_null(), "Pointer eq_data is null");
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().eq_data,
@@ -2849,73 +1867,41 @@ impl Model {
 
     /// address of first object in tendon's path
     pub fn tendon_adr(&self) -> &[i32] {
-        assert!(
-            !self.raw().tendon_adr.is_null(),
-            "Pointer tendon_adr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_adr, self.ntendon()) }
     }
 
     /// number of objects in tendon's path
     pub fn tendon_num(&self) -> &[i32] {
-        assert!(
-            !self.raw().tendon_num.is_null(),
-            "Pointer tendon_num is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_num, self.ntendon()) }
     }
 
     /// material id for rendering
     pub fn tendon_matid(&self) -> &[i32] {
-        assert!(
-            !self.raw().tendon_matid.is_null(),
-            "Pointer tendon_matid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_matid, self.ntendon()) }
     }
 
     /// group for visibility
     pub fn tendon_group(&self) -> &[i32] {
-        assert!(
-            !self.raw().tendon_group.is_null(),
-            "Pointer tendon_group is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_group, self.ntendon()) }
     }
 
     /// does tendon have length limits
     pub fn tendon_limited(&self) -> &[u8] {
-        assert!(
-            !self.raw().tendon_limited.is_null(),
-            "Pointer tendon_limited is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_limited, self.ntendon()) }
     }
 
     /// does tendon have actuator force limits
     pub fn tendon_actfrclimited(&self) -> &[u8] {
-        assert!(
-            !self.raw().tendon_actfrclimited.is_null(),
-            "Pointer tendon_actfrclimited is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_actfrclimited, self.ntendon()) }
     }
 
     /// width for rendering
     pub fn tendon_width(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_width.is_null(),
-            "Pointer tendon_width is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_width, self.ntendon()) }
     }
 
     /// constraint solver reference: limit
     pub fn tendon_solref_lim(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_solref_lim.is_null(),
-            "Pointer tendon_solref_lim is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().tendon_solref_lim,
@@ -2926,10 +1912,6 @@ impl Model {
 
     /// constraint solver impedance: limit
     pub fn tendon_solimp_lim(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_solimp_lim.is_null(),
-            "Pointer tendon_solimp_lim is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().tendon_solimp_lim,
@@ -2940,10 +1922,6 @@ impl Model {
 
     /// constraint solver reference: friction
     pub fn tendon_solref_fri(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_solref_fri.is_null(),
-            "Pointer tendon_solref_fri is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().tendon_solref_fri,
@@ -2954,10 +1932,6 @@ impl Model {
 
     /// constraint solver impedance: friction
     pub fn tendon_solimp_fri(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_solimp_fri.is_null(),
-            "Pointer tendon_solimp_fri is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().tendon_solimp_fri,
@@ -2968,100 +1942,56 @@ impl Model {
 
     /// tendon length limits
     pub fn tendon_range(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_range.is_null(),
-            "Pointer tendon_range is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_range, self.ntendon() * 2) }
     }
 
     /// range of total actuator force
     pub fn tendon_actfrcrange(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_actfrcrange.is_null(),
-            "Pointer tendon_actfrcrange is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_actfrcrange, self.ntendon() * 2) }
     }
 
     /// min distance for limit detection
     pub fn tendon_margin(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_margin.is_null(),
-            "Pointer tendon_margin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_margin, self.ntendon()) }
     }
 
     /// stiffness coefficient
     pub fn tendon_stiffness(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_stiffness.is_null(),
-            "Pointer tendon_stiffness is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_stiffness, self.ntendon()) }
     }
 
     /// damping coefficient
     pub fn tendon_damping(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_damping.is_null(),
-            "Pointer tendon_damping is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_damping, self.ntendon()) }
     }
 
     /// inertia associated with tendon velocity
     pub fn tendon_armature(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_armature.is_null(),
-            "Pointer tendon_armature is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_armature, self.ntendon()) }
     }
 
     /// loss due to friction
     pub fn tendon_frictionloss(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_frictionloss.is_null(),
-            "Pointer tendon_frictionloss is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_frictionloss, self.ntendon()) }
     }
 
     /// spring resting length range
     pub fn tendon_lengthspring(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_lengthspring.is_null(),
-            "Pointer tendon_lengthspring is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_lengthspring, self.ntendon() * 2) }
     }
 
     /// tendon length in qpos0
     pub fn tendon_length0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_length0.is_null(),
-            "Pointer tendon_length0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_length0, self.ntendon()) }
     }
 
     /// inv. weight in qpos0
     pub fn tendon_invweight0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_invweight0.is_null(),
-            "Pointer tendon_invweight0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_invweight0, self.ntendon()) }
     }
 
     /// user data
     pub fn tendon_user(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tendon_user.is_null(),
-            "Pointer tendon_user is null"
-        );
         unsafe {
             std::slice::from_raw_parts(self.raw().tendon_user, self.ntendon() * self.nuser_tendon())
         }
@@ -3069,139 +1999,81 @@ impl Model {
 
     /// rgba when material is omitted
     pub fn tendon_rgba(&self) -> &[f32] {
-        assert!(
-            !self.raw().tendon_rgba.is_null(),
-            "Pointer tendon_rgba is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_rgba, self.ntendon() * 4) }
     }
 
     /// wrap object type (mjtWrap)
     pub fn wrap_type(&self) -> &[i32] {
-        assert!(!self.raw().wrap_type.is_null(), "Pointer wrap_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().wrap_type, self.nwrap()) }
     }
 
     /// object id: geom, site, joint
     pub fn wrap_objid(&self) -> &[i32] {
-        assert!(
-            !self.raw().wrap_objid.is_null(),
-            "Pointer wrap_objid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().wrap_objid, self.nwrap()) }
     }
 
     /// divisor, joint coef, or site id
     pub fn wrap_prm(&self) -> &[mjtNum] {
-        assert!(!self.raw().wrap_prm.is_null(), "Pointer wrap_prm is null");
         unsafe { std::slice::from_raw_parts(self.raw().wrap_prm, self.nwrap()) }
     }
 
     /// transmission type (mjtTrn)
     pub fn actuator_trntype(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_trntype.is_null(),
-            "Pointer actuator_trntype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_trntype, self.nu()) }
     }
 
     /// dynamics type (mjtDyn)
     pub fn actuator_dyntype(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_dyntype.is_null(),
-            "Pointer actuator_dyntype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_dyntype, self.nu()) }
     }
 
     /// gain type (mjtGain)
     pub fn actuator_gaintype(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_gaintype.is_null(),
-            "Pointer actuator_gaintype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_gaintype, self.nu()) }
     }
 
     /// bias type (mjtBias)
     pub fn actuator_biastype(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_biastype.is_null(),
-            "Pointer actuator_biastype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_biastype, self.nu()) }
     }
 
     /// transmission id: joint, tendon, site
     pub fn actuator_trnid(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_trnid.is_null(),
-            "Pointer actuator_trnid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_trnid, self.nu() * 2) }
     }
 
     /// first activation address; -1: stateless
     pub fn actuator_actadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_actadr.is_null(),
-            "Pointer actuator_actadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_actadr, self.nu()) }
     }
 
     /// number of activation variables
     pub fn actuator_actnum(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_actnum.is_null(),
-            "Pointer actuator_actnum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_actnum, self.nu()) }
     }
 
     /// group for visibility
     pub fn actuator_group(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_group.is_null(),
-            "Pointer actuator_group is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_group, self.nu()) }
     }
 
     /// is control limited
     pub fn actuator_ctrllimited(&self) -> &[u8] {
-        assert!(
-            !self.raw().actuator_ctrllimited.is_null(),
-            "Pointer actuator_ctrllimited is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_ctrllimited, self.nu()) }
     }
 
     /// is force limited
     pub fn actuator_forcelimited(&self) -> &[u8] {
-        assert!(
-            !self.raw().actuator_forcelimited.is_null(),
-            "Pointer actuator_forcelimited is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_forcelimited, self.nu()) }
     }
 
     /// is activation limited
     pub fn actuator_actlimited(&self) -> &[u8] {
-        assert!(
-            !self.raw().actuator_actlimited.is_null(),
-            "Pointer actuator_actlimited is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_actlimited, self.nu()) }
     }
 
     /// dynamics parameters
     pub fn actuator_dynprm(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_dynprm.is_null(),
-            "Pointer actuator_dynprm is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().actuator_dynprm,
@@ -3212,10 +2084,6 @@ impl Model {
 
     /// gain parameters
     pub fn actuator_gainprm(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_gainprm.is_null(),
-            "Pointer actuator_gainprm is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().actuator_gainprm,
@@ -3226,10 +2094,6 @@ impl Model {
 
     /// bias parameters
     pub fn actuator_biasprm(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_biasprm.is_null(),
-            "Pointer actuator_biasprm is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().actuator_biasprm,
@@ -3240,91 +2104,51 @@ impl Model {
 
     /// step activation before force
     pub fn actuator_actearly(&self) -> &[u8] {
-        assert!(
-            !self.raw().actuator_actearly.is_null(),
-            "Pointer actuator_actearly is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_actearly, self.nu()) }
     }
 
     /// range of controls
     pub fn actuator_ctrlrange(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_ctrlrange.is_null(),
-            "Pointer actuator_ctrlrange is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_ctrlrange, self.nu() * 2) }
     }
 
     /// range of forces
     pub fn actuator_forcerange(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_forcerange.is_null(),
-            "Pointer actuator_forcerange is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_forcerange, self.nu() * 2) }
     }
 
     /// range of activations
     pub fn actuator_actrange(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_actrange.is_null(),
-            "Pointer actuator_actrange is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_actrange, self.nu() * 2) }
     }
 
     /// scale length and transmitted force
     pub fn actuator_gear(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_gear.is_null(),
-            "Pointer actuator_gear is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_gear, self.nu() * 6) }
     }
 
     /// crank length for slider-crank
     pub fn actuator_cranklength(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_cranklength.is_null(),
-            "Pointer actuator_cranklength is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_cranklength, self.nu()) }
     }
 
     /// acceleration from unit force in qpos0
     pub fn actuator_acc0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_acc0.is_null(),
-            "Pointer actuator_acc0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_acc0, self.nu()) }
     }
 
     /// actuator length in qpos0
     pub fn actuator_length0(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_length0.is_null(),
-            "Pointer actuator_length0 is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_length0, self.nu()) }
     }
 
     /// feasible actuator length range
     pub fn actuator_lengthrange(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_lengthrange.is_null(),
-            "Pointer actuator_lengthrange is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_lengthrange, self.nu() * 2) }
     }
 
     /// user data
     pub fn actuator_user(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().actuator_user.is_null(),
-            "Pointer actuator_user is null"
-        );
         unsafe {
             std::slice::from_raw_parts(self.raw().actuator_user, self.nu() * self.nuser_actuator())
         }
@@ -3332,82 +2156,46 @@ impl Model {
 
     /// plugin instance id; -1: not a plugin
     pub fn actuator_plugin(&self) -> &[i32] {
-        assert!(
-            !self.raw().actuator_plugin.is_null(),
-            "Pointer actuator_plugin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_plugin, self.nu()) }
     }
 
     /// sensor type (mjtSensor)
     pub fn sensor_type(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_type.is_null(),
-            "Pointer sensor_type is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_type, self.nsensor()) }
     }
 
     /// numeric data type (mjtDataType)
     pub fn sensor_datatype(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_datatype.is_null(),
-            "Pointer sensor_datatype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_datatype, self.nsensor()) }
     }
 
     /// required compute stage (mjtStage)
     pub fn sensor_needstage(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_needstage.is_null(),
-            "Pointer sensor_needstage is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_needstage, self.nsensor()) }
     }
 
     /// type of sensorized object (mjtObj)
     pub fn sensor_objtype(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_objtype.is_null(),
-            "Pointer sensor_objtype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_objtype, self.nsensor()) }
     }
 
     /// id of sensorized object
     pub fn sensor_objid(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_objid.is_null(),
-            "Pointer sensor_objid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_objid, self.nsensor()) }
     }
 
     /// type of reference frame (mjtObj)
     pub fn sensor_reftype(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_reftype.is_null(),
-            "Pointer sensor_reftype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_reftype, self.nsensor()) }
     }
 
     /// id of reference frame; -1: global frame
     pub fn sensor_refid(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_refid.is_null(),
-            "Pointer sensor_refid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_refid, self.nsensor()) }
     }
 
     /// sensor parameters
     pub fn sensor_intprm(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_intprm.is_null(),
-            "Pointer sensor_intprm is null"
-        );
         unsafe {
             std::slice::from_raw_parts(
                 self.raw().sensor_intprm,
@@ -3418,46 +2206,26 @@ impl Model {
 
     /// number of scalar outputs
     pub fn sensor_dim(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_dim.is_null(),
-            "Pointer sensor_dim is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_dim, self.nsensor()) }
     }
 
     /// address in sensor array
     pub fn sensor_adr(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_adr.is_null(),
-            "Pointer sensor_adr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_adr, self.nsensor()) }
     }
 
     /// cutoff for real and positive; 0: ignore
     pub fn sensor_cutoff(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().sensor_cutoff.is_null(),
-            "Pointer sensor_cutoff is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_cutoff, self.nsensor()) }
     }
 
     /// noise standard deviation
     pub fn sensor_noise(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().sensor_noise.is_null(),
-            "Pointer sensor_noise is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_noise, self.nsensor()) }
     }
 
     /// user data
     pub fn sensor_user(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().sensor_user.is_null(),
-            "Pointer sensor_user is null"
-        );
         unsafe {
             std::slice::from_raw_parts(self.raw().sensor_user, self.nsensor() * self.nuser_sensor())
         }
@@ -3465,406 +2233,251 @@ impl Model {
 
     /// plugin instance id; -1: not a plugin
     pub fn sensor_plugin(&self) -> &[i32] {
-        assert!(
-            !self.raw().sensor_plugin.is_null(),
-            "Pointer sensor_plugin is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().sensor_plugin, self.nsensor()) }
     }
 
     /// globally registered plugin slot number
     pub fn plugin(&self) -> &[i32] {
-        assert!(!self.raw().plugin.is_null(), "Pointer plugin is null");
         unsafe { std::slice::from_raw_parts(self.raw().plugin, self.nplugin()) }
     }
 
     /// address in the plugin state array
     pub fn plugin_stateadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().plugin_stateadr.is_null(),
-            "Pointer plugin_stateadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().plugin_stateadr, self.nplugin()) }
     }
 
     /// number of states in the plugin instance
     pub fn plugin_statenum(&self) -> &[i32] {
-        assert!(
-            !self.raw().plugin_statenum.is_null(),
-            "Pointer plugin_statenum is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().plugin_statenum, self.nplugin()) }
     }
 
     /// config attributes of plugin instances
     pub fn plugin_attr(&self) -> &[i8] {
-        assert!(
-            !self.raw().plugin_attr.is_null(),
-            "Pointer plugin_attr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().plugin_attr, self.npluginattr()) }
     }
 
     /// address to each instance's config attrib
     pub fn plugin_attradr(&self) -> &[i32] {
-        assert!(
-            !self.raw().plugin_attradr.is_null(),
-            "Pointer plugin_attradr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().plugin_attradr, self.nplugin()) }
     }
 
     /// address of field in numeric_data
     pub fn numeric_adr(&self) -> &[i32] {
-        assert!(
-            !self.raw().numeric_adr.is_null(),
-            "Pointer numeric_adr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().numeric_adr, self.nnumeric()) }
     }
 
     /// size of numeric field
     pub fn numeric_size(&self) -> &[i32] {
-        assert!(
-            !self.raw().numeric_size.is_null(),
-            "Pointer numeric_size is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().numeric_size, self.nnumeric()) }
     }
 
     /// array of all numeric fields
     pub fn numeric_data(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().numeric_data.is_null(),
-            "Pointer numeric_data is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().numeric_data, self.nnumericdata()) }
     }
 
     /// address of text in text_data
     pub fn text_adr(&self) -> &[i32] {
-        assert!(!self.raw().text_adr.is_null(), "Pointer text_adr is null");
         unsafe { std::slice::from_raw_parts(self.raw().text_adr, self.ntext()) }
     }
 
     /// size of text field (strlen+1)
     pub fn text_size(&self) -> &[i32] {
-        assert!(!self.raw().text_size.is_null(), "Pointer text_size is null");
         unsafe { std::slice::from_raw_parts(self.raw().text_size, self.ntext()) }
     }
 
     /// array of all text fields (0-terminated)
     pub fn text_data(&self) -> &[i8] {
-        assert!(!self.raw().text_data.is_null(), "Pointer text_data is null");
         unsafe { std::slice::from_raw_parts(self.raw().text_data, self.ntextdata()) }
     }
 
     /// address of text in text_data
     pub fn tuple_adr(&self) -> &[i32] {
-        assert!(!self.raw().tuple_adr.is_null(), "Pointer tuple_adr is null");
         unsafe { std::slice::from_raw_parts(self.raw().tuple_adr, self.ntuple()) }
     }
 
     /// number of objects in tuple
     pub fn tuple_size(&self) -> &[i32] {
-        assert!(
-            !self.raw().tuple_size.is_null(),
-            "Pointer tuple_size is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tuple_size, self.ntuple()) }
     }
 
     /// array of object types in all tuples
     pub fn tuple_objtype(&self) -> &[i32] {
-        assert!(
-            !self.raw().tuple_objtype.is_null(),
-            "Pointer tuple_objtype is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tuple_objtype, self.ntupledata()) }
     }
 
     /// array of object ids in all tuples
     pub fn tuple_objid(&self) -> &[i32] {
-        assert!(
-            !self.raw().tuple_objid.is_null(),
-            "Pointer tuple_objid is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tuple_objid, self.ntupledata()) }
     }
 
     /// array of object params in all tuples
     pub fn tuple_objprm(&self) -> &[mjtNum] {
-        assert!(
-            !self.raw().tuple_objprm.is_null(),
-            "Pointer tuple_objprm is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().tuple_objprm, self.ntupledata()) }
     }
 
     /// key time
     pub fn key_time(&self) -> &[mjtNum] {
-        assert!(!self.raw().key_time.is_null(), "Pointer key_time is null");
         unsafe { std::slice::from_raw_parts(self.raw().key_time, self.nkey()) }
     }
 
     /// key position
     pub fn key_qpos(&self) -> &[mjtNum] {
-        assert!(!self.raw().key_qpos.is_null(), "Pointer key_qpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().key_qpos, self.nkey() * self.nq()) }
     }
 
     /// key velocity
     pub fn key_qvel(&self) -> &[mjtNum] {
-        assert!(!self.raw().key_qvel.is_null(), "Pointer key_qvel is null");
         unsafe { std::slice::from_raw_parts(self.raw().key_qvel, self.nkey() * self.nv()) }
     }
 
     /// key activation
     pub fn key_act(&self) -> &[mjtNum] {
-        assert!(!self.raw().key_act.is_null(), "Pointer key_act is null");
         unsafe { std::slice::from_raw_parts(self.raw().key_act, self.nkey() * self.na()) }
     }
 
     /// key mocap position
     pub fn key_mpos(&self) -> &[mjtNum] {
-        assert!(!self.raw().key_mpos.is_null(), "Pointer key_mpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().key_mpos, self.nkey() * self.nmocap() * 3) }
     }
 
     /// key mocap quaternion
     pub fn key_mquat(&self) -> &[mjtNum] {
-        assert!(!self.raw().key_mquat.is_null(), "Pointer key_mquat is null");
         unsafe { std::slice::from_raw_parts(self.raw().key_mquat, self.nkey() * self.nmocap() * 4) }
     }
 
     /// key control
     pub fn key_ctrl(&self) -> &[mjtNum] {
-        assert!(!self.raw().key_ctrl.is_null(), "Pointer key_ctrl is null");
         unsafe { std::slice::from_raw_parts(self.raw().key_ctrl, self.nkey() * self.nu()) }
     }
 
     /// body name pointers
     pub fn name_bodyadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_bodyadr.is_null(),
-            "Pointer name_bodyadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_bodyadr, self.nbody()) }
     }
 
     /// joint name pointers
     pub fn name_jntadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_jntadr.is_null(),
-            "Pointer name_jntadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_jntadr, self.njnt()) }
     }
 
     /// geom name pointers
     pub fn name_geomadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_geomadr.is_null(),
-            "Pointer name_geomadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_geomadr, self.ngeom()) }
     }
 
     /// site name pointers
     pub fn name_siteadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_siteadr.is_null(),
-            "Pointer name_siteadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_siteadr, self.nsite()) }
     }
 
     /// camera name pointers
     pub fn name_camadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_camadr.is_null(),
-            "Pointer name_camadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_camadr, self.ncam()) }
     }
 
     /// light name pointers
     pub fn name_lightadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_lightadr.is_null(),
-            "Pointer name_lightadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_lightadr, self.nlight()) }
     }
 
     /// flex name pointers
     pub fn name_flexadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_flexadr.is_null(),
-            "Pointer name_flexadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_flexadr, self.nflex()) }
     }
 
     /// mesh name pointers
     pub fn name_meshadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_meshadr.is_null(),
-            "Pointer name_meshadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_meshadr, self.nmesh()) }
     }
 
     /// skin name pointers
     pub fn name_skinadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_skinadr.is_null(),
-            "Pointer name_skinadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_skinadr, self.nskin()) }
     }
 
     /// hfield name pointers
     pub fn name_hfieldadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_hfieldadr.is_null(),
-            "Pointer name_hfieldadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_hfieldadr, self.nhfield()) }
     }
 
     /// texture name pointers
     pub fn name_texadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_texadr.is_null(),
-            "Pointer name_texadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_texadr, self.ntex()) }
     }
 
     /// material name pointers
     pub fn name_matadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_matadr.is_null(),
-            "Pointer name_matadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_matadr, self.nmat()) }
     }
 
     /// geom pair name pointers
     pub fn name_pairadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_pairadr.is_null(),
-            "Pointer name_pairadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_pairadr, self.npair()) }
     }
 
     /// exclude name pointers
     pub fn name_excludeadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_excludeadr.is_null(),
-            "Pointer name_excludeadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_excludeadr, self.nexclude()) }
     }
 
     /// equality constraint name pointers
     pub fn name_eqadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_eqadr.is_null(),
-            "Pointer name_eqadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_eqadr, self.neq()) }
     }
 
     /// tendon name pointers
     pub fn name_tendonadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_tendonadr.is_null(),
-            "Pointer name_tendonadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_tendonadr, self.ntendon()) }
     }
 
     /// actuator name pointers
     pub fn name_actuatoradr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_actuatoradr.is_null(),
-            "Pointer name_actuatoradr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_actuatoradr, self.nu()) }
     }
 
     /// sensor name pointers
     pub fn name_sensoradr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_sensoradr.is_null(),
-            "Pointer name_sensoradr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_sensoradr, self.nsensor()) }
     }
 
     /// numeric name pointers
     pub fn name_numericadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_numericadr.is_null(),
-            "Pointer name_numericadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_numericadr, self.nnumeric()) }
     }
 
     /// text name pointers
     pub fn name_textadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_textadr.is_null(),
-            "Pointer name_textadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_textadr, self.ntext()) }
     }
 
     /// tuple name pointers
     pub fn name_tupleadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_tupleadr.is_null(),
-            "Pointer name_tupleadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_tupleadr, self.ntuple()) }
     }
 
     /// keyframe name pointers
     pub fn name_keyadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_keyadr.is_null(),
-            "Pointer name_keyadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_keyadr, self.nkey()) }
     }
 
     /// plugin instance name pointers
     pub fn name_pluginadr(&self) -> &[i32] {
-        assert!(
-            !self.raw().name_pluginadr.is_null(),
-            "Pointer name_pluginadr is null"
-        );
         unsafe { std::slice::from_raw_parts(self.raw().name_pluginadr, self.nplugin()) }
     }
 
     /// names of all objects, 0-terminated
     pub fn names(&self) -> &[i8] {
-        assert!(!self.raw().names.is_null(), "Pointer names is null");
         unsafe { std::slice::from_raw_parts(self.raw().names, self.nnames()) }
     }
 
     /// internal hash map of names
     pub fn names_map(&self) -> &[i32] {
-        assert!(!self.raw().names_map.is_null(), "Pointer names_map is null");
         unsafe { std::slice::from_raw_parts(self.raw().names_map, self.nnames_map()) }
     }
 
     /// paths to assets, 0-terminated
     pub fn paths(&self) -> &[i8] {
-        assert!(!self.raw().paths.is_null(), "Pointer paths is null");
         unsafe { std::slice::from_raw_parts(self.raw().paths, self.npaths()) }
     }
     pub fn signature(&self) -> u64 {

@@ -126,7 +126,6 @@ for field in model_struct.fields:
                 f"""
 /// {field.doc}
 pub fn {field.name}(&self) -> &[{rust_type}] {{
-    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
     unsafe {{
         std::slice::from_raw_parts(self.raw().{field.name}, {array_extent})
     }}
@@ -197,7 +196,6 @@ for field in data_struct.fields:
                 f"""
 /// {field.doc}
 pub fn {field.name}(&self) -> &[{rust_type}] {{
-    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
     unsafe {{
         std::slice::from_raw_parts(self.raw().{field.name}, {array_extent})
     }}
@@ -207,7 +205,6 @@ pub fn {field.name}(&self) -> &[{rust_type}] {{
                 f"""
 /// {field.doc}
 pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
-    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
     unsafe {{
         std::slice::from_raw_parts_mut(self.raw_mut().{field.name}, {array_extent})
         }}
