@@ -123,7 +123,9 @@ for field in model_struct.fields:
                     )
             array_extent = " * ".join(array_extents)
             model_accessors.append(
-                f"""pub fn {field.name}(&self) -> &[{rust_type}] {{
+                f"""
+/// {field.doc}
+pub fn {field.name}(&self) -> &[{rust_type}] {{
     assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
     unsafe {{
         std::slice::from_raw_parts(self.raw().{field.name}, {array_extent})
@@ -131,7 +133,9 @@ for field in model_struct.fields:
 }}"""
             )
             model_accessors.append(
-                f"""pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
+                f"""
+/// {field.doc}
+pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
     assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
     unsafe {{
         std::slice::from_raw_parts_mut(self.raw_mut().{field.name}, self.{field.array_extent[0]}())
@@ -200,7 +204,9 @@ for field in data_struct.fields:
             # TODO: Should we use .as_chunks_unchecked::<3>() for 2D arrays with extent 3?
             # The return type would be &[[T; 3]]
             data_accessors.append(
-                f"""pub fn {field.name}(&self) -> &[{rust_type}] {{
+                f"""
+/// {field.doc}
+pub fn {field.name}(&self) -> &[{rust_type}] {{
     assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
     unsafe {{
         std::slice::from_raw_parts(self.raw().{field.name}, {array_extent})
@@ -208,7 +214,9 @@ for field in data_struct.fields:
 }}"""
             )
             data_accessors.append(
-                f"""pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
+                f"""
+/// {field.doc}
+pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
     assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
     unsafe {{
         std::slice::from_raw_parts_mut(self.raw_mut().{field.name}, {array_extent})
@@ -265,7 +273,9 @@ for function_name, function in functions.FUNCTIONS.items():
 
     function_name = camel_to_snake(function.name)
     data_functions.append(
-        f"""pub fn {function_name}(data: &mut Data) {{
+        f"""
+/// {function.doc}
+pub fn {function_name}(data: &mut Data) {{
         unsafe {{
             mujoco_sys::{function.name}(data.model.as_ptr(), data.as_mut_ptr());
         }}

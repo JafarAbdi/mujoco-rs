@@ -1,6 +1,8 @@
 #!/bin/bash
 
-bindgen binding.h -o src/lib.rs \
+SCRIPT_DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+
+bindgen $SCRIPT_DIR/binding.h -o $SCRIPT_DIR/src/lib.rs \
   --no-layout-tests \
   --no-doc-comments \
   --raw-line "#![allow(non_camel_case_types)]" \
@@ -11,7 +13,7 @@ bindgen binding.h -o src/lib.rs \
   --allowlist-function="(mj).*" \
   --allowlist-type="(mj).*" \
   --allowlist-var="mj.*" \
-  -- -Imujoco/include
+  -- -I$SCRIPT_DIR/mujoco/include
 
 # Remove prefixes from enums
 prefixes=(
@@ -77,8 +79,8 @@ prefixes=(
 )
 
 for prefix in "${prefixes[@]}"; do
-    sed -i "s/${prefix}\([A-Z][A-Z_]*\)/\1/g" src/lib.rs
+    sed -i "s/${prefix}\([A-Z][A-Z_]*\)/\1/g" $SCRIPT_DIR/src/lib.rs
 done
 
-uv run generate_from_introspect.py ./mujoco
-cargo fmt -- ../mujoco/src/{data_struct,model_struct,data_functions}.rs
+uv run $SCRIPT_DIR/generate_from_introspect.py $SCRIPT_DIR/mujoco
+cargo fmt -- $SCRIPT_DIR/../mujoco/src/{data_struct,model_struct,data_functions}.rs
