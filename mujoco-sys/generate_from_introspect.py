@@ -132,16 +132,6 @@ pub fn {field.name}(&self) -> &[{rust_type}] {{
     }}
 }}"""
             )
-            model_accessors.append(
-                f"""
-/// {field.doc}
-pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
-    assert!(!self.raw().{field.name}.is_null(), "Pointer {field.name} is null");
-    unsafe {{
-        std::slice::from_raw_parts_mut(self.raw_mut().{field.name}, self.{field.array_extent[0]}())
-        }}
-}}"""
-            )
 
         case structs.ArrayType:
             accessor, includes = generate_array_accessor(field)
