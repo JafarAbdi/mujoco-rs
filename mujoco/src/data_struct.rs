@@ -90,30 +90,44 @@ impl<'a> Data<'a> {
     pub fn energy(&self) -> &[mjtNum; 2] {
         &self.raw().energy
     }
+
+    /// position
     pub fn qpos(&self) -> &[mjtNum] {
         assert!(!self.raw().qpos.is_null(), "Pointer qpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().qpos, self.model.nq()) }
     }
+
+    /// position
     pub fn qpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qpos.is_null(), "Pointer qpos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qpos, self.model.nq()) }
     }
+
+    /// velocity
     pub fn qvel(&self) -> &[mjtNum] {
         assert!(!self.raw().qvel.is_null(), "Pointer qvel is null");
         unsafe { std::slice::from_raw_parts(self.raw().qvel, self.model.nv()) }
     }
+
+    /// velocity
     pub fn qvel_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qvel.is_null(), "Pointer qvel is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qvel, self.model.nv()) }
     }
+
+    /// actuator activation
     pub fn act(&self) -> &[mjtNum] {
         assert!(!self.raw().act.is_null(), "Pointer act is null");
         unsafe { std::slice::from_raw_parts(self.raw().act, self.model.na()) }
     }
+
+    /// actuator activation
     pub fn act_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().act.is_null(), "Pointer act is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().act, self.model.na()) }
     }
+
+    /// acceleration used for warmstart
     pub fn qacc_warmstart(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qacc_warmstart.is_null(),
@@ -121,6 +135,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qacc_warmstart, self.model.nv()) }
     }
+
+    /// acceleration used for warmstart
     pub fn qacc_warmstart_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qacc_warmstart.is_null(),
@@ -128,6 +144,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qacc_warmstart, self.model.nv()) }
     }
+
+    /// plugin state
     pub fn plugin_state(&self) -> &[mjtNum] {
         assert!(
             !self.raw().plugin_state.is_null(),
@@ -135,6 +153,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().plugin_state, self.model.npluginstate()) }
     }
+
+    /// plugin state
     pub fn plugin_state_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().plugin_state.is_null(),
@@ -144,14 +164,20 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().plugin_state, self.model.npluginstate())
         }
     }
+
+    /// control
     pub fn ctrl(&self) -> &[mjtNum] {
         assert!(!self.raw().ctrl.is_null(), "Pointer ctrl is null");
         unsafe { std::slice::from_raw_parts(self.raw().ctrl, self.model.nu()) }
     }
+
+    /// control
     pub fn ctrl_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().ctrl.is_null(), "Pointer ctrl is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ctrl, self.model.nu()) }
     }
+
+    /// applied generalized force
     pub fn qfrc_applied(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_applied.is_null(),
@@ -159,6 +185,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_applied, self.model.nv()) }
     }
+
+    /// applied generalized force
     pub fn qfrc_applied_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_applied.is_null(),
@@ -166,6 +194,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_applied, self.model.nv()) }
     }
+
+    /// applied Cartesian force/torque
     pub fn xfrc_applied(&self) -> &[mjtNum] {
         assert!(
             !self.raw().xfrc_applied.is_null(),
@@ -173,6 +203,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().xfrc_applied, self.model.nbody() * 6) }
     }
+
+    /// applied Cartesian force/torque
     pub fn xfrc_applied_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().xfrc_applied.is_null(),
@@ -182,22 +214,32 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().xfrc_applied, self.model.nbody() * 6)
         }
     }
+
+    /// enable/disable constraints
     pub fn eq_active(&self) -> &[u8] {
         assert!(!self.raw().eq_active.is_null(), "Pointer eq_active is null");
         unsafe { std::slice::from_raw_parts(self.raw().eq_active, self.model.neq()) }
     }
+
+    /// enable/disable constraints
     pub fn eq_active_mut(&mut self) -> &mut [u8] {
         assert!(!self.raw().eq_active.is_null(), "Pointer eq_active is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().eq_active, self.model.neq()) }
     }
+
+    /// positions of mocap bodies
     pub fn mocap_pos(&self) -> &[mjtNum] {
         assert!(!self.raw().mocap_pos.is_null(), "Pointer mocap_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().mocap_pos, self.model.nmocap() * 3) }
     }
+
+    /// positions of mocap bodies
     pub fn mocap_pos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().mocap_pos.is_null(), "Pointer mocap_pos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().mocap_pos, self.model.nmocap() * 3) }
     }
+
+    /// orientations of mocap bodies
     pub fn mocap_quat(&self) -> &[mjtNum] {
         assert!(
             !self.raw().mocap_quat.is_null(),
@@ -205,6 +247,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().mocap_quat, self.model.nmocap() * 4) }
     }
+
+    /// orientations of mocap bodies
     pub fn mocap_quat_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().mocap_quat.is_null(),
@@ -214,30 +258,44 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().mocap_quat, self.model.nmocap() * 4)
         }
     }
+
+    /// acceleration
     pub fn qacc(&self) -> &[mjtNum] {
         assert!(!self.raw().qacc.is_null(), "Pointer qacc is null");
         unsafe { std::slice::from_raw_parts(self.raw().qacc, self.model.nv()) }
     }
+
+    /// acceleration
     pub fn qacc_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qacc.is_null(), "Pointer qacc is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qacc, self.model.nv()) }
     }
+
+    /// time-derivative of actuator activation
     pub fn act_dot(&self) -> &[mjtNum] {
         assert!(!self.raw().act_dot.is_null(), "Pointer act_dot is null");
         unsafe { std::slice::from_raw_parts(self.raw().act_dot, self.model.na()) }
     }
+
+    /// time-derivative of actuator activation
     pub fn act_dot_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().act_dot.is_null(), "Pointer act_dot is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().act_dot, self.model.na()) }
     }
+
+    /// user data, not touched by engine
     pub fn userdata(&self) -> &[mjtNum] {
         assert!(!self.raw().userdata.is_null(), "Pointer userdata is null");
         unsafe { std::slice::from_raw_parts(self.raw().userdata, self.model.nuserdata()) }
     }
+
+    /// user data, not touched by engine
     pub fn userdata_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().userdata.is_null(), "Pointer userdata is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().userdata, self.model.nuserdata()) }
     }
+
+    /// sensor data array
     pub fn sensordata(&self) -> &[mjtNum] {
         assert!(
             !self.raw().sensordata.is_null(),
@@ -245,6 +303,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().sensordata, self.model.nsensordata()) }
     }
+
+    /// sensor data array
     pub fn sensordata_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().sensordata.is_null(),
@@ -254,14 +314,20 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().sensordata, self.model.nsensordata())
         }
     }
+
+    /// copy of m->plugin, required for deletion
     pub fn plugin(&self) -> &[i32] {
         assert!(!self.raw().plugin.is_null(), "Pointer plugin is null");
         unsafe { std::slice::from_raw_parts(self.raw().plugin, self.model.nplugin()) }
     }
+
+    /// copy of m->plugin, required for deletion
     pub fn plugin_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().plugin.is_null(), "Pointer plugin is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().plugin, self.model.nplugin()) }
     }
+
+    /// pointer to plugin-managed data structure
     pub fn plugin_data(&self) -> &[usize] {
         assert!(
             !self.raw().plugin_data.is_null(),
@@ -269,6 +335,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().plugin_data, self.model.nplugin()) }
     }
+
+    /// pointer to plugin-managed data structure
     pub fn plugin_data_mut(&mut self) -> &mut [usize] {
         assert!(
             !self.raw().plugin_data.is_null(),
@@ -276,110 +344,164 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().plugin_data, self.model.nplugin()) }
     }
+
+    /// Cartesian position of body frame
     pub fn xpos(&self) -> &[mjtNum] {
         assert!(!self.raw().xpos.is_null(), "Pointer xpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().xpos, self.model.nbody() * 3) }
     }
+
+    /// Cartesian position of body frame
     pub fn xpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().xpos.is_null(), "Pointer xpos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().xpos, self.model.nbody() * 3) }
     }
+
+    /// Cartesian orientation of body frame
     pub fn xquat(&self) -> &[mjtNum] {
         assert!(!self.raw().xquat.is_null(), "Pointer xquat is null");
         unsafe { std::slice::from_raw_parts(self.raw().xquat, self.model.nbody() * 4) }
     }
+
+    /// Cartesian orientation of body frame
     pub fn xquat_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().xquat.is_null(), "Pointer xquat is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().xquat, self.model.nbody() * 4) }
     }
+
+    /// Cartesian orientation of body frame
     pub fn xmat(&self) -> &[mjtNum] {
         assert!(!self.raw().xmat.is_null(), "Pointer xmat is null");
         unsafe { std::slice::from_raw_parts(self.raw().xmat, self.model.nbody() * 9) }
     }
+
+    /// Cartesian orientation of body frame
     pub fn xmat_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().xmat.is_null(), "Pointer xmat is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().xmat, self.model.nbody() * 9) }
     }
+
+    /// Cartesian position of body com
     pub fn xipos(&self) -> &[mjtNum] {
         assert!(!self.raw().xipos.is_null(), "Pointer xipos is null");
         unsafe { std::slice::from_raw_parts(self.raw().xipos, self.model.nbody() * 3) }
     }
+
+    /// Cartesian position of body com
     pub fn xipos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().xipos.is_null(), "Pointer xipos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().xipos, self.model.nbody() * 3) }
     }
+
+    /// Cartesian orientation of body inertia
     pub fn ximat(&self) -> &[mjtNum] {
         assert!(!self.raw().ximat.is_null(), "Pointer ximat is null");
         unsafe { std::slice::from_raw_parts(self.raw().ximat, self.model.nbody() * 9) }
     }
+
+    /// Cartesian orientation of body inertia
     pub fn ximat_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().ximat.is_null(), "Pointer ximat is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ximat, self.model.nbody() * 9) }
     }
+
+    /// Cartesian position of joint anchor
     pub fn xanchor(&self) -> &[mjtNum] {
         assert!(!self.raw().xanchor.is_null(), "Pointer xanchor is null");
         unsafe { std::slice::from_raw_parts(self.raw().xanchor, self.model.njnt() * 3) }
     }
+
+    /// Cartesian position of joint anchor
     pub fn xanchor_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().xanchor.is_null(), "Pointer xanchor is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().xanchor, self.model.njnt() * 3) }
     }
+
+    /// Cartesian joint axis
     pub fn xaxis(&self) -> &[mjtNum] {
         assert!(!self.raw().xaxis.is_null(), "Pointer xaxis is null");
         unsafe { std::slice::from_raw_parts(self.raw().xaxis, self.model.njnt() * 3) }
     }
+
+    /// Cartesian joint axis
     pub fn xaxis_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().xaxis.is_null(), "Pointer xaxis is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().xaxis, self.model.njnt() * 3) }
     }
+
+    /// Cartesian geom position
     pub fn geom_xpos(&self) -> &[mjtNum] {
         assert!(!self.raw().geom_xpos.is_null(), "Pointer geom_xpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_xpos, self.model.ngeom() * 3) }
     }
+
+    /// Cartesian geom position
     pub fn geom_xpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().geom_xpos.is_null(), "Pointer geom_xpos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().geom_xpos, self.model.ngeom() * 3) }
     }
+
+    /// Cartesian geom orientation
     pub fn geom_xmat(&self) -> &[mjtNum] {
         assert!(!self.raw().geom_xmat.is_null(), "Pointer geom_xmat is null");
         unsafe { std::slice::from_raw_parts(self.raw().geom_xmat, self.model.ngeom() * 9) }
     }
+
+    /// Cartesian geom orientation
     pub fn geom_xmat_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().geom_xmat.is_null(), "Pointer geom_xmat is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().geom_xmat, self.model.ngeom() * 9) }
     }
+
+    /// Cartesian site position
     pub fn site_xpos(&self) -> &[mjtNum] {
         assert!(!self.raw().site_xpos.is_null(), "Pointer site_xpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().site_xpos, self.model.nsite() * 3) }
     }
+
+    /// Cartesian site position
     pub fn site_xpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().site_xpos.is_null(), "Pointer site_xpos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().site_xpos, self.model.nsite() * 3) }
     }
+
+    /// Cartesian site orientation
     pub fn site_xmat(&self) -> &[mjtNum] {
         assert!(!self.raw().site_xmat.is_null(), "Pointer site_xmat is null");
         unsafe { std::slice::from_raw_parts(self.raw().site_xmat, self.model.nsite() * 9) }
     }
+
+    /// Cartesian site orientation
     pub fn site_xmat_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().site_xmat.is_null(), "Pointer site_xmat is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().site_xmat, self.model.nsite() * 9) }
     }
+
+    /// Cartesian camera position
     pub fn cam_xpos(&self) -> &[mjtNum] {
         assert!(!self.raw().cam_xpos.is_null(), "Pointer cam_xpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_xpos, self.model.ncam() * 3) }
     }
+
+    /// Cartesian camera position
     pub fn cam_xpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cam_xpos.is_null(), "Pointer cam_xpos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cam_xpos, self.model.ncam() * 3) }
     }
+
+    /// Cartesian camera orientation
     pub fn cam_xmat(&self) -> &[mjtNum] {
         assert!(!self.raw().cam_xmat.is_null(), "Pointer cam_xmat is null");
         unsafe { std::slice::from_raw_parts(self.raw().cam_xmat, self.model.ncam() * 9) }
     }
+
+    /// Cartesian camera orientation
     pub fn cam_xmat_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cam_xmat.is_null(), "Pointer cam_xmat is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cam_xmat, self.model.ncam() * 9) }
     }
+
+    /// Cartesian light position
     pub fn light_xpos(&self) -> &[mjtNum] {
         assert!(
             !self.raw().light_xpos.is_null(),
@@ -387,6 +509,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().light_xpos, self.model.nlight() * 3) }
     }
+
+    /// Cartesian light position
     pub fn light_xpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().light_xpos.is_null(),
@@ -396,6 +520,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().light_xpos, self.model.nlight() * 3)
         }
     }
+
+    /// Cartesian light direction
     pub fn light_xdir(&self) -> &[mjtNum] {
         assert!(
             !self.raw().light_xdir.is_null(),
@@ -403,6 +529,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().light_xdir, self.model.nlight() * 3) }
     }
+
+    /// Cartesian light direction
     pub fn light_xdir_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().light_xdir.is_null(),
@@ -412,6 +540,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().light_xdir, self.model.nlight() * 3)
         }
     }
+
+    /// center of mass of each subtree
     pub fn subtree_com(&self) -> &[mjtNum] {
         assert!(
             !self.raw().subtree_com.is_null(),
@@ -419,6 +549,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().subtree_com, self.model.nbody() * 3) }
     }
+
+    /// center of mass of each subtree
     pub fn subtree_com_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().subtree_com.is_null(),
@@ -428,22 +560,32 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().subtree_com, self.model.nbody() * 3)
         }
     }
+
+    /// com-based motion axis of each dof (rot:lin)
     pub fn cdof(&self) -> &[mjtNum] {
         assert!(!self.raw().cdof.is_null(), "Pointer cdof is null");
         unsafe { std::slice::from_raw_parts(self.raw().cdof, self.model.nv() * 6) }
     }
+
+    /// com-based motion axis of each dof (rot:lin)
     pub fn cdof_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cdof.is_null(), "Pointer cdof is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cdof, self.model.nv() * 6) }
     }
+
+    /// com-based body inertia and mass
     pub fn cinert(&self) -> &[mjtNum] {
         assert!(!self.raw().cinert.is_null(), "Pointer cinert is null");
         unsafe { std::slice::from_raw_parts(self.raw().cinert, self.model.nbody() * 10) }
     }
+
+    /// com-based body inertia and mass
     pub fn cinert_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cinert.is_null(), "Pointer cinert is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cinert, self.model.nbody() * 10) }
     }
+
+    /// Cartesian flex vertex positions
     pub fn flexvert_xpos(&self) -> &[mjtNum] {
         assert!(
             !self.raw().flexvert_xpos.is_null(),
@@ -451,6 +593,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().flexvert_xpos, self.model.nflexvert() * 3) }
     }
+
+    /// Cartesian flex vertex positions
     pub fn flexvert_xpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().flexvert_xpos.is_null(),
@@ -460,6 +604,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().flexvert_xpos, self.model.nflexvert() * 3)
         }
     }
+
+    /// flex element bounding boxes (center, size)
     pub fn flexelem_aabb(&self) -> &[mjtNum] {
         assert!(
             !self.raw().flexelem_aabb.is_null(),
@@ -467,6 +613,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().flexelem_aabb, self.model.nflexelem() * 6) }
     }
+
+    /// flex element bounding boxes (center, size)
     pub fn flexelem_aabb_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().flexelem_aabb.is_null(),
@@ -476,6 +624,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().flexelem_aabb, self.model.nflexelem() * 6)
         }
     }
+
+    /// number of non-zeros in Jacobian row
     pub fn flexedge_J_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().flexedge_J_rownnz.is_null(),
@@ -483,6 +633,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().flexedge_J_rownnz, self.model.nflexedge()) }
     }
+
+    /// number of non-zeros in Jacobian row
     pub fn flexedge_J_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().flexedge_J_rownnz.is_null(),
@@ -492,6 +644,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().flexedge_J_rownnz, self.model.nflexedge())
         }
     }
+
+    /// row start address in colind array
     pub fn flexedge_J_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().flexedge_J_rowadr.is_null(),
@@ -499,6 +653,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().flexedge_J_rowadr, self.model.nflexedge()) }
     }
+
+    /// row start address in colind array
     pub fn flexedge_J_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().flexedge_J_rowadr.is_null(),
@@ -508,6 +664,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().flexedge_J_rowadr, self.model.nflexedge())
         }
     }
+
+    /// column indices in sparse Jacobian
     pub fn flexedge_J_colind(&self) -> &[i32] {
         assert!(
             !self.raw().flexedge_J_colind.is_null(),
@@ -520,6 +678,8 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// column indices in sparse Jacobian
     pub fn flexedge_J_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().flexedge_J_colind.is_null(),
@@ -532,6 +692,8 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// flex edge Jacobian
     pub fn flexedge_J(&self) -> &[mjtNum] {
         assert!(
             !self.raw().flexedge_J.is_null(),
@@ -544,6 +706,8 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// flex edge Jacobian
     pub fn flexedge_J_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().flexedge_J.is_null(),
@@ -556,6 +720,8 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// flex edge lengths
     pub fn flexedge_length(&self) -> &[mjtNum] {
         assert!(
             !self.raw().flexedge_length.is_null(),
@@ -563,6 +729,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().flexedge_length, self.model.nflexedge()) }
     }
+
+    /// flex edge lengths
     pub fn flexedge_length_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().flexedge_length.is_null(),
@@ -572,6 +740,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().flexedge_length, self.model.nflexedge())
         }
     }
+
+    /// global bounding box (center, size)
     pub fn bvh_aabb_dyn(&self) -> &[mjtNum] {
         assert!(
             !self.raw().bvh_aabb_dyn.is_null(),
@@ -579,6 +749,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().bvh_aabb_dyn, self.model.nbvhdynamic() * 6) }
     }
+
+    /// global bounding box (center, size)
     pub fn bvh_aabb_dyn_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().bvh_aabb_dyn.is_null(),
@@ -591,6 +763,8 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// start address of tendon's path
     pub fn ten_wrapadr(&self) -> &[i32] {
         assert!(
             !self.raw().ten_wrapadr.is_null(),
@@ -598,6 +772,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ten_wrapadr, self.model.ntendon()) }
     }
+
+    /// start address of tendon's path
     pub fn ten_wrapadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().ten_wrapadr.is_null(),
@@ -605,6 +781,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ten_wrapadr, self.model.ntendon()) }
     }
+
+    /// number of wrap points in path
     pub fn ten_wrapnum(&self) -> &[i32] {
         assert!(
             !self.raw().ten_wrapnum.is_null(),
@@ -612,6 +790,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ten_wrapnum, self.model.ntendon()) }
     }
+
+    /// number of wrap points in path
     pub fn ten_wrapnum_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().ten_wrapnum.is_null(),
@@ -619,6 +799,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ten_wrapnum, self.model.ntendon()) }
     }
+
+    /// number of non-zeros in Jacobian row
     pub fn ten_J_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().ten_J_rownnz.is_null(),
@@ -626,6 +808,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ten_J_rownnz, self.model.ntendon()) }
     }
+
+    /// number of non-zeros in Jacobian row
     pub fn ten_J_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().ten_J_rownnz.is_null(),
@@ -633,6 +817,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ten_J_rownnz, self.model.ntendon()) }
     }
+
+    /// row start address in colind array
     pub fn ten_J_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().ten_J_rowadr.is_null(),
@@ -640,6 +826,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ten_J_rowadr, self.model.ntendon()) }
     }
+
+    /// row start address in colind array
     pub fn ten_J_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().ten_J_rowadr.is_null(),
@@ -647,6 +835,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ten_J_rowadr, self.model.ntendon()) }
     }
+
+    /// column indices in sparse Jacobian
     pub fn ten_J_colind(&self) -> &[i32] {
         assert!(
             !self.raw().ten_J_colind.is_null(),
@@ -659,6 +849,8 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// column indices in sparse Jacobian
     pub fn ten_J_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().ten_J_colind.is_null(),
@@ -671,12 +863,16 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// tendon Jacobian
     pub fn ten_J(&self) -> &[mjtNum] {
         assert!(!self.raw().ten_J.is_null(), "Pointer ten_J is null");
         unsafe {
             std::slice::from_raw_parts(self.raw().ten_J, self.model.ntendon() * self.model.nv())
         }
     }
+
+    /// tendon Jacobian
     pub fn ten_J_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().ten_J.is_null(), "Pointer ten_J is null");
         unsafe {
@@ -686,6 +882,8 @@ impl<'a> Data<'a> {
             )
         }
     }
+
+    /// tendon lengths
     pub fn ten_length(&self) -> &[mjtNum] {
         assert!(
             !self.raw().ten_length.is_null(),
@@ -693,6 +891,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ten_length, self.model.ntendon()) }
     }
+
+    /// tendon lengths
     pub fn ten_length_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().ten_length.is_null(),
@@ -700,22 +900,32 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ten_length, self.model.ntendon()) }
     }
+
+    /// geom id; -1: site; -2: pulley
     pub fn wrap_obj(&self) -> &[i32] {
         assert!(!self.raw().wrap_obj.is_null(), "Pointer wrap_obj is null");
         unsafe { std::slice::from_raw_parts(self.raw().wrap_obj, self.model.nwrap() * 2) }
     }
+
+    /// geom id; -1: site; -2: pulley
     pub fn wrap_obj_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().wrap_obj.is_null(), "Pointer wrap_obj is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().wrap_obj, self.model.nwrap() * 2) }
     }
+
+    /// Cartesian 3D points in all paths
     pub fn wrap_xpos(&self) -> &[mjtNum] {
         assert!(!self.raw().wrap_xpos.is_null(), "Pointer wrap_xpos is null");
         unsafe { std::slice::from_raw_parts(self.raw().wrap_xpos, self.model.nwrap() * 6) }
     }
+
+    /// Cartesian 3D points in all paths
     pub fn wrap_xpos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().wrap_xpos.is_null(), "Pointer wrap_xpos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().wrap_xpos, self.model.nwrap() * 6) }
     }
+
+    /// actuator lengths
     pub fn actuator_length(&self) -> &[mjtNum] {
         assert!(
             !self.raw().actuator_length.is_null(),
@@ -723,6 +933,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_length, self.model.nu()) }
     }
+
+    /// actuator lengths
     pub fn actuator_length_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().actuator_length.is_null(),
@@ -730,6 +942,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().actuator_length, self.model.nu()) }
     }
+
+    /// number of non-zeros in actuator_moment row
     pub fn moment_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().moment_rownnz.is_null(),
@@ -737,6 +951,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().moment_rownnz, self.model.nu()) }
     }
+
+    /// number of non-zeros in actuator_moment row
     pub fn moment_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().moment_rownnz.is_null(),
@@ -744,6 +960,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().moment_rownnz, self.model.nu()) }
     }
+
+    /// row start address in colind array
     pub fn moment_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().moment_rowadr.is_null(),
@@ -751,6 +969,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().moment_rowadr, self.model.nu()) }
     }
+
+    /// row start address in colind array
     pub fn moment_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().moment_rowadr.is_null(),
@@ -758,6 +978,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().moment_rowadr, self.model.nu()) }
     }
+
+    /// column indices in sparse Jacobian
     pub fn moment_colind(&self) -> &[i32] {
         assert!(
             !self.raw().moment_colind.is_null(),
@@ -765,6 +987,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().moment_colind, self.model.nJmom()) }
     }
+
+    /// column indices in sparse Jacobian
     pub fn moment_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().moment_colind.is_null(),
@@ -772,6 +996,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().moment_colind, self.model.nJmom()) }
     }
+
+    /// actuator moments
     pub fn actuator_moment(&self) -> &[mjtNum] {
         assert!(
             !self.raw().actuator_moment.is_null(),
@@ -779,6 +1005,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_moment, self.model.nJmom()) }
     }
+
+    /// actuator moments
     pub fn actuator_moment_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().actuator_moment.is_null(),
@@ -788,46 +1016,68 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().actuator_moment, self.model.nJmom())
         }
     }
+
+    /// com-based composite inertia and mass
     pub fn crb(&self) -> &[mjtNum] {
         assert!(!self.raw().crb.is_null(), "Pointer crb is null");
         unsafe { std::slice::from_raw_parts(self.raw().crb, self.model.nbody() * 10) }
     }
+
+    /// com-based composite inertia and mass
     pub fn crb_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().crb.is_null(), "Pointer crb is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().crb, self.model.nbody() * 10) }
     }
+
+    /// inertia (sparse)
     pub fn qM(&self) -> &[mjtNum] {
         assert!(!self.raw().qM.is_null(), "Pointer qM is null");
         unsafe { std::slice::from_raw_parts(self.raw().qM, self.model.nM()) }
     }
+
+    /// inertia (sparse)
     pub fn qM_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qM.is_null(), "Pointer qM is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qM, self.model.nM()) }
     }
+
+    /// reduced inertia (compressed sparse row)
     pub fn M(&self) -> &[mjtNum] {
         assert!(!self.raw().M.is_null(), "Pointer M is null");
         unsafe { std::slice::from_raw_parts(self.raw().M, self.model.nC()) }
     }
+
+    /// reduced inertia (compressed sparse row)
     pub fn M_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().M.is_null(), "Pointer M is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().M, self.model.nC()) }
     }
+
+    /// L'*D*L factorization of M (sparse)
     pub fn qLD(&self) -> &[mjtNum] {
         assert!(!self.raw().qLD.is_null(), "Pointer qLD is null");
         unsafe { std::slice::from_raw_parts(self.raw().qLD, self.model.nC()) }
     }
+
+    /// L'*D*L factorization of M (sparse)
     pub fn qLD_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qLD.is_null(), "Pointer qLD is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qLD, self.model.nC()) }
     }
+
+    /// 1/diag(D)
     pub fn qLDiagInv(&self) -> &[mjtNum] {
         assert!(!self.raw().qLDiagInv.is_null(), "Pointer qLDiagInv is null");
         unsafe { std::slice::from_raw_parts(self.raw().qLDiagInv, self.model.nv()) }
     }
+
+    /// 1/diag(D)
     pub fn qLDiagInv_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qLDiagInv.is_null(), "Pointer qLDiagInv is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qLDiagInv, self.model.nv()) }
     }
+
+    /// was bounding volume checked for collision
     pub fn bvh_active(&self) -> &[u8] {
         assert!(
             !self.raw().bvh_active.is_null(),
@@ -835,6 +1085,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().bvh_active, self.model.nbvh()) }
     }
+
+    /// was bounding volume checked for collision
     pub fn bvh_active_mut(&mut self) -> &mut [u8] {
         assert!(
             !self.raw().bvh_active.is_null(),
@@ -842,6 +1094,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().bvh_active, self.model.nbvh()) }
     }
+
+    /// flex edge velocities
     pub fn flexedge_velocity(&self) -> &[mjtNum] {
         assert!(
             !self.raw().flexedge_velocity.is_null(),
@@ -849,6 +1103,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().flexedge_velocity, self.model.nflexedge()) }
     }
+
+    /// flex edge velocities
     pub fn flexedge_velocity_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().flexedge_velocity.is_null(),
@@ -858,6 +1114,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().flexedge_velocity, self.model.nflexedge())
         }
     }
+
+    /// tendon velocities
     pub fn ten_velocity(&self) -> &[mjtNum] {
         assert!(
             !self.raw().ten_velocity.is_null(),
@@ -865,6 +1123,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ten_velocity, self.model.ntendon()) }
     }
+
+    /// tendon velocities
     pub fn ten_velocity_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().ten_velocity.is_null(),
@@ -872,6 +1132,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ten_velocity, self.model.ntendon()) }
     }
+
+    /// actuator velocities
     pub fn actuator_velocity(&self) -> &[mjtNum] {
         assert!(
             !self.raw().actuator_velocity.is_null(),
@@ -879,6 +1141,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_velocity, self.model.nu()) }
     }
+
+    /// actuator velocities
     pub fn actuator_velocity_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().actuator_velocity.is_null(),
@@ -886,30 +1150,44 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().actuator_velocity, self.model.nu()) }
     }
+
+    /// com-based velocity (rot:lin)
     pub fn cvel(&self) -> &[mjtNum] {
         assert!(!self.raw().cvel.is_null(), "Pointer cvel is null");
         unsafe { std::slice::from_raw_parts(self.raw().cvel, self.model.nbody() * 6) }
     }
+
+    /// com-based velocity (rot:lin)
     pub fn cvel_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cvel.is_null(), "Pointer cvel is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cvel, self.model.nbody() * 6) }
     }
+
+    /// time-derivative of cdof (rot:lin)
     pub fn cdof_dot(&self) -> &[mjtNum] {
         assert!(!self.raw().cdof_dot.is_null(), "Pointer cdof_dot is null");
         unsafe { std::slice::from_raw_parts(self.raw().cdof_dot, self.model.nv() * 6) }
     }
+
+    /// time-derivative of cdof (rot:lin)
     pub fn cdof_dot_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cdof_dot.is_null(), "Pointer cdof_dot is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cdof_dot, self.model.nv() * 6) }
     }
+
+    /// C(qpos,qvel)
     pub fn qfrc_bias(&self) -> &[mjtNum] {
         assert!(!self.raw().qfrc_bias.is_null(), "Pointer qfrc_bias is null");
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_bias, self.model.nv()) }
     }
+
+    /// C(qpos,qvel)
     pub fn qfrc_bias_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qfrc_bias.is_null(), "Pointer qfrc_bias is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_bias, self.model.nv()) }
     }
+
+    /// passive spring force
     pub fn qfrc_spring(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_spring.is_null(),
@@ -917,6 +1195,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_spring, self.model.nv()) }
     }
+
+    /// passive spring force
     pub fn qfrc_spring_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_spring.is_null(),
@@ -924,6 +1204,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_spring, self.model.nv()) }
     }
+
+    /// passive damper force
     pub fn qfrc_damper(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_damper.is_null(),
@@ -931,6 +1213,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_damper, self.model.nv()) }
     }
+
+    /// passive damper force
     pub fn qfrc_damper_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_damper.is_null(),
@@ -938,6 +1222,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_damper, self.model.nv()) }
     }
+
+    /// passive gravity compensation force
     pub fn qfrc_gravcomp(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_gravcomp.is_null(),
@@ -945,6 +1231,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_gravcomp, self.model.nv()) }
     }
+
+    /// passive gravity compensation force
     pub fn qfrc_gravcomp_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_gravcomp.is_null(),
@@ -952,6 +1240,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_gravcomp, self.model.nv()) }
     }
+
+    /// passive fluid force
     pub fn qfrc_fluid(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_fluid.is_null(),
@@ -959,6 +1249,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_fluid, self.model.nv()) }
     }
+
+    /// passive fluid force
     pub fn qfrc_fluid_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_fluid.is_null(),
@@ -966,6 +1258,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_fluid, self.model.nv()) }
     }
+
+    /// total passive force
     pub fn qfrc_passive(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_passive.is_null(),
@@ -973,6 +1267,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_passive, self.model.nv()) }
     }
+
+    /// total passive force
     pub fn qfrc_passive_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_passive.is_null(),
@@ -980,6 +1276,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_passive, self.model.nv()) }
     }
+
+    /// linear velocity of subtree com
     pub fn subtree_linvel(&self) -> &[mjtNum] {
         assert!(
             !self.raw().subtree_linvel.is_null(),
@@ -987,6 +1285,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().subtree_linvel, self.model.nbody() * 3) }
     }
+
+    /// linear velocity of subtree com
     pub fn subtree_linvel_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().subtree_linvel.is_null(),
@@ -996,6 +1296,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().subtree_linvel, self.model.nbody() * 3)
         }
     }
+
+    /// angular momentum about subtree com
     pub fn subtree_angmom(&self) -> &[mjtNum] {
         assert!(
             !self.raw().subtree_angmom.is_null(),
@@ -1003,6 +1305,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().subtree_angmom, self.model.nbody() * 3) }
     }
+
+    /// angular momentum about subtree com
     pub fn subtree_angmom_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().subtree_angmom.is_null(),
@@ -1012,142 +1316,212 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().subtree_angmom, self.model.nbody() * 3)
         }
     }
+
+    /// L'*D*L factorization of modified M
     pub fn qH(&self) -> &[mjtNum] {
         assert!(!self.raw().qH.is_null(), "Pointer qH is null");
         unsafe { std::slice::from_raw_parts(self.raw().qH, self.model.nC()) }
     }
+
+    /// L'*D*L factorization of modified M
     pub fn qH_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qH.is_null(), "Pointer qH is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qH, self.model.nC()) }
     }
+
+    /// 1/diag(D) of modified M
     pub fn qHDiagInv(&self) -> &[mjtNum] {
         assert!(!self.raw().qHDiagInv.is_null(), "Pointer qHDiagInv is null");
         unsafe { std::slice::from_raw_parts(self.raw().qHDiagInv, self.model.nv()) }
     }
+
+    /// 1/diag(D) of modified M
     pub fn qHDiagInv_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qHDiagInv.is_null(), "Pointer qHDiagInv is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qHDiagInv, self.model.nv()) }
     }
+
+    /// body-dof: non-zeros in each row
     pub fn B_rownnz(&self) -> &[i32] {
         assert!(!self.raw().B_rownnz.is_null(), "Pointer B_rownnz is null");
         unsafe { std::slice::from_raw_parts(self.raw().B_rownnz, self.model.nbody()) }
     }
+
+    /// body-dof: non-zeros in each row
     pub fn B_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().B_rownnz.is_null(), "Pointer B_rownnz is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().B_rownnz, self.model.nbody()) }
     }
+
+    /// body-dof: address of each row in B_colind
     pub fn B_rowadr(&self) -> &[i32] {
         assert!(!self.raw().B_rowadr.is_null(), "Pointer B_rowadr is null");
         unsafe { std::slice::from_raw_parts(self.raw().B_rowadr, self.model.nbody()) }
     }
+
+    /// body-dof: address of each row in B_colind
     pub fn B_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().B_rowadr.is_null(), "Pointer B_rowadr is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().B_rowadr, self.model.nbody()) }
     }
+
+    /// body-dof: column indices of non-zeros
     pub fn B_colind(&self) -> &[i32] {
         assert!(!self.raw().B_colind.is_null(), "Pointer B_colind is null");
         unsafe { std::slice::from_raw_parts(self.raw().B_colind, self.model.nB()) }
     }
+
+    /// body-dof: column indices of non-zeros
     pub fn B_colind_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().B_colind.is_null(), "Pointer B_colind is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().B_colind, self.model.nB()) }
     }
+
+    /// reduced inertia: non-zeros in each row
     pub fn M_rownnz(&self) -> &[i32] {
         assert!(!self.raw().M_rownnz.is_null(), "Pointer M_rownnz is null");
         unsafe { std::slice::from_raw_parts(self.raw().M_rownnz, self.model.nv()) }
     }
+
+    /// reduced inertia: non-zeros in each row
     pub fn M_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().M_rownnz.is_null(), "Pointer M_rownnz is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().M_rownnz, self.model.nv()) }
     }
+
+    /// reduced inertia: address of each row in M_colind
     pub fn M_rowadr(&self) -> &[i32] {
         assert!(!self.raw().M_rowadr.is_null(), "Pointer M_rowadr is null");
         unsafe { std::slice::from_raw_parts(self.raw().M_rowadr, self.model.nv()) }
     }
+
+    /// reduced inertia: address of each row in M_colind
     pub fn M_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().M_rowadr.is_null(), "Pointer M_rowadr is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().M_rowadr, self.model.nv()) }
     }
+
+    /// reduced inertia: column indices of non-zeros
     pub fn M_colind(&self) -> &[i32] {
         assert!(!self.raw().M_colind.is_null(), "Pointer M_colind is null");
         unsafe { std::slice::from_raw_parts(self.raw().M_colind, self.model.nC()) }
     }
+
+    /// reduced inertia: column indices of non-zeros
     pub fn M_colind_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().M_colind.is_null(), "Pointer M_colind is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().M_colind, self.model.nC()) }
     }
+
+    /// index mapping from qM to M
     pub fn mapM2M(&self) -> &[i32] {
         assert!(!self.raw().mapM2M.is_null(), "Pointer mapM2M is null");
         unsafe { std::slice::from_raw_parts(self.raw().mapM2M, self.model.nC()) }
     }
+
+    /// index mapping from qM to M
     pub fn mapM2M_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().mapM2M.is_null(), "Pointer mapM2M is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().mapM2M, self.model.nC()) }
     }
+
+    /// full inertia: non-zeros in each row
     pub fn D_rownnz(&self) -> &[i32] {
         assert!(!self.raw().D_rownnz.is_null(), "Pointer D_rownnz is null");
         unsafe { std::slice::from_raw_parts(self.raw().D_rownnz, self.model.nv()) }
     }
+
+    /// full inertia: non-zeros in each row
     pub fn D_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().D_rownnz.is_null(), "Pointer D_rownnz is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().D_rownnz, self.model.nv()) }
     }
+
+    /// full inertia: address of each row in D_colind
     pub fn D_rowadr(&self) -> &[i32] {
         assert!(!self.raw().D_rowadr.is_null(), "Pointer D_rowadr is null");
         unsafe { std::slice::from_raw_parts(self.raw().D_rowadr, self.model.nv()) }
     }
+
+    /// full inertia: address of each row in D_colind
     pub fn D_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().D_rowadr.is_null(), "Pointer D_rowadr is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().D_rowadr, self.model.nv()) }
     }
+
+    /// full inertia: index of diagonal element
     pub fn D_diag(&self) -> &[i32] {
         assert!(!self.raw().D_diag.is_null(), "Pointer D_diag is null");
         unsafe { std::slice::from_raw_parts(self.raw().D_diag, self.model.nv()) }
     }
+
+    /// full inertia: index of diagonal element
     pub fn D_diag_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().D_diag.is_null(), "Pointer D_diag is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().D_diag, self.model.nv()) }
     }
+
+    /// full inertia: column indices of non-zeros
     pub fn D_colind(&self) -> &[i32] {
         assert!(!self.raw().D_colind.is_null(), "Pointer D_colind is null");
         unsafe { std::slice::from_raw_parts(self.raw().D_colind, self.model.nD()) }
     }
+
+    /// full inertia: column indices of non-zeros
     pub fn D_colind_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().D_colind.is_null(), "Pointer D_colind is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().D_colind, self.model.nD()) }
     }
+
+    /// index mapping from qM to D
     pub fn mapM2D(&self) -> &[i32] {
         assert!(!self.raw().mapM2D.is_null(), "Pointer mapM2D is null");
         unsafe { std::slice::from_raw_parts(self.raw().mapM2D, self.model.nD()) }
     }
+
+    /// index mapping from qM to D
     pub fn mapM2D_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().mapM2D.is_null(), "Pointer mapM2D is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().mapM2D, self.model.nD()) }
     }
+
+    /// index mapping from D to qM
     pub fn mapD2M(&self) -> &[i32] {
         assert!(!self.raw().mapD2M.is_null(), "Pointer mapD2M is null");
         unsafe { std::slice::from_raw_parts(self.raw().mapD2M, self.model.nM()) }
     }
+
+    /// index mapping from D to qM
     pub fn mapD2M_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().mapD2M.is_null(), "Pointer mapD2M is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().mapD2M, self.model.nM()) }
     }
+
+    /// d (passive + actuator - bias) / d qvel
     pub fn qDeriv(&self) -> &[mjtNum] {
         assert!(!self.raw().qDeriv.is_null(), "Pointer qDeriv is null");
         unsafe { std::slice::from_raw_parts(self.raw().qDeriv, self.model.nD()) }
     }
+
+    /// d (passive + actuator - bias) / d qvel
     pub fn qDeriv_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qDeriv.is_null(), "Pointer qDeriv is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qDeriv, self.model.nD()) }
     }
+
+    /// sparse LU of (qM - dt*qDeriv)
     pub fn qLU(&self) -> &[mjtNum] {
         assert!(!self.raw().qLU.is_null(), "Pointer qLU is null");
         unsafe { std::slice::from_raw_parts(self.raw().qLU, self.model.nD()) }
     }
+
+    /// sparse LU of (qM - dt*qDeriv)
     pub fn qLU_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().qLU.is_null(), "Pointer qLU is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qLU, self.model.nD()) }
     }
+
+    /// actuator force in actuation space
     pub fn actuator_force(&self) -> &[mjtNum] {
         assert!(
             !self.raw().actuator_force.is_null(),
@@ -1155,6 +1529,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().actuator_force, self.model.nu()) }
     }
+
+    /// actuator force in actuation space
     pub fn actuator_force_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().actuator_force.is_null(),
@@ -1162,6 +1538,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().actuator_force, self.model.nu()) }
     }
+
+    /// actuator force
     pub fn qfrc_actuator(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_actuator.is_null(),
@@ -1169,6 +1547,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_actuator, self.model.nv()) }
     }
+
+    /// actuator force
     pub fn qfrc_actuator_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_actuator.is_null(),
@@ -1176,6 +1556,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_actuator, self.model.nv()) }
     }
+
+    /// net unconstrained force
     pub fn qfrc_smooth(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_smooth.is_null(),
@@ -1183,6 +1565,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_smooth, self.model.nv()) }
     }
+
+    /// net unconstrained force
     pub fn qfrc_smooth_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_smooth.is_null(),
@@ -1190,6 +1574,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_smooth, self.model.nv()) }
     }
+
+    /// unconstrained acceleration
     pub fn qacc_smooth(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qacc_smooth.is_null(),
@@ -1197,6 +1583,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qacc_smooth, self.model.nv()) }
     }
+
+    /// unconstrained acceleration
     pub fn qacc_smooth_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qacc_smooth.is_null(),
@@ -1204,6 +1592,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qacc_smooth, self.model.nv()) }
     }
+
+    /// constraint force
     pub fn qfrc_constraint(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_constraint.is_null(),
@@ -1211,6 +1601,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_constraint, self.model.nv()) }
     }
+
+    /// constraint force
     pub fn qfrc_constraint_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_constraint.is_null(),
@@ -1218,6 +1610,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_constraint, self.model.nv()) }
     }
+
+    /// net external force; should equal: qfrc_applied + J'*xfrc_applied + qfrc_actuator
     pub fn qfrc_inverse(&self) -> &[mjtNum] {
         assert!(
             !self.raw().qfrc_inverse.is_null(),
@@ -1225,6 +1619,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().qfrc_inverse, self.model.nv()) }
     }
+
+    /// net external force; should equal: qfrc_applied + J'*xfrc_applied + qfrc_actuator
     pub fn qfrc_inverse_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().qfrc_inverse.is_null(),
@@ -1232,54 +1628,80 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().qfrc_inverse, self.model.nv()) }
     }
+
+    /// com-based acceleration
     pub fn cacc(&self) -> &[mjtNum] {
         assert!(!self.raw().cacc.is_null(), "Pointer cacc is null");
         unsafe { std::slice::from_raw_parts(self.raw().cacc, self.model.nbody() * 6) }
     }
+
+    /// com-based acceleration
     pub fn cacc_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cacc.is_null(), "Pointer cacc is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cacc, self.model.nbody() * 6) }
     }
+
+    /// com-based interaction force with parent
     pub fn cfrc_int(&self) -> &[mjtNum] {
         assert!(!self.raw().cfrc_int.is_null(), "Pointer cfrc_int is null");
         unsafe { std::slice::from_raw_parts(self.raw().cfrc_int, self.model.nbody() * 6) }
     }
+
+    /// com-based interaction force with parent
     pub fn cfrc_int_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cfrc_int.is_null(), "Pointer cfrc_int is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cfrc_int, self.model.nbody() * 6) }
     }
+
+    /// com-based external force on body
     pub fn cfrc_ext(&self) -> &[mjtNum] {
         assert!(!self.raw().cfrc_ext.is_null(), "Pointer cfrc_ext is null");
         unsafe { std::slice::from_raw_parts(self.raw().cfrc_ext, self.model.nbody() * 6) }
     }
+
+    /// com-based external force on body
     pub fn cfrc_ext_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().cfrc_ext.is_null(), "Pointer cfrc_ext is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cfrc_ext, self.model.nbody() * 6) }
     }
+
+    /// array of all detected contacts
     pub fn contact(&self) -> &[mjContact] {
         assert!(!self.raw().contact.is_null(), "Pointer contact is null");
         unsafe { std::slice::from_raw_parts(self.raw().contact, self.ncon()) }
     }
+
+    /// array of all detected contacts
     pub fn contact_mut(&mut self) -> &mut [mjContact] {
         assert!(!self.raw().contact.is_null(), "Pointer contact is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().contact, self.ncon()) }
     }
+
+    /// constraint type (mjtConstraint)
     pub fn efc_type(&self) -> &[i32] {
         assert!(!self.raw().efc_type.is_null(), "Pointer efc_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_type, self.nefc()) }
     }
+
+    /// constraint type (mjtConstraint)
     pub fn efc_type_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().efc_type.is_null(), "Pointer efc_type is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_type, self.nefc()) }
     }
+
+    /// id of object of specified type
     pub fn efc_id(&self) -> &[i32] {
         assert!(!self.raw().efc_id.is_null(), "Pointer efc_id is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_id, self.nefc()) }
     }
+
+    /// id of object of specified type
     pub fn efc_id_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().efc_id.is_null(), "Pointer efc_id is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_id, self.nefc()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row
     pub fn efc_J_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().efc_J_rownnz.is_null(),
@@ -1287,6 +1709,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_J_rownnz, self.nefc()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row
     pub fn efc_J_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_J_rownnz.is_null(),
@@ -1294,6 +1718,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_J_rownnz, self.nefc()) }
     }
+
+    /// row start address in colind array
     pub fn efc_J_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().efc_J_rowadr.is_null(),
@@ -1301,6 +1727,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_J_rowadr, self.nefc()) }
     }
+
+    /// row start address in colind array
     pub fn efc_J_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_J_rowadr.is_null(),
@@ -1308,6 +1736,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_J_rowadr, self.nefc()) }
     }
+
+    /// number of subsequent rows in supernode
     pub fn efc_J_rowsuper(&self) -> &[i32] {
         assert!(
             !self.raw().efc_J_rowsuper.is_null(),
@@ -1315,6 +1745,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_J_rowsuper, self.nefc()) }
     }
+
+    /// number of subsequent rows in supernode
     pub fn efc_J_rowsuper_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_J_rowsuper.is_null(),
@@ -1322,6 +1754,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_J_rowsuper, self.nefc()) }
     }
+
+    /// column indices in constraint Jacobian
     pub fn efc_J_colind(&self) -> &[i32] {
         assert!(
             !self.raw().efc_J_colind.is_null(),
@@ -1329,6 +1763,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_J_colind, self.nJ()) }
     }
+
+    /// column indices in constraint Jacobian
     pub fn efc_J_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_J_colind.is_null(),
@@ -1336,6 +1772,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_J_colind, self.nJ()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row T
     pub fn efc_JT_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().efc_JT_rownnz.is_null(),
@@ -1343,6 +1781,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_JT_rownnz, self.model.nv()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row T
     pub fn efc_JT_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_JT_rownnz.is_null(),
@@ -1350,6 +1790,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_JT_rownnz, self.model.nv()) }
     }
+
+    /// row start address in colind array              T
     pub fn efc_JT_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().efc_JT_rowadr.is_null(),
@@ -1357,6 +1799,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_JT_rowadr, self.model.nv()) }
     }
+
+    /// row start address in colind array              T
     pub fn efc_JT_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_JT_rowadr.is_null(),
@@ -1364,6 +1808,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_JT_rowadr, self.model.nv()) }
     }
+
+    /// number of subsequent rows in supernode         T
     pub fn efc_JT_rowsuper(&self) -> &[i32] {
         assert!(
             !self.raw().efc_JT_rowsuper.is_null(),
@@ -1371,6 +1817,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_JT_rowsuper, self.model.nv()) }
     }
+
+    /// number of subsequent rows in supernode         T
     pub fn efc_JT_rowsuper_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_JT_rowsuper.is_null(),
@@ -1378,6 +1826,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_JT_rowsuper, self.model.nv()) }
     }
+
+    /// column indices in constraint Jacobian          T
     pub fn efc_JT_colind(&self) -> &[i32] {
         assert!(
             !self.raw().efc_JT_colind.is_null(),
@@ -1385,6 +1835,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_JT_colind, self.nJ()) }
     }
+
+    /// column indices in constraint Jacobian          T
     pub fn efc_JT_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_JT_colind.is_null(),
@@ -1392,30 +1844,44 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_JT_colind, self.nJ()) }
     }
+
+    /// constraint Jacobian
     pub fn efc_J(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_J.is_null(), "Pointer efc_J is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_J, self.nJ()) }
     }
+
+    /// constraint Jacobian
     pub fn efc_J_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_J.is_null(), "Pointer efc_J is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_J, self.nJ()) }
     }
+
+    /// constraint Jacobian transposed
     pub fn efc_JT(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_JT.is_null(), "Pointer efc_JT is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_JT, self.nJ()) }
     }
+
+    /// constraint Jacobian transposed
     pub fn efc_JT_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_JT.is_null(), "Pointer efc_JT is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_JT, self.nJ()) }
     }
+
+    /// constraint position (equality, contact)
     pub fn efc_pos(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_pos.is_null(), "Pointer efc_pos is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_pos, self.nefc()) }
     }
+
+    /// constraint position (equality, contact)
     pub fn efc_pos_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_pos.is_null(), "Pointer efc_pos is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_pos, self.nefc()) }
     }
+
+    /// inclusion margin (contact)
     pub fn efc_margin(&self) -> &[mjtNum] {
         assert!(
             !self.raw().efc_margin.is_null(),
@@ -1423,6 +1889,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_margin, self.nefc()) }
     }
+
+    /// inclusion margin (contact)
     pub fn efc_margin_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().efc_margin.is_null(),
@@ -1430,6 +1898,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_margin, self.nefc()) }
     }
+
+    /// frictionloss (friction)
     pub fn efc_frictionloss(&self) -> &[mjtNum] {
         assert!(
             !self.raw().efc_frictionloss.is_null(),
@@ -1437,6 +1907,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_frictionloss, self.nefc()) }
     }
+
+    /// frictionloss (friction)
     pub fn efc_frictionloss_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().efc_frictionloss.is_null(),
@@ -1444,6 +1916,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_frictionloss, self.nefc()) }
     }
+
+    /// approximation to diagonal of A
     pub fn efc_diagApprox(&self) -> &[mjtNum] {
         assert!(
             !self.raw().efc_diagApprox.is_null(),
@@ -1451,6 +1925,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_diagApprox, self.nefc()) }
     }
+
+    /// approximation to diagonal of A
     pub fn efc_diagApprox_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().efc_diagApprox.is_null(),
@@ -1458,30 +1934,44 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_diagApprox, self.nefc()) }
     }
+
+    /// stiffness, damping, impedance, imp'
     pub fn efc_KBIP(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_KBIP.is_null(), "Pointer efc_KBIP is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_KBIP, self.nefc() * 4) }
     }
+
+    /// stiffness, damping, impedance, imp'
     pub fn efc_KBIP_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_KBIP.is_null(), "Pointer efc_KBIP is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_KBIP, self.nefc() * 4) }
     }
+
+    /// constraint mass
     pub fn efc_D(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_D.is_null(), "Pointer efc_D is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_D, self.nefc()) }
     }
+
+    /// constraint mass
     pub fn efc_D_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_D.is_null(), "Pointer efc_D is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_D, self.nefc()) }
     }
+
+    /// inverse constraint mass
     pub fn efc_R(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_R.is_null(), "Pointer efc_R is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_R, self.nefc()) }
     }
+
+    /// inverse constraint mass
     pub fn efc_R_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_R.is_null(), "Pointer efc_R is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_R, self.nefc()) }
     }
+
+    /// first efc address involving tendon; -1: none
     pub fn tendon_efcadr(&self) -> &[i32] {
         assert!(
             !self.raw().tendon_efcadr.is_null(),
@@ -1489,6 +1979,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().tendon_efcadr, self.model.ntendon()) }
     }
+
+    /// first efc address involving tendon; -1: none
     pub fn tendon_efcadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().tendon_efcadr.is_null(),
@@ -1498,6 +1990,8 @@ impl<'a> Data<'a> {
             std::slice::from_raw_parts_mut(self.raw_mut().tendon_efcadr, self.model.ntendon())
         }
     }
+
+    /// island id of this dof; -1: none
     pub fn dof_island(&self) -> &[i32] {
         assert!(
             !self.raw().dof_island.is_null(),
@@ -1505,6 +1999,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().dof_island, self.model.nv()) }
     }
+
+    /// island id of this dof; -1: none
     pub fn dof_island_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().dof_island.is_null(),
@@ -1512,14 +2008,20 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().dof_island, self.model.nv()) }
     }
+
+    /// number of dofs in this island
     pub fn island_nv(&self) -> &[i32] {
         assert!(!self.raw().island_nv.is_null(), "Pointer island_nv is null");
         unsafe { std::slice::from_raw_parts(self.raw().island_nv, self.nisland()) }
     }
+
+    /// number of dofs in this island
     pub fn island_nv_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().island_nv.is_null(), "Pointer island_nv is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().island_nv, self.nisland()) }
     }
+
+    /// island start address in idof vector
     pub fn island_idofadr(&self) -> &[i32] {
         assert!(
             !self.raw().island_idofadr.is_null(),
@@ -1527,6 +2029,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().island_idofadr, self.nisland()) }
     }
+
+    /// island start address in idof vector
     pub fn island_idofadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().island_idofadr.is_null(),
@@ -1534,6 +2038,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().island_idofadr, self.nisland()) }
     }
+
+    /// island start address in dof vector
     pub fn island_dofadr(&self) -> &[i32] {
         assert!(
             !self.raw().island_dofadr.is_null(),
@@ -1541,6 +2047,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().island_dofadr, self.nisland()) }
     }
+
+    /// island start address in dof vector
     pub fn island_dofadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().island_dofadr.is_null(),
@@ -1548,6 +2056,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().island_dofadr, self.nisland()) }
     }
+
+    /// map from dof to idof
     pub fn map_dof2idof(&self) -> &[i32] {
         assert!(
             !self.raw().map_dof2idof.is_null(),
@@ -1555,6 +2065,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().map_dof2idof, self.model.nv()) }
     }
+
+    /// map from dof to idof
     pub fn map_dof2idof_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().map_dof2idof.is_null(),
@@ -1562,6 +2074,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().map_dof2idof, self.model.nv()) }
     }
+
+    /// map from idof to dof;  >= nidof: unconstrained
     pub fn map_idof2dof(&self) -> &[i32] {
         assert!(
             !self.raw().map_idof2dof.is_null(),
@@ -1569,6 +2083,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().map_idof2dof, self.model.nv()) }
     }
+
+    /// map from idof to dof;  >= nidof: unconstrained
     pub fn map_idof2dof_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().map_idof2dof.is_null(),
@@ -1576,6 +2092,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().map_idof2dof, self.model.nv()) }
     }
+
+    /// net unconstrained force
     pub fn ifrc_smooth(&self) -> &[mjtNum] {
         assert!(
             !self.raw().ifrc_smooth.is_null(),
@@ -1583,6 +2101,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ifrc_smooth, self.nidof()) }
     }
+
+    /// net unconstrained force
     pub fn ifrc_smooth_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().ifrc_smooth.is_null(),
@@ -1590,6 +2110,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().ifrc_smooth, self.nidof()) }
     }
+
+    /// unconstrained acceleration
     pub fn iacc_smooth(&self) -> &[mjtNum] {
         assert!(
             !self.raw().iacc_smooth.is_null(),
@@ -1597,6 +2119,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iacc_smooth, self.nidof()) }
     }
+
+    /// unconstrained acceleration
     pub fn iacc_smooth_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().iacc_smooth.is_null(),
@@ -1604,62 +2128,92 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iacc_smooth, self.nidof()) }
     }
+
+    /// inertia: non-zeros in each row
     pub fn iM_rownnz(&self) -> &[i32] {
         assert!(!self.raw().iM_rownnz.is_null(), "Pointer iM_rownnz is null");
         unsafe { std::slice::from_raw_parts(self.raw().iM_rownnz, self.nidof()) }
     }
+
+    /// inertia: non-zeros in each row
     pub fn iM_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().iM_rownnz.is_null(), "Pointer iM_rownnz is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iM_rownnz, self.nidof()) }
     }
+
+    /// inertia: address of each row in iM_colind
     pub fn iM_rowadr(&self) -> &[i32] {
         assert!(!self.raw().iM_rowadr.is_null(), "Pointer iM_rowadr is null");
         unsafe { std::slice::from_raw_parts(self.raw().iM_rowadr, self.nidof()) }
     }
+
+    /// inertia: address of each row in iM_colind
     pub fn iM_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().iM_rowadr.is_null(), "Pointer iM_rowadr is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iM_rowadr, self.nidof()) }
     }
+
+    /// inertia: column indices of non-zeros
     pub fn iM_colind(&self) -> &[i32] {
         assert!(!self.raw().iM_colind.is_null(), "Pointer iM_colind is null");
         unsafe { std::slice::from_raw_parts(self.raw().iM_colind, self.model.nC()) }
     }
+
+    /// inertia: column indices of non-zeros
     pub fn iM_colind_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().iM_colind.is_null(), "Pointer iM_colind is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iM_colind, self.model.nC()) }
     }
+
+    /// total inertia (sparse)
     pub fn iM(&self) -> &[mjtNum] {
         assert!(!self.raw().iM.is_null(), "Pointer iM is null");
         unsafe { std::slice::from_raw_parts(self.raw().iM, self.model.nC()) }
     }
+
+    /// total inertia (sparse)
     pub fn iM_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iM.is_null(), "Pointer iM is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iM, self.model.nC()) }
     }
+
+    /// L'*D*L factorization of M (sparse)
     pub fn iLD(&self) -> &[mjtNum] {
         assert!(!self.raw().iLD.is_null(), "Pointer iLD is null");
         unsafe { std::slice::from_raw_parts(self.raw().iLD, self.model.nC()) }
     }
+
+    /// L'*D*L factorization of M (sparse)
     pub fn iLD_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iLD.is_null(), "Pointer iLD is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iLD, self.model.nC()) }
     }
+
+    /// 1/diag(D)
     pub fn iLDiagInv(&self) -> &[mjtNum] {
         assert!(!self.raw().iLDiagInv.is_null(), "Pointer iLDiagInv is null");
         unsafe { std::slice::from_raw_parts(self.raw().iLDiagInv, self.nidof()) }
     }
+
+    /// 1/diag(D)
     pub fn iLDiagInv_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iLDiagInv.is_null(), "Pointer iLDiagInv is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iLDiagInv, self.nidof()) }
     }
+
+    /// acceleration
     pub fn iacc(&self) -> &[mjtNum] {
         assert!(!self.raw().iacc.is_null(), "Pointer iacc is null");
         unsafe { std::slice::from_raw_parts(self.raw().iacc, self.nidof()) }
     }
+
+    /// acceleration
     pub fn iacc_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iacc.is_null(), "Pointer iacc is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iacc, self.nidof()) }
     }
+
+    /// island id of this constraint
     pub fn efc_island(&self) -> &[i32] {
         assert!(
             !self.raw().efc_island.is_null(),
@@ -1667,6 +2221,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_island, self.nefc()) }
     }
+
+    /// island id of this constraint
     pub fn efc_island_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_island.is_null(),
@@ -1674,22 +2230,32 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_island, self.nefc()) }
     }
+
+    /// number of equality constraints in island
     pub fn island_ne(&self) -> &[i32] {
         assert!(!self.raw().island_ne.is_null(), "Pointer island_ne is null");
         unsafe { std::slice::from_raw_parts(self.raw().island_ne, self.nisland()) }
     }
+
+    /// number of equality constraints in island
     pub fn island_ne_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().island_ne.is_null(), "Pointer island_ne is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().island_ne, self.nisland()) }
     }
+
+    /// number of friction constraints in island
     pub fn island_nf(&self) -> &[i32] {
         assert!(!self.raw().island_nf.is_null(), "Pointer island_nf is null");
         unsafe { std::slice::from_raw_parts(self.raw().island_nf, self.nisland()) }
     }
+
+    /// number of friction constraints in island
     pub fn island_nf_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().island_nf.is_null(), "Pointer island_nf is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().island_nf, self.nisland()) }
     }
+
+    /// number of constraints in island
     pub fn island_nefc(&self) -> &[i32] {
         assert!(
             !self.raw().island_nefc.is_null(),
@@ -1697,6 +2263,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().island_nefc, self.nisland()) }
     }
+
+    /// number of constraints in island
     pub fn island_nefc_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().island_nefc.is_null(),
@@ -1704,6 +2272,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().island_nefc, self.nisland()) }
     }
+
+    /// start address in iefc vector
     pub fn island_iefcadr(&self) -> &[i32] {
         assert!(
             !self.raw().island_iefcadr.is_null(),
@@ -1711,6 +2281,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().island_iefcadr, self.nisland()) }
     }
+
+    /// start address in iefc vector
     pub fn island_iefcadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().island_iefcadr.is_null(),
@@ -1718,6 +2290,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().island_iefcadr, self.nisland()) }
     }
+
+    /// map from efc to iefc
     pub fn map_efc2iefc(&self) -> &[i32] {
         assert!(
             !self.raw().map_efc2iefc.is_null(),
@@ -1725,6 +2299,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().map_efc2iefc, self.nefc()) }
     }
+
+    /// map from efc to iefc
     pub fn map_efc2iefc_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().map_efc2iefc.is_null(),
@@ -1732,6 +2308,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().map_efc2iefc, self.nefc()) }
     }
+
+    /// map from iefc to efc
     pub fn map_iefc2efc(&self) -> &[i32] {
         assert!(
             !self.raw().map_iefc2efc.is_null(),
@@ -1739,6 +2317,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().map_iefc2efc, self.nefc()) }
     }
+
+    /// map from iefc to efc
     pub fn map_iefc2efc_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().map_iefc2efc.is_null(),
@@ -1746,22 +2326,32 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().map_iefc2efc, self.nefc()) }
     }
+
+    /// constraint type (mjtConstraint)
     pub fn iefc_type(&self) -> &[i32] {
         assert!(!self.raw().iefc_type.is_null(), "Pointer iefc_type is null");
         unsafe { std::slice::from_raw_parts(self.raw().iefc_type, self.nefc()) }
     }
+
+    /// constraint type (mjtConstraint)
     pub fn iefc_type_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().iefc_type.is_null(), "Pointer iefc_type is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_type, self.nefc()) }
     }
+
+    /// id of object of specified type
     pub fn iefc_id(&self) -> &[i32] {
         assert!(!self.raw().iefc_id.is_null(), "Pointer iefc_id is null");
         unsafe { std::slice::from_raw_parts(self.raw().iefc_id, self.nefc()) }
     }
+
+    /// id of object of specified type
     pub fn iefc_id_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().iefc_id.is_null(), "Pointer iefc_id is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_id, self.nefc()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row
     pub fn iefc_J_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_J_rownnz.is_null(),
@@ -1769,6 +2359,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_J_rownnz, self.nefc()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row
     pub fn iefc_J_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_J_rownnz.is_null(),
@@ -1776,6 +2368,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_J_rownnz, self.nefc()) }
     }
+
+    /// row start address in colind array
     pub fn iefc_J_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_J_rowadr.is_null(),
@@ -1783,6 +2377,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_J_rowadr, self.nefc()) }
     }
+
+    /// row start address in colind array
     pub fn iefc_J_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_J_rowadr.is_null(),
@@ -1790,6 +2386,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_J_rowadr, self.nefc()) }
     }
+
+    /// number of subsequent rows in supernode
     pub fn iefc_J_rowsuper(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_J_rowsuper.is_null(),
@@ -1797,6 +2395,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_J_rowsuper, self.nefc()) }
     }
+
+    /// number of subsequent rows in supernode
     pub fn iefc_J_rowsuper_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_J_rowsuper.is_null(),
@@ -1804,6 +2404,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_J_rowsuper, self.nefc()) }
     }
+
+    /// column indices in constraint Jacobian
     pub fn iefc_J_colind(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_J_colind.is_null(),
@@ -1811,6 +2413,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_J_colind, self.nJ()) }
     }
+
+    /// column indices in constraint Jacobian
     pub fn iefc_J_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_J_colind.is_null(),
@@ -1818,6 +2422,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_J_colind, self.nJ()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row T
     pub fn iefc_JT_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_JT_rownnz.is_null(),
@@ -1825,6 +2431,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_JT_rownnz, self.nidof()) }
     }
+
+    /// number of non-zeros in constraint Jacobian row T
     pub fn iefc_JT_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_JT_rownnz.is_null(),
@@ -1832,6 +2440,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_JT_rownnz, self.nidof()) }
     }
+
+    /// row start address in colind array              T
     pub fn iefc_JT_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_JT_rowadr.is_null(),
@@ -1839,6 +2449,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_JT_rowadr, self.nidof()) }
     }
+
+    /// row start address in colind array              T
     pub fn iefc_JT_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_JT_rowadr.is_null(),
@@ -1846,6 +2458,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_JT_rowadr, self.nidof()) }
     }
+
+    /// number of subsequent rows in supernode         T
     pub fn iefc_JT_rowsuper(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_JT_rowsuper.is_null(),
@@ -1853,6 +2467,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_JT_rowsuper, self.nidof()) }
     }
+
+    /// number of subsequent rows in supernode         T
     pub fn iefc_JT_rowsuper_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_JT_rowsuper.is_null(),
@@ -1860,6 +2476,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_JT_rowsuper, self.nidof()) }
     }
+
+    /// column indices in constraint Jacobian          T
     pub fn iefc_JT_colind(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_JT_colind.is_null(),
@@ -1867,6 +2485,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_JT_colind, self.nJ()) }
     }
+
+    /// column indices in constraint Jacobian          T
     pub fn iefc_JT_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_JT_colind.is_null(),
@@ -1874,22 +2494,32 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_JT_colind, self.nJ()) }
     }
+
+    /// constraint Jacobian
     pub fn iefc_J(&self) -> &[mjtNum] {
         assert!(!self.raw().iefc_J.is_null(), "Pointer iefc_J is null");
         unsafe { std::slice::from_raw_parts(self.raw().iefc_J, self.nJ()) }
     }
+
+    /// constraint Jacobian
     pub fn iefc_J_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iefc_J.is_null(), "Pointer iefc_J is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_J, self.nJ()) }
     }
+
+    /// constraint Jacobian transposed
     pub fn iefc_JT(&self) -> &[mjtNum] {
         assert!(!self.raw().iefc_JT.is_null(), "Pointer iefc_JT is null");
         unsafe { std::slice::from_raw_parts(self.raw().iefc_JT, self.nJ()) }
     }
+
+    /// constraint Jacobian transposed
     pub fn iefc_JT_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iefc_JT.is_null(), "Pointer iefc_JT is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_JT, self.nJ()) }
     }
+
+    /// frictionloss (friction)
     pub fn iefc_frictionloss(&self) -> &[mjtNum] {
         assert!(
             !self.raw().iefc_frictionloss.is_null(),
@@ -1897,6 +2527,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_frictionloss, self.nefc()) }
     }
+
+    /// frictionloss (friction)
     pub fn iefc_frictionloss_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().iefc_frictionloss.is_null(),
@@ -1904,22 +2536,32 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_frictionloss, self.nefc()) }
     }
+
+    /// constraint mass
     pub fn iefc_D(&self) -> &[mjtNum] {
         assert!(!self.raw().iefc_D.is_null(), "Pointer iefc_D is null");
         unsafe { std::slice::from_raw_parts(self.raw().iefc_D, self.nefc()) }
     }
+
+    /// constraint mass
     pub fn iefc_D_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iefc_D.is_null(), "Pointer iefc_D is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_D, self.nefc()) }
     }
+
+    /// inverse constraint mass
     pub fn iefc_R(&self) -> &[mjtNum] {
         assert!(!self.raw().iefc_R.is_null(), "Pointer iefc_R is null");
         unsafe { std::slice::from_raw_parts(self.raw().iefc_R, self.nefc()) }
     }
+
+    /// inverse constraint mass
     pub fn iefc_R_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iefc_R.is_null(), "Pointer iefc_R is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_R, self.nefc()) }
     }
+
+    /// number of non-zeros in AR
     pub fn efc_AR_rownnz(&self) -> &[i32] {
         assert!(
             !self.raw().efc_AR_rownnz.is_null(),
@@ -1927,6 +2569,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_AR_rownnz, self.nefc()) }
     }
+
+    /// number of non-zeros in AR
     pub fn efc_AR_rownnz_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_AR_rownnz.is_null(),
@@ -1934,6 +2578,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_AR_rownnz, self.nefc()) }
     }
+
+    /// row start address in colind array
     pub fn efc_AR_rowadr(&self) -> &[i32] {
         assert!(
             !self.raw().efc_AR_rowadr.is_null(),
@@ -1941,6 +2587,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_AR_rowadr, self.nefc()) }
     }
+
+    /// row start address in colind array
     pub fn efc_AR_rowadr_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_AR_rowadr.is_null(),
@@ -1948,6 +2596,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_AR_rowadr, self.nefc()) }
     }
+
+    /// column indices in sparse AR
     pub fn efc_AR_colind(&self) -> &[i32] {
         assert!(
             !self.raw().efc_AR_colind.is_null(),
@@ -1955,6 +2605,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().efc_AR_colind, self.nA()) }
     }
+
+    /// column indices in sparse AR
     pub fn efc_AR_colind_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().efc_AR_colind.is_null(),
@@ -1962,46 +2614,68 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_AR_colind, self.nA()) }
     }
+
+    /// J*inv(M)*J' + R
     pub fn efc_AR(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_AR.is_null(), "Pointer efc_AR is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_AR, self.nA()) }
     }
+
+    /// J*inv(M)*J' + R
     pub fn efc_AR_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_AR.is_null(), "Pointer efc_AR is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_AR, self.nA()) }
     }
+
+    /// velocity in constraint space: J*qvel
     pub fn efc_vel(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_vel.is_null(), "Pointer efc_vel is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_vel, self.nefc()) }
     }
+
+    /// velocity in constraint space: J*qvel
     pub fn efc_vel_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_vel.is_null(), "Pointer efc_vel is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_vel, self.nefc()) }
     }
+
+    /// reference pseudo-acceleration
     pub fn efc_aref(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_aref.is_null(), "Pointer efc_aref is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_aref, self.nefc()) }
     }
+
+    /// reference pseudo-acceleration
     pub fn efc_aref_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_aref.is_null(), "Pointer efc_aref is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_aref, self.nefc()) }
     }
+
+    /// linear cost term: J*qacc_smooth - aref
     pub fn efc_b(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_b.is_null(), "Pointer efc_b is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_b, self.nefc()) }
     }
+
+    /// linear cost term: J*qacc_smooth - aref
     pub fn efc_b_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_b.is_null(), "Pointer efc_b is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_b, self.nefc()) }
     }
+
+    /// reference pseudo-acceleration
     pub fn iefc_aref(&self) -> &[mjtNum] {
         assert!(!self.raw().iefc_aref.is_null(), "Pointer iefc_aref is null");
         unsafe { std::slice::from_raw_parts(self.raw().iefc_aref, self.nefc()) }
     }
+
+    /// reference pseudo-acceleration
     pub fn iefc_aref_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().iefc_aref.is_null(), "Pointer iefc_aref is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_aref, self.nefc()) }
     }
+
+    /// constraint state (mjtConstraintState)
     pub fn iefc_state(&self) -> &[i32] {
         assert!(
             !self.raw().iefc_state.is_null(),
@@ -2009,6 +2683,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_state, self.nefc()) }
     }
+
+    /// constraint state (mjtConstraintState)
     pub fn iefc_state_mut(&mut self) -> &mut [i32] {
         assert!(
             !self.raw().iefc_state.is_null(),
@@ -2016,6 +2692,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_state, self.nefc()) }
     }
+
+    /// constraint force in constraint space
     pub fn iefc_force(&self) -> &[mjtNum] {
         assert!(
             !self.raw().iefc_force.is_null(),
@@ -2023,6 +2701,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().iefc_force, self.nefc()) }
     }
+
+    /// constraint force in constraint space
     pub fn iefc_force_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().iefc_force.is_null(),
@@ -2030,22 +2710,32 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().iefc_force, self.nefc()) }
     }
+
+    /// constraint state (mjtConstraintState)
     pub fn efc_state(&self) -> &[i32] {
         assert!(!self.raw().efc_state.is_null(), "Pointer efc_state is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_state, self.nefc()) }
     }
+
+    /// constraint state (mjtConstraintState)
     pub fn efc_state_mut(&mut self) -> &mut [i32] {
         assert!(!self.raw().efc_state.is_null(), "Pointer efc_state is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_state, self.nefc()) }
     }
+
+    /// constraint force in constraint space
     pub fn efc_force(&self) -> &[mjtNum] {
         assert!(!self.raw().efc_force.is_null(), "Pointer efc_force is null");
         unsafe { std::slice::from_raw_parts(self.raw().efc_force, self.nefc()) }
     }
+
+    /// constraint force in constraint space
     pub fn efc_force_mut(&mut self) -> &mut [mjtNum] {
         assert!(!self.raw().efc_force.is_null(), "Pointer efc_force is null");
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().efc_force, self.nefc()) }
     }
+
+    /// constraint force
     pub fn ifrc_constraint(&self) -> &[mjtNum] {
         assert!(
             !self.raw().ifrc_constraint.is_null(),
@@ -2053,6 +2743,8 @@ impl<'a> Data<'a> {
         );
         unsafe { std::slice::from_raw_parts(self.raw().ifrc_constraint, self.nidof()) }
     }
+
+    /// constraint force
     pub fn ifrc_constraint_mut(&mut self) -> &mut [mjtNum] {
         assert!(
             !self.raw().ifrc_constraint.is_null(),
