@@ -5461,3 +5461,44 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn mjs_asPlugin(element: *mut mjsElement) -> *mut mjsPlugin;
 }
+
+impl From<usize> for mjtGeom {
+    fn from(value: usize) -> Self {
+        match value {
+            0 => mjtGeom::PLANE,
+            1 => mjtGeom::HFIELD,
+            2 => mjtGeom::SPHERE,
+            3 => mjtGeom::CAPSULE,
+            4 => mjtGeom::ELLIPSOID,
+            5 => mjtGeom::CYLINDER,
+            6 => mjtGeom::BOX,
+            7 => mjtGeom::MESH,
+            8 => mjtGeom::SDF,
+            9 => mjtGeom::mjNGEOMTYPES,
+            100 => mjtGeom::ARROW,
+            101 => mjtGeom::ARROW1,
+            102 => mjtGeom::ARROW2,
+            103 => mjtGeom::LINE,
+            104 => mjtGeom::LINEBOX,
+            105 => mjtGeom::FLEX,
+            106 => mjtGeom::SKIN,
+            107 => mjtGeom::LABEL,
+            108 => mjtGeom::TRIANGLE,
+            1001 => mjtGeom::NONE,
+
+            _ => panic!("Invalid value for mjtGeom: {}", value),
+        }
+    }
+}
+impl From<usize> for mjtJoint {
+    fn from(value: usize) -> Self {
+        match value {
+            0 => mjtJoint::FREE,
+            1 => mjtJoint::BALL,
+            2 => mjtJoint::SLIDE,
+            3 => mjtJoint::HINGE,
+
+            _ => panic!("Invalid value for mjtJoint: {}", value),
+        }
+    }
+}

@@ -14,6 +14,7 @@ sys.path.append(os.path.abspath(f"{mujoco_path}/python/mujoco"))
 
 from introspect import structs
 from introspect import functions
+from introspect import enums
 
 FILE_DIR = pathlib.Path(__file__).parent
 
@@ -275,3 +276,31 @@ use crate::Data;
 """
 
 save_file("data_functions.rs", data_functions_header, data_functions, "")
+
+
+# Enums
+def generate_from_trait(enum_name, prefix):
+    enum = enums.ENUMS[enum_name]
+    lines = [
+        f"""
+impl From<usize> for {enum_name} {{
+    fn from(value: usize) -> Self {{
+        match value {{
+"""
+    ]
+    for key, value in enum.values.items():
+        variant_name = key.removeprefix(prefix)
+        lines.append(f"            {value} => {enum_name}::{variant_name},")
+    lines.append(
+        f"""
+            _ => panic!("Invalid value for {enum_name}: {{}}", value),
+        }}
+    }}
+}}"""
+    )
+    return "\n".join(lines)
+
+
+with (FILE_DIR / "src" / "lib.rs").open("a") as f:
+    f.write(generate_from_trait("mjtGeom", "mjGEOM_"))
+    f.write(generate_from_trait("mjtJoint", "mjJNT_"))
