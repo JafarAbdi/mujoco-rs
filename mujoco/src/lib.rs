@@ -10,7 +10,7 @@ pub mod spec;
 
 pub use data::Data;
 pub use data_functions::*;
-pub use model::Model;
+pub use model::{Model, joint_nq, joint_nv};
 pub use spec::Spec;
 
 #[cfg(test)]
