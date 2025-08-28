@@ -63,6 +63,27 @@ impl Model {
     }
 }
 
+/// Get number of generalized coordinates for a given joint type
+pub fn joint_nq(joint_type: mujoco_sys::mjtJoint) -> usize {
+    match joint_type {
+        mujoco_sys::mjtJoint::FREE => 7,
+        mujoco_sys::mjtJoint::BALL => 4,
+        mujoco_sys::mjtJoint::SLIDE => 1,
+        mujoco_sys::mjtJoint::HINGE => 1,
+    }
+}
+
+/// Get number of degrees of freedom for a given joint type
+/// joint_nv(joint_type) == dim(qvel) for a joint of type joint_type
+pub fn joint_nv(joint_type: mujoco_sys::mjtJoint) -> usize {
+    match joint_type {
+        mujoco_sys::mjtJoint::FREE => 6,
+        mujoco_sys::mjtJoint::BALL => 3,
+        mujoco_sys::mjtJoint::SLIDE => 1,
+        mujoco_sys::mjtJoint::HINGE => 1,
+    }
+}
+
 impl Drop for Model {
     fn drop(&mut self) {
         if !self.ptr.is_null() {
