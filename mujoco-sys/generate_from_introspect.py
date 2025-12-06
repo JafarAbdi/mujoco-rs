@@ -34,6 +34,23 @@ RUST_ARRAY_TYPES = {
     "int": "i32",
 }
 
+# Functions that are manually bound in Rust wrapper types
+SKIP_FUNCTIONS = {
+    # model.rs
+    "mj_loadXML",
+    "mj_deleteModel",
+    "mj_copyModel",
+    # data.rs
+    "mj_makeData",
+    "mj_deleteData",
+    "mj_copyData",
+    # spec.rs
+    "mj_parseXML",
+    "mj_parseXMLString",
+    "mj_compile",
+    "mj_deleteSpec",
+}
+
 
 def camel_to_snake(camel_str):
     """Convert camelCase to snake_case"""
@@ -238,7 +255,10 @@ save_file("data_struct.rs", data_header, data_accessors, footer)
 data_functions = []
 
 for function_name, function in functions.FUNCTIONS.items():
+    if function_name in SKIP_FUNCTIONS:
+        continue
     if len(function.parameters) != 2:
+        print(f"Skipping function {function} with {len(function.parameters)} parameters")
         continue
     first_param, second_param = function.parameters
     if (
