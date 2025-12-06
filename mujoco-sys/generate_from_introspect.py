@@ -34,8 +34,8 @@ RUST_ARRAY_TYPES = {
     "int": "i32",
 }
 
-# Functions that are manually bound in Rust wrapper types
 SKIP_FUNCTIONS = {
+    # Functions that are manually bound in Rust wrapper types
     # model.rs
     "mj_loadXML",
     "mj_deleteModel",
@@ -49,13 +49,151 @@ SKIP_FUNCTIONS = {
     "mj_parseXMLString",
     "mj_compile",
     "mj_deleteSpec",
+    # Functions that are not needed or have complex signatures
+    # Complex/unsafe functions
+    "mju_malloc",
+    "mju_free",
+    "mju_error",
+    "mju_warning",
+    "mju_clearHandlers",
+    "mju_threadPoolCreate",
+    "mju_threadPoolDestroy",
+    "mju_defaultTask",
+    "mju_taskJoin",
+    "mju_boxQPmalloc",
+    # Sparse matrix ops
+    "mju_dense2sparse",
+    "mju_sparse2dense",
+    "mju_printMatSparse",
+    # Complex derivative functions
+    "mjd_transitionFD",
+    "mjd_inverseFD",
+    # Threading
+    "mju_bindThreadPool",
+    "mju_threadPoolEnqueue",
+    # String/type conversion
+    "mju_type2Str",
+    "mju_str2Type",
+    "mju_writeNumBytes",
+    "mju_strncpy",
+    # Error/warning helpers
+    "mju_error_i",
+    "mju_error_s",
+    "mju_warning_i",
+    "mju_warning_s",
+    "mju_writeLog",
+    # Physics utilities (complex signatures)
+    "mju_encodePyramid",
+    "mju_decodePyramid",
+    "mju_springDamper",
+    "mju_clip",
+    "mju_muscleGain",
+    "mju_muscleBias",
+    "mju_muscleDynamics",
+    # Type conversion (float/double)
+    "mju_f2n",
+    "mju_n2f",
+    "mju_d2n",
+    "mju_n2d",
+    # Complex/other
+    "mju_boxQP",
+    "mju_standardNormal",
+    "mju_printMat",
+    "mju_rayFlex",
+    "mju_raySkin",
+    # Sorting
+    "mju_insertionSort",
+    "mju_insertionSortInt",
+    # Internal/low-level mj_ functions
+    "mj_freeLastXML",
+    "mj_defaultSolRefImp",
+    "mj_resetCallbacks",
+    "mj_makeSpec",
+    "mj_loadPluginLibrary",
+    "mj_loadAllPluginLibraries",
+    # VFS functions
+    "mj_defaultVFS",
+    "mj_addFileVFS",
+    "mj_addBufferVFS",
+    "mj_deleteFileVFS",
+    "mj_deleteVFS",
+    # Spec functions
+    "mj_copyBack",
+    "mj_recompile",
+    "mj_copySpec",
+    # XML/Save/Load with error buffers
+    "mj_saveLastXML",
+    "mj_saveXMLString",
+    "mj_saveXML",
+    "mj_saveModel",
+    "mj_loadModel",
+    "mj_printSchema",
+    # Default/Init structs
+    "mj_defaultLROpt",
+    "mj_defaultOption",
+    "mj_defaultVisual",
+    # Stack allocation
+    "mj_markStack",
+    "mj_freeStack",
+    "mj_stackAllocByte",
+    "mj_stackAllocNum",
+    "mj_stackAllocInt",
+    # Model query
+    "mj_isPyramidal",
+    "mj_isSparse",
+    "mj_isDual",
+    "mj_getTotalmass",
+    "mj_sizeModel",
+    "mj_stateSize",
+    # Simulation with extra params
+    "mj_forwardSkip",
+    "mj_inverseSkip",
+    "mj_RungeKutta",
+    "mj_resetDataDebug",
+    # Solver/matrix functions
+    "mj_solveM",
+    "mj_solveM2",
+    "mj_rne",
+    "mj_mulJacVec",
+    "mj_mulJacTVec",
+    "mj_mulM",
+    "mj_mulM2",
+    "mj_fullM",
+    "mj_getState",
+    "mj_setState",
+    "mj_addM",
+    "mj_constraintUpdate",
+    # Print functions
+    "mj_printModel",
+    "mj_printData",
+    "mj_printFormattedModel",
+    "mj_printFormattedData",
+    # Misc
+    "mj_setTotalmass",
+    "mj_setConst",
+    "mj_setKeyframe",
+    "mj_local2Global",
+    "mj_applyFT",
+    "mj_warning",
+    "mj_addContact",
+    "mj_multiRay",
+    "mj_ray",
+    "mj_rayHfield",
+    "mj_rayMesh",
+    "mj_getPluginConfig",
 }
+
+# Prefixes to skip for now
+SKIP_PREFIXES = ("mjs_", "mjc_", "mjp_", "mjui_", "mjr_", "mjv_")
 
 
 def camel_to_snake(camel_str):
     """Convert camelCase to snake_case"""
-    # Insert underscore before uppercase letters (except at start)
-    snake_str = re.sub("([a-z0-9])([A-Z])", r"\1_\2", camel_str)
+    # Insert underscore before uppercase letters (except at start of word)
+    # But not after digits (e.g., euler2Quat -> euler2quat, not euler2_quat)
+    snake_str = re.sub("([a-z])([A-Z])", r"\1_\2", camel_str)
+    # Insert underscore between consecutive uppercase letters
+    snake_str = re.sub("([A-Z])([A-Z])", r"\1_\2", snake_str)
     return snake_str.lower()
 
 
@@ -257,8 +395,12 @@ data_functions = []
 for function_name, function in functions.FUNCTIONS.items():
     if function_name in SKIP_FUNCTIONS:
         continue
+    if function_name.startswith(SKIP_PREFIXES):
+        continue
+    if not function_name.startswith("mj_"):
+        continue
     if len(function.parameters) != 2:
-        print(f"Skipping function {function} with {len(function.parameters)} parameters")
+        print(f"Skipping mj_ function {function}")
         continue
     first_param, second_param = function.parameters
     if (
@@ -266,11 +408,13 @@ for function_name, function in functions.FUNCTIONS.items():
         or first_param.type.inner_type.name != "mjModel"
         or not first_param.type.inner_type.is_const
     ):
+        print(f"Skipping mj_ function {function}")
         continue
     if (
         not isinstance(second_param.type, structs.PointerType)
         or second_param.type.inner_type.name != "mjData"
     ):
+        print(f"Skipping mj_ function {function}")
         continue
     assert (
         not second_param.type.inner_type.is_const
@@ -296,6 +440,386 @@ use crate::Data;
 """
 
 save_file("data_functions.rs", data_functions_header, data_functions, "")
+
+# =============================================================================
+# Manually specified mj_* functions with special signatures
+# =============================================================================
+
+MANUAL_MJ_FUNCTIONS = {
+    "mj_version": lambda f: f"""
+/// {f.doc}
+pub fn mj_version() -> i32 {{
+    unsafe {{ mujoco_sys::mj_version() }}
+}}""",
+    "mj_versionString": lambda f: f"""
+/// {f.doc}
+pub fn mj_version_string() -> &'static str {{
+    unsafe {{
+        std::ffi::CStr::from_ptr(mujoco_sys::mj_versionString())
+            .to_str()
+            .unwrap_or("")
+    }}
+}}""",
+    "mj_name2id": lambda f: f"""
+/// {f.doc}
+pub fn mj_name2id(model: &crate::Model, obj_type: i32, name: &str) -> i32 {{
+    let name_cstr = std::ffi::CString::new(name).unwrap();
+    unsafe {{ mujoco_sys::mj_name2id(model.as_ptr(), obj_type, name_cstr.as_ptr()) }}
+}}""",
+    "mj_id2name": lambda f: f"""
+/// {f.doc}
+pub fn mj_id2name(model: &crate::Model, obj_type: i32, id: i32) -> &'static str {{
+    unsafe {{
+        let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type, id);
+        if ptr.is_null() {{
+            ""
+        }} else {{
+            std::ffi::CStr::from_ptr(ptr).to_str().unwrap_or("")
+        }}
+    }}
+}}""",
+    "mj_resetDataKeyframe": lambda f: f"""
+/// {f.doc}
+pub fn mj_reset_data_keyframe(data: &mut crate::Data, key: i32) {{
+    unsafe {{ mujoco_sys::mj_resetDataKeyframe(data.model.as_ptr(), data.as_mut_ptr(), key) }}
+}}""",
+    "mj_differentiatePos": lambda f: f"""
+/// {f.doc}
+pub fn mj_differentiate_pos(model: &crate::Model, qvel: &mut [f64], dt: f64, qpos1: &[f64], qpos2: &[f64]) {{
+    unsafe {{ mujoco_sys::mj_differentiatePos(model.as_ptr(), qvel.as_mut_ptr(), dt, qpos1.as_ptr(), qpos2.as_ptr()) }}
+}}""",
+    "mj_integratePos": lambda f: f"""
+/// {f.doc}
+pub fn mj_integrate_pos(model: &crate::Model, qpos: &mut [f64], qvel: &[f64], dt: f64) {{
+    unsafe {{ mujoco_sys::mj_integratePos(model.as_ptr(), qpos.as_mut_ptr(), qvel.as_ptr(), dt) }}
+}}""",
+    "mj_normalizeQuat": lambda f: f"""
+/// {f.doc}
+pub fn mj_normalize_quat(model: &crate::Model, qpos: &mut [f64]) {{
+    unsafe {{ mujoco_sys::mj_normalizeQuat(model.as_ptr(), qpos.as_mut_ptr()) }}
+}}""",
+    "mj_objectVelocity": lambda f: f"""
+/// {f.doc}
+pub fn mj_object_velocity(data: &crate::Data, objtype: i32, objid: i32, flg_local: i32) -> [f64; 6] {{
+    let mut res = [0.0; 6];
+    unsafe {{ mujoco_sys::mj_objectVelocity(data.model.as_ptr(), data.as_ptr(), objtype, objid, res.as_mut_ptr(), flg_local) }}
+    res
+}}""",
+    "mj_objectAcceleration": lambda f: f"""
+/// {f.doc}
+pub fn mj_object_acceleration(data: &crate::Data, objtype: i32, objid: i32, flg_local: i32) -> [f64; 6] {{
+    let mut res = [0.0; 6];
+    unsafe {{ mujoco_sys::mj_objectAcceleration(data.model.as_ptr(), data.as_ptr(), objtype, objid, res.as_mut_ptr(), flg_local) }}
+    res
+}}""",
+    "mj_contactForce": lambda f: f"""
+/// {f.doc}
+pub fn mj_contact_force(data: &crate::Data, id: i32) -> [f64; 6] {{
+    let mut res = [0.0; 6];
+    unsafe {{ mujoco_sys::mj_contactForce(data.model.as_ptr(), data.as_ptr(), id, res.as_mut_ptr()) }}
+    res
+}}""",
+    "mj_geomDistance": lambda f: f"""
+/// {f.doc}
+pub fn mj_geom_distance(data: &crate::Data, geom1: i32, geom2: i32, distmax: f64) -> (f64, [f64; 6]) {{
+    let mut fromto = [0.0; 6];
+    let dist = unsafe {{ mujoco_sys::mj_geomDistance(data.model.as_ptr(), data.as_ptr(), geom1, geom2, distmax, fromto.as_mut_ptr()) }};
+    (dist, fromto)
+}}""",
+    "mj_jac": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], point: &[f64; 3], body: i32) {{
+    unsafe {{ mujoco_sys::mj_jac(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), point.as_ptr(), body) }}
+}}""",
+    "mj_jacBody": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac_body(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {{
+    unsafe {{ mujoco_sys::mj_jacBody(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), body) }}
+}}""",
+    "mj_jacBodyCom": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac_body_com(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {{
+    unsafe {{ mujoco_sys::mj_jacBodyCom(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), body) }}
+}}""",
+    "mj_jacSubtreeCom": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac_subtree_com(data: &mut crate::Data, jacp: &mut [f64], body: i32) {{
+    unsafe {{ mujoco_sys::mj_jacSubtreeCom(data.model.as_ptr(), data.as_mut_ptr(), jacp.as_mut_ptr(), body) }}
+}}""",
+    "mj_jacGeom": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac_geom(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], geom: i32) {{
+    unsafe {{ mujoco_sys::mj_jacGeom(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), geom) }}
+}}""",
+    "mj_jacSite": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac_site(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], site: i32) {{
+    unsafe {{ mujoco_sys::mj_jacSite(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), site) }}
+}}""",
+    "mj_jacPointAxis": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac_point_axis(data: &mut crate::Data, jac_point: &mut [f64], jac_axis: &mut [f64], point: &[f64; 3], axis: &[f64; 3], body: i32) {{
+    unsafe {{ mujoco_sys::mj_jacPointAxis(data.model.as_ptr(), data.as_mut_ptr(), jac_point.as_mut_ptr(), jac_axis.as_mut_ptr(), point.as_ptr(), axis.as_ptr(), body) }}
+}}""",
+    "mj_jacDot": lambda f: f"""
+/// {f.doc}
+pub fn mj_jac_dot(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], point: &[f64; 3], body: i32) {{
+    unsafe {{ mujoco_sys::mj_jacDot(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), point.as_ptr(), body) }}
+}}""",
+    "mj_angmomMat": lambda f: f"""
+/// {f.doc}
+pub fn mj_angmom_mat(data: &mut crate::Data, mat: &mut [f64], body: i32) {{
+    unsafe {{ mujoco_sys::mj_angmomMat(data.model.as_ptr(), data.as_mut_ptr(), mat.as_mut_ptr(), body) }}
+}}""",
+}
+
+# Generate manual functions using docs from introspect
+output_path = FILE_DIR / ".." / "mujoco" / "src" / "data_functions.rs"
+with open(output_path, "a") as f:
+    for func_name, generator in MANUAL_MJ_FUNCTIONS.items():
+        if func_name in functions.FUNCTIONS:
+            f.write(generator(functions.FUNCTIONS[func_name]))
+            f.write("\n")
+
+
+# =============================================================================
+# Math utility functions (mju_* and mjd_*)
+# =============================================================================
+
+# In-place modify functions (use &mut for first param, don't return)
+IN_PLACE_FUNCTIONS = {
+    "mju_normalize3",
+    "mju_normalize4",
+    "mju_quatIntegrate",
+    "mju_zero3",
+    "mju_zero4",
+    "mju_unit4",
+}
+
+MATH_TYPE_MAP = {
+    "mjtNum": "f64",
+    "int": "i32",
+    "float": "f32",
+    "double": "f64",
+    "mjtByte": "u8",
+    "size_t": "usize",
+}
+
+# Rust reserved keywords that need escaping
+RUST_KEYWORDS = {
+    "type",
+}
+
+
+def escape_keyword(name):
+    """Escape Rust keywords with r# prefix."""
+    if name in RUST_KEYWORDS:
+        return f"r#{name}"
+    return name
+
+
+def is_array_type(param_type):
+    return isinstance(param_type, structs.ArrayType)
+
+
+def is_value_type(param_type):
+    return isinstance(param_type, structs.ValueType)
+
+
+def is_pointer_type(param_type):
+    return isinstance(param_type, structs.PointerType)
+
+
+def get_array_info(param_type):
+    """Returns (inner_type, size) for array types."""
+    if is_array_type(param_type):
+        return param_type.inner_type.name, param_type.extents[0]
+    return None, None
+
+
+def get_pointer_info(param_type):
+    """Returns inner type name for pointer types."""
+    if is_pointer_type(param_type):
+        return param_type.inner_type.name, param_type.inner_type.is_const
+    return None, None
+
+
+def is_runtime_sized_function(params):
+    """Check if function uses runtime-sized arrays (pointer + n pattern)."""
+    has_pointer = False
+    has_n_param = False
+    for param in params:
+        if is_pointer_type(param.type):
+            inner = param.type.inner_type.name
+            if inner in ("mjtNum", "int", "float", "double"):
+                has_pointer = True
+        if is_value_type(param.type) and param.name in ("n", "nr", "nc"):
+            has_n_param = True
+    return has_pointer and has_n_param
+
+
+def generate_math_function(func_name, function):
+    """Generate a math utility function binding."""
+    params = function.parameters
+    rust_name = camel_to_snake(func_name)
+    doc = function.doc
+
+    # Check if first param is output array (non-const)
+    first_param = params[0] if params else None
+    is_in_place = func_name in IN_PLACE_FUNCTIONS
+
+    # Determine if this returns a value or has output param
+    has_output_param = False
+    output_type = None
+    output_size = None
+
+    if first_param and is_array_type(first_param.type):
+        inner_type, size = get_array_info(first_param.type)
+        if not first_param.type.inner_type.is_const:
+            has_output_param = True
+            output_type = MATH_TYPE_MAP.get(inner_type, inner_type)
+            output_size = size
+
+    # Build parameter list and call arguments
+    rust_params = []
+    call_args = []
+
+    for i, param in enumerate(params):
+        pname = escape_keyword(param.name)
+        ptype = param.type
+
+        if i == 0 and has_output_param:
+            if is_in_place:
+                # In-place: &mut [f64; N]
+                rust_params.append(f"{pname}: &mut [{output_type}; {output_size}]")
+                call_args.append(f"{pname}.as_mut_ptr()")
+            else:
+                # Output param handled separately (we create local array)
+                call_args.append("res.as_mut_ptr()")
+            continue
+
+        if is_array_type(ptype):
+            inner_type, size = get_array_info(ptype)
+            rust_type = MATH_TYPE_MAP.get(inner_type, inner_type)
+            is_const = ptype.inner_type.is_const
+            if is_const:
+                rust_params.append(f"{pname}: &[{rust_type}; {size}]")
+                call_args.append(f"{pname}.as_ptr()")
+            else:
+                rust_params.append(f"{pname}: &mut [{rust_type}; {size}]")
+                call_args.append(f"{pname}.as_mut_ptr()")
+        elif is_value_type(ptype):
+            rust_type = MATH_TYPE_MAP.get(ptype.name, ptype.name)
+            rust_params.append(f"{pname}: {rust_type}")
+            call_args.append(pname)
+        elif is_pointer_type(ptype):
+            inner_type, is_const = get_pointer_info(ptype)
+            # Handle const char* as &str
+            if inner_type == "char" and is_const:
+                rust_params.append(f"{pname}: &str")
+                call_args.append(f"std::ffi::CString::new({pname}).unwrap().as_ptr()")
+            # Skip non-numeric pointer types (structs, etc.)
+            elif inner_type not in ("mjtNum", "int", "float", "double"):
+                return None
+            else:
+                rust_type = MATH_TYPE_MAP.get(inner_type, inner_type)
+                if is_const:
+                    rust_params.append(f"{pname}: &[{rust_type}]")
+                    call_args.append(f"{pname}.as_ptr()")
+                else:
+                    rust_params.append(f"{pname}: &mut [{rust_type}]")
+                    call_args.append(f"{pname}.as_mut_ptr()")
+        else:
+            return None
+
+    params_str = ", ".join(rust_params)
+    args_str = ", ".join(call_args)
+
+    # Handle return type
+    ret_type = function.return_type
+    has_return = is_value_type(ret_type) and ret_type.name != "void"
+    rust_ret_type = (
+        MATH_TYPE_MAP.get(ret_type.name, ret_type.name) if has_return else None
+    )
+
+    # Generate function body
+    if is_in_place:
+        # In-place modification
+        if has_return:
+            return f"""
+/// {doc}
+pub fn {rust_name}({params_str}) -> {rust_ret_type} {{
+    unsafe {{ mujoco_sys::{func_name}({args_str}) }}
+}}"""
+        else:
+            return f"""
+/// {doc}
+pub fn {rust_name}({params_str}) {{
+    unsafe {{ mujoco_sys::{func_name}({args_str}); }}
+}}"""
+    elif has_output_param:
+        # Return array style
+        if has_return:
+            # Has both output array and return value - rare case
+            return f"""
+/// {doc}
+pub fn {rust_name}({params_str}) -> ([{output_type}; {output_size}], {rust_ret_type}) {{
+    let mut res = [0.0; {output_size}];
+    let ret = unsafe {{ mujoco_sys::{func_name}({args_str}) }};
+    (res, ret)
+}}"""
+        else:
+            return f"""
+/// {doc}
+pub fn {rust_name}({params_str}) -> [{output_type}; {output_size}] {{
+    let mut res = [0.0; {output_size}];
+    unsafe {{ mujoco_sys::{func_name}({args_str}); }}
+    res
+}}"""
+    else:
+        # No output param, just return value or void
+        if has_return:
+            return f"""
+/// {doc}
+pub fn {rust_name}({params_str}) -> {rust_ret_type} {{
+    unsafe {{ mujoco_sys::{func_name}({args_str}) }}
+}}"""
+        else:
+            return f"""
+/// {doc}
+pub fn {rust_name}({params_str}) {{
+    unsafe {{ mujoco_sys::{func_name}({args_str}); }}
+}}"""
+
+
+math_functions = []
+
+for func_name, function in functions.FUNCTIONS.items():
+    if func_name in SKIP_FUNCTIONS:
+        continue
+
+    # Only process mju_* and mjd_* functions (mj_* handled separately)
+    if not (func_name.startswith("mju_") or func_name.startswith("mjd_")):
+        continue
+
+    result = generate_math_function(func_name, function)
+    if result:
+        math_functions.append(result)
+    else:
+        print(f"Skipping math function {function} - unsupported signature")
+
+math_functions_header = """//! Auto-generated math utility functions
+//! Generated by generate_from_introspect.py - DO NOT EDIT MANUALLY
+
+#![allow(non_snake_case)]
+"""
+
+# Write math functions to file
+output_path = FILE_DIR / ".." / "mujoco" / "src" / "math.rs"
+with open(output_path, "w") as f:
+    f.write(math_functions_header)
+    for func in math_functions:
+        f.write(f"{func}\n")
 
 
 # Enums

@@ -35,5 +35,6 @@ The crate will automatically build MuJoCo and its dependencies from source when 
 To update the FFI bindings, run the provided script:
 
 ```bash
+# Make sure you have bindgen (Install with `cargo install bindgen-cli`)
 ./update-ffi.sh
 ```

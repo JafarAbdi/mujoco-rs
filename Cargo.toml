@@ -1,3 +1,6 @@
 [workspace]
 members  = ["mujoco-sys", "mujoco"]
 resolver = "2"
+
+[profile.release]
+lto = "thin"

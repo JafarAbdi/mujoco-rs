@@ -303,3 +303,271 @@ pub fn mj_reference_constraint(data: &mut Data) {
         mujoco_sys::mj_referenceConstraint(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
+
+/// Return version number: 1.0.2 is encoded as 102.
+pub fn mj_version() -> i32 {
+    unsafe { mujoco_sys::mj_version() }
+}
+
+/// Return the current version of MuJoCo as a null-terminated string.
+pub fn mj_version_string() -> &'static str {
+    unsafe {
+        std::ffi::CStr::from_ptr(mujoco_sys::mj_versionString())
+            .to_str()
+            .unwrap_or("")
+    }
+}
+
+/// Get id of object with the specified mjtObj type and name, returns -1 if id not found.
+pub fn mj_name2id(model: &crate::Model, obj_type: i32, name: &str) -> i32 {
+    let name_cstr = std::ffi::CString::new(name).unwrap();
+    unsafe { mujoco_sys::mj_name2id(model.as_ptr(), obj_type, name_cstr.as_ptr()) }
+}
+
+/// Get name of object with the specified mjtObj type and id, returns NULL if name not found.
+pub fn mj_id2name(model: &crate::Model, obj_type: i32, id: i32) -> &'static str {
+    unsafe {
+        let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type, id);
+        if ptr.is_null() {
+            ""
+        } else {
+            std::ffi::CStr::from_ptr(ptr).to_str().unwrap_or("")
+        }
+    }
+}
+
+/// Reset data. If 0 <= key < nkey, set fields from specified keyframe.
+pub fn mj_reset_data_keyframe(data: &mut crate::Data, key: i32) {
+    unsafe { mujoco_sys::mj_resetDataKeyframe(data.model.as_ptr(), data.as_mut_ptr(), key) }
+}
+
+/// Compute velocity by finite-differencing two positions.
+pub fn mj_differentiate_pos(
+    model: &crate::Model,
+    qvel: &mut [f64],
+    dt: f64,
+    qpos1: &[f64],
+    qpos2: &[f64],
+) {
+    unsafe {
+        mujoco_sys::mj_differentiatePos(
+            model.as_ptr(),
+            qvel.as_mut_ptr(),
+            dt,
+            qpos1.as_ptr(),
+            qpos2.as_ptr(),
+        )
+    }
+}
+
+/// Integrate position with given velocity.
+pub fn mj_integrate_pos(model: &crate::Model, qpos: &mut [f64], qvel: &[f64], dt: f64) {
+    unsafe { mujoco_sys::mj_integratePos(model.as_ptr(), qpos.as_mut_ptr(), qvel.as_ptr(), dt) }
+}
+
+/// Normalize all quaternions in qpos-type vector.
+pub fn mj_normalize_quat(model: &crate::Model, qpos: &mut [f64]) {
+    unsafe { mujoco_sys::mj_normalizeQuat(model.as_ptr(), qpos.as_mut_ptr()) }
+}
+
+/// Compute object 6D velocity (rot:lin) in object-centered frame, world/local orientation.
+pub fn mj_object_velocity(
+    data: &crate::Data,
+    objtype: i32,
+    objid: i32,
+    flg_local: i32,
+) -> [f64; 6] {
+    let mut res = [0.0; 6];
+    unsafe {
+        mujoco_sys::mj_objectVelocity(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            objtype,
+            objid,
+            res.as_mut_ptr(),
+            flg_local,
+        )
+    }
+    res
+}
+
+/// Compute object 6D acceleration (rot:lin) in object-centered frame, world/local orientation.
+pub fn mj_object_acceleration(
+    data: &crate::Data,
+    objtype: i32,
+    objid: i32,
+    flg_local: i32,
+) -> [f64; 6] {
+    let mut res = [0.0; 6];
+    unsafe {
+        mujoco_sys::mj_objectAcceleration(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            objtype,
+            objid,
+            res.as_mut_ptr(),
+            flg_local,
+        )
+    }
+    res
+}
+
+/// Extract 6D force:torque given contact id, in the contact frame.
+pub fn mj_contact_force(data: &crate::Data, id: i32) -> [f64; 6] {
+    let mut res = [0.0; 6];
+    unsafe { mujoco_sys::mj_contactForce(data.model.as_ptr(), data.as_ptr(), id, res.as_mut_ptr()) }
+    res
+}
+
+/// Returns smallest signed distance between two geoms and optionally segment from geom1 to geom2.
+pub fn mj_geom_distance(
+    data: &crate::Data,
+    geom1: i32,
+    geom2: i32,
+    distmax: f64,
+) -> (f64, [f64; 6]) {
+    let mut fromto = [0.0; 6];
+    let dist = unsafe {
+        mujoco_sys::mj_geomDistance(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            geom1,
+            geom2,
+            distmax,
+            fromto.as_mut_ptr(),
+        )
+    };
+    (dist, fromto)
+}
+
+/// Compute 3/6-by-nv end-effector Jacobian of global point attached to given body.
+pub fn mj_jac(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], point: &[f64; 3], body: i32) {
+    unsafe {
+        mujoco_sys::mj_jac(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            jacp.as_mut_ptr(),
+            jacr.as_mut_ptr(),
+            point.as_ptr(),
+            body,
+        )
+    }
+}
+
+/// Compute body frame end-effector Jacobian.
+pub fn mj_jac_body(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {
+    unsafe {
+        mujoco_sys::mj_jacBody(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            jacp.as_mut_ptr(),
+            jacr.as_mut_ptr(),
+            body,
+        )
+    }
+}
+
+/// Compute body center-of-mass end-effector Jacobian.
+pub fn mj_jac_body_com(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {
+    unsafe {
+        mujoco_sys::mj_jacBodyCom(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            jacp.as_mut_ptr(),
+            jacr.as_mut_ptr(),
+            body,
+        )
+    }
+}
+
+/// Compute subtree center-of-mass end-effector Jacobian.
+pub fn mj_jac_subtree_com(data: &mut crate::Data, jacp: &mut [f64], body: i32) {
+    unsafe {
+        mujoco_sys::mj_jacSubtreeCom(
+            data.model.as_ptr(),
+            data.as_mut_ptr(),
+            jacp.as_mut_ptr(),
+            body,
+        )
+    }
+}
+
+/// Compute geom end-effector Jacobian.
+pub fn mj_jac_geom(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], geom: i32) {
+    unsafe {
+        mujoco_sys::mj_jacGeom(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            jacp.as_mut_ptr(),
+            jacr.as_mut_ptr(),
+            geom,
+        )
+    }
+}
+
+/// Compute site end-effector Jacobian.
+pub fn mj_jac_site(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], site: i32) {
+    unsafe {
+        mujoco_sys::mj_jacSite(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            jacp.as_mut_ptr(),
+            jacr.as_mut_ptr(),
+            site,
+        )
+    }
+}
+
+/// Compute translation end-effector Jacobian of point, and rotation Jacobian of axis.
+pub fn mj_jac_point_axis(
+    data: &mut crate::Data,
+    jac_point: &mut [f64],
+    jac_axis: &mut [f64],
+    point: &[f64; 3],
+    axis: &[f64; 3],
+    body: i32,
+) {
+    unsafe {
+        mujoco_sys::mj_jacPointAxis(
+            data.model.as_ptr(),
+            data.as_mut_ptr(),
+            jac_point.as_mut_ptr(),
+            jac_axis.as_mut_ptr(),
+            point.as_ptr(),
+            axis.as_ptr(),
+            body,
+        )
+    }
+}
+
+/// Compute 3/6-by-nv Jacobian time derivative of global point attached to given body.
+pub fn mj_jac_dot(
+    data: &crate::Data,
+    jacp: &mut [f64],
+    jacr: &mut [f64],
+    point: &[f64; 3],
+    body: i32,
+) {
+    unsafe {
+        mujoco_sys::mj_jacDot(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            jacp.as_mut_ptr(),
+            jacr.as_mut_ptr(),
+            point.as_ptr(),
+            body,
+        )
+    }
+}
+
+/// Compute subtree angular momentum matrix.
+pub fn mj_angmom_mat(data: &mut crate::Data, mat: &mut [f64], body: i32) {
+    unsafe {
+        mujoco_sys::mj_angmomMat(
+            data.model.as_ptr(),
+            data.as_mut_ptr(),
+            mat.as_mut_ptr(),
+            body,
+        )
+    }
+}
