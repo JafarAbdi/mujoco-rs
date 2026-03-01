@@ -20,6 +20,7 @@ FILE_DIR = pathlib.Path(__file__).parent
 
 RUST_TYPES = {
     "int": "usize",
+    "mjtSize": "usize",
     "float": "f32",
     "uint64_t": "u64",
     "mjtByte": "u8",
@@ -29,9 +30,44 @@ RUST_TYPES = {
 RUST_POINTER_TYPES = {
     "int": "i32",
     "char": "i8",
+    "mjtSize": "i64",
 }
 RUST_ARRAY_TYPES = {
     "int": "i32",
+    "mjtSize": "i64",
+}
+
+# Fields that should have nalgebra accessors generated
+# Maps field name -> (element_stride, nalgebra_type, count_field, has_setter)
+# element_stride: number of elements per item (3 for Vec3, 4 for Quat, 9 for Mat3)
+# nalgebra_type: the nalgebra type to return
+# count_field: field name for the count (prefixed with model. or self.)
+# has_setter: whether to generate a set_ method (only for user-controllable fields)
+NALGEBRA_DATA_FIELDS = {
+    # Body positions and orientations (computed by simulation, no setters)
+    "xpos": (3, "Vec3", "nbody", False),
+    "xquat": (4, "Quat", "nbody", False),
+    "xmat": (9, "Mat3", "nbody", False),
+    # Body inertial frame (computed, no setters)
+    "xipos": (3, "Vec3", "nbody", False),
+    "ximat": (9, "Mat3", "nbody", False),
+    # Subtree center of mass (computed, no setter)
+    "subtree_com": (3, "Vec3", "nbody", False),
+    # Geom positions and orientations (computed, no setters)
+    "geom_xpos": (3, "Vec3", "ngeom", False),
+    "geom_xmat": (9, "Mat3", "ngeom", False),
+    # Site positions and orientations (computed, no setters)
+    "site_xpos": (3, "Vec3", "nsite", False),
+    "site_xmat": (9, "Mat3", "nsite", False),
+    # Camera positions and orientations (computed, no setters)
+    "cam_xpos": (3, "Vec3", "ncam", False),
+    "cam_xmat": (9, "Mat3", "ncam", False),
+    # Light positions and directions (computed, no setters)
+    "light_xpos": (3, "Vec3", "nlight", False),
+    "light_xdir": (3, "Vec3", "nlight", False),
+    # Mocap body positions and orientations (user input, has setters)
+    "mocap_pos": (3, "Vec3", "nmocap", True),
+    "mocap_quat": (4, "Quat", "nmocap", True),
 }
 
 SKIP_FUNCTIONS = {
@@ -49,61 +85,9 @@ SKIP_FUNCTIONS = {
     "mj_parseXMLString",
     "mj_compile",
     "mj_deleteSpec",
-    # Functions that are not needed or have complex signatures
-    # Complex/unsafe functions
-    "mju_malloc",
-    "mju_free",
-    "mju_error",
-    "mju_warning",
-    "mju_clearHandlers",
-    "mju_threadPoolCreate",
-    "mju_threadPoolDestroy",
-    "mju_defaultTask",
-    "mju_taskJoin",
-    "mju_boxQPmalloc",
-    # Sparse matrix ops
-    "mju_dense2sparse",
-    "mju_sparse2dense",
-    "mju_printMatSparse",
     # Complex derivative functions
     "mjd_transitionFD",
     "mjd_inverseFD",
-    # Threading
-    "mju_bindThreadPool",
-    "mju_threadPoolEnqueue",
-    # String/type conversion
-    "mju_type2Str",
-    "mju_str2Type",
-    "mju_writeNumBytes",
-    "mju_strncpy",
-    # Error/warning helpers
-    "mju_error_i",
-    "mju_error_s",
-    "mju_warning_i",
-    "mju_warning_s",
-    "mju_writeLog",
-    # Physics utilities (complex signatures)
-    "mju_encodePyramid",
-    "mju_decodePyramid",
-    "mju_springDamper",
-    "mju_clip",
-    "mju_muscleGain",
-    "mju_muscleBias",
-    "mju_muscleDynamics",
-    # Type conversion (float/double)
-    "mju_f2n",
-    "mju_n2f",
-    "mju_d2n",
-    "mju_n2d",
-    # Complex/other
-    "mju_boxQP",
-    "mju_standardNormal",
-    "mju_printMat",
-    "mju_rayFlex",
-    "mju_raySkin",
-    # Sorting
-    "mju_insertionSort",
-    "mju_insertionSortInt",
     # Internal/low-level mj_ functions
     "mj_freeLastXML",
     "mj_defaultSolRefImp",
@@ -181,10 +165,37 @@ SKIP_FUNCTIONS = {
     "mj_rayHfield",
     "mj_rayMesh",
     "mj_getPluginConfig",
+    # VFS mount/unmount
+    "mj_mountVFS",
+    "mj_unmountVFS",
+    # Cache functions
+    "mj_getCacheSize",
+    "mj_getCacheCapacity",
+    "mj_setCacheCapacity",
+    "mj_getCache",
+    "mj_clearCache",
+    # Alternative model loading
+    "mj_parse",
+    "mj_loadModelBuffer",
+    # Length range
+    "mj_setLengthRange",
+    # Scene printing
+    "mj_printScene",
+    "mj_printFormattedScene",
+    # State management
+    "mj_extractState",
+    "mj_copyState",
+    # History functions
+    "mj_readCtrl",
+    "mj_readSensor",
+    "mj_initCtrlHistory",
+    "mj_initSensorHistory",
+    # Flex raycast
+    "mj_rayFlex",
 }
 
-# Prefixes to skip for now
-SKIP_PREFIXES = ("mjs_", "mjc_", "mjp_", "mjui_", "mjr_", "mjv_")
+# Prefixes to skip
+SKIP_PREFIXES = ("mjs_", "mjc_", "mjp_", "mjui_", "mjr_", "mjv_", "mju_")
 
 
 def camel_to_snake(camel_str):
@@ -204,6 +215,135 @@ def save_file(filename, header, accessors, footer):
         for accessor in accessors:
             f.write(f"    {accessor}\n")
         f.write(footer)
+
+
+def generate_nalgebra_accessor(field_name, stride, nalgebra_type, count_field, has_setter):
+    """Generate nalgebra accessor methods for a spatial data field.
+
+    Returns a tuple of (getter, setter) where setter is None if has_setter is False.
+    Uses get_/set_ naming convention for clean API.
+    """
+    # Determine count expression
+    if count_field in model_fields:
+        count_expr = f"self.model.{count_field}()"
+    else:
+        count_expr = f"self.{count_field}()"
+
+    if nalgebra_type == "Vec3":
+        getter = f"""
+/// Get {field_name} at index as Vec3
+pub fn get_{field_name}(&self, idx: usize) -> crate::Vec3 {{
+    debug_assert!(idx < {count_expr}, "{field_name} index out of bounds");
+    let data = self.{field_name}();
+    let i = idx * {stride};
+    crate::Vec3::new(data[i], data[i + 1], data[i + 2])
+}}"""
+        setter = f"""
+/// Set {field_name} at index from Vec3
+pub fn set_{field_name}(&mut self, idx: usize, value: &crate::Vec3) {{
+    debug_assert!(idx < {count_expr}, "{field_name} index out of bounds");
+    let data = self.{field_name}_mut();
+    let i = idx * {stride};
+    data[i] = value[0];
+    data[i + 1] = value[1];
+    data[i + 2] = value[2];
+}}""" if has_setter else None
+
+    elif nalgebra_type == "Quat":
+        getter = f"""
+/// Get {field_name} at index as UnitQuaternion
+pub fn get_{field_name}(&self, idx: usize) -> crate::Quat {{
+    debug_assert!(idx < {count_expr}, "{field_name} index out of bounds");
+    let data = self.{field_name}();
+    let i = idx * {stride};
+    // MuJoCo uses (w, x, y, z), nalgebra Quaternion::new takes (w, x, y, z)
+    crate::Quat::from_quaternion(nalgebra::Quaternion::new(
+        data[i], data[i + 1], data[i + 2], data[i + 3]
+    ))
+}}"""
+        setter = f"""
+/// Set {field_name} at index from UnitQuaternion
+pub fn set_{field_name}(&mut self, idx: usize, value: &crate::Quat) {{
+    debug_assert!(idx < {count_expr}, "{field_name} index out of bounds");
+    let data = self.{field_name}_mut();
+    let i = idx * {stride};
+    data[i] = value.w;
+    data[i + 1] = value.i;
+    data[i + 2] = value.j;
+    data[i + 3] = value.k;
+}}""" if has_setter else None
+
+    elif nalgebra_type == "Mat3":
+        getter = f"""
+/// Get {field_name} at index as Mat3
+pub fn get_{field_name}(&self, idx: usize) -> crate::Mat3 {{
+    debug_assert!(idx < {count_expr}, "{field_name} index out of bounds");
+    let data = self.{field_name}();
+    let i = idx * {stride};
+    // MuJoCo stores row-major, nalgebra is column-major
+    crate::Mat3::from_row_slice(&data[i..i + 9])
+}}"""
+        setter = f"""
+/// Set {field_name} at index from Mat3
+pub fn set_{field_name}(&mut self, idx: usize, value: &crate::Mat3) {{
+    debug_assert!(idx < {count_expr}, "{field_name} index out of bounds");
+    let data = self.{field_name}_mut();
+    let i = idx * {stride};
+    // Convert from column-major nalgebra to row-major MuJoCo
+    for row in 0..3 {{
+        for col in 0..3 {{
+            data[i + row * 3 + col] = value[(row, col)];
+        }}
+    }}
+}}""" if has_setter else None
+
+    else:
+        raise ValueError(f"Unknown nalgebra type: {nalgebra_type}")
+
+    return (getter, setter)
+
+
+def generate_math_rs():
+    """Generate math.rs with nalgebra type aliases."""
+    content = '''//! Math type aliases using nalgebra
+//! Generated by generate_from_introspect.py - DO NOT EDIT MANUALLY
+
+pub use nalgebra::{
+    DMatrix, DVector, Isometry3, Matrix3, Matrix3xX, Matrix4, Matrix6xX, Quaternion, Rotation3,
+    UnitQuaternion, Vector3, Vector4, Vector6,
+};
+
+/// 3D vector (position, velocity, etc.)
+pub type Vec3 = Vector3<f64>;
+
+/// 4D vector
+pub type Vec4 = Vector4<f64>;
+
+/// 6D vector (spatial velocity, wrench, etc.)
+pub type Vec6 = Vector6<f64>;
+
+/// 3x3 matrix (rotation, inertia, etc.)
+pub type Mat3 = Matrix3<f64>;
+
+/// 4x4 matrix (homogeneous transform)
+pub type Mat4 = Matrix4<f64>;
+
+/// Unit quaternion (orientation)
+pub type Quat = UnitQuaternion<f64>;
+
+/// 6D pose (position + orientation)
+pub type Pose = Isometry3<f64>;
+
+/// 3×nv Jacobian matrix (position or rotation Jacobian)
+pub type Jacobian3xN = Matrix3xX<f64>;
+
+/// 6×nv Jacobian matrix (combined position + rotation Jacobian)
+pub type Jacobian6xN = Matrix6xX<f64>;
+'''
+    output_path = FILE_DIR / ".." / "mujoco" / "src" / "math.rs"
+    with open(output_path, "w") as f:
+        f.write(content)
+    print("Generated math.rs")
 
 
 def generate_value_accessor(field):
@@ -366,6 +506,15 @@ pub fn {field.name}_mut(&mut self) -> &mut [{rust_type}] {{
         }}
 }}"""
             )
+            # Generate nalgebra accessors for spatial data fields
+            if field.name in NALGEBRA_DATA_FIELDS:
+                stride, nalgebra_type, count_field, has_setter = NALGEBRA_DATA_FIELDS[field.name]
+                getter, setter = generate_nalgebra_accessor(
+                    field.name, stride, nalgebra_type, count_field, has_setter
+                )
+                data_accessors.append(getter)
+                if setter:
+                    data_accessors.append(setter)
 
         case structs.ArrayType:
             accessor, includes = generate_array_accessor(field)
@@ -500,76 +649,180 @@ pub fn mj_normalize_quat(model: &crate::Model, qpos: &mut [f64]) {{
 }}""",
     "mj_objectVelocity": lambda f: f"""
 /// {f.doc}
-pub fn mj_object_velocity(data: &crate::Data, objtype: i32, objid: i32, flg_local: i32) -> [f64; 6] {{
-    let mut res = [0.0; 6];
+pub fn mj_object_velocity(data: &crate::Data, objtype: i32, objid: i32, flg_local: i32) -> crate::Vec6 {{
+    let mut res = crate::Vec6::zeros();
     unsafe {{ mujoco_sys::mj_objectVelocity(data.model.as_ptr(), data.as_ptr(), objtype, objid, res.as_mut_ptr(), flg_local) }}
     res
 }}""",
     "mj_objectAcceleration": lambda f: f"""
 /// {f.doc}
-pub fn mj_object_acceleration(data: &crate::Data, objtype: i32, objid: i32, flg_local: i32) -> [f64; 6] {{
-    let mut res = [0.0; 6];
+pub fn mj_object_acceleration(data: &crate::Data, objtype: i32, objid: i32, flg_local: i32) -> crate::Vec6 {{
+    let mut res = crate::Vec6::zeros();
     unsafe {{ mujoco_sys::mj_objectAcceleration(data.model.as_ptr(), data.as_ptr(), objtype, objid, res.as_mut_ptr(), flg_local) }}
     res
 }}""",
     "mj_contactForce": lambda f: f"""
 /// {f.doc}
-pub fn mj_contact_force(data: &crate::Data, id: i32) -> [f64; 6] {{
-    let mut res = [0.0; 6];
+pub fn mj_contact_force(data: &crate::Data, id: i32) -> crate::Vec6 {{
+    let mut res = crate::Vec6::zeros();
     unsafe {{ mujoco_sys::mj_contactForce(data.model.as_ptr(), data.as_ptr(), id, res.as_mut_ptr()) }}
     res
 }}""",
     "mj_geomDistance": lambda f: f"""
 /// {f.doc}
-pub fn mj_geom_distance(data: &crate::Data, geom1: i32, geom2: i32, distmax: f64) -> (f64, [f64; 6]) {{
-    let mut fromto = [0.0; 6];
+pub fn mj_geom_distance(data: &crate::Data, geom1: i32, geom2: i32, distmax: f64) -> (f64, crate::Vec6) {{
+    let mut fromto = crate::Vec6::zeros();
     let dist = unsafe {{ mujoco_sys::mj_geomDistance(data.model.as_ptr(), data.as_ptr(), geom1, geom2, distmax, fromto.as_mut_ptr()) }};
     (dist, fromto)
 }}""",
     "mj_jac": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], point: &[f64; 3], body: i32) {{
-    unsafe {{ mujoco_sys::mj_jac(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), point.as_ptr(), body) }}
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {{
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    unsafe {{
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jac(data.model.as_ptr(), data.as_ptr(), jacp, jacr, point.as_ptr(), body);
+    }}
+    jac
 }}""",
     "mj_jacBody": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac_body(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {{
-    unsafe {{ mujoco_sys::mj_jacBody(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), body) }}
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_body(data: &crate::Data, body: i32) -> crate::Jacobian6xN {{
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    unsafe {{
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacBody(data.model.as_ptr(), data.as_ptr(), jacp, jacr, body);
+    }}
+    jac
 }}""",
     "mj_jacBodyCom": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac_body_com(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {{
-    unsafe {{ mujoco_sys::mj_jacBodyCom(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), body) }}
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_body_com(data: &crate::Data, body: i32) -> crate::Jacobian6xN {{
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    unsafe {{
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacBodyCom(data.model.as_ptr(), data.as_ptr(), jacp, jacr, body);
+    }}
+    jac
 }}""",
     "mj_jacSubtreeCom": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac_subtree_com(data: &mut crate::Data, jacp: &mut [f64], body: i32) {{
-    unsafe {{ mujoco_sys::mj_jacSubtreeCom(data.model.as_ptr(), data.as_mut_ptr(), jacp.as_mut_ptr(), body) }}
+/// Returns a 3×nv position Jacobian matrix.
+pub fn mj_jac_subtree_com(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {{
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian3xN::zeros(nv);
+    unsafe {{
+        mujoco_sys::mj_jacSubtreeCom(data.model.as_ptr(), data.as_mut_ptr(), jac.as_mut_ptr(), body);
+    }}
+    jac
 }}""",
     "mj_jacGeom": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac_geom(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], geom: i32) {{
-    unsafe {{ mujoco_sys::mj_jacGeom(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), geom) }}
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_geom(data: &crate::Data, geom: i32) -> crate::Jacobian6xN {{
+    debug_assert!(
+        (geom as usize) < data.model.ngeom(),
+        "geom index {{}} out of bounds (ngeom = {{}})", geom, data.model.ngeom()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    unsafe {{
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacGeom(data.model.as_ptr(), data.as_ptr(), jacp, jacr, geom);
+    }}
+    jac
 }}""",
     "mj_jacSite": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac_site(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], site: i32) {{
-    unsafe {{ mujoco_sys::mj_jacSite(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), site) }}
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_site(data: &crate::Data, site: i32) -> crate::Jacobian6xN {{
+    debug_assert!(
+        (site as usize) < data.model.nsite(),
+        "site index {{}} out of bounds (nsite = {{}})", site, data.model.nsite()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    unsafe {{
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacSite(data.model.as_ptr(), data.as_ptr(), jacp, jacr, site);
+    }}
+    jac
 }}""",
     "mj_jacPointAxis": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac_point_axis(data: &mut crate::Data, jac_point: &mut [f64], jac_axis: &mut [f64], point: &[f64; 3], axis: &[f64; 3], body: i32) {{
-    unsafe {{ mujoco_sys::mj_jacPointAxis(data.model.as_ptr(), data.as_mut_ptr(), jac_point.as_mut_ptr(), jac_axis.as_mut_ptr(), point.as_ptr(), axis.as_ptr(), body) }}
+/// Returns a 6×nv Jacobian matrix (top 3 rows: point translation, bottom 3 rows: axis rotation).
+pub fn mj_jac_point_axis(data: &mut crate::Data, point: &crate::Vec3, axis: &crate::Vec3, body: i32) -> crate::Jacobian6xN {{
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    unsafe {{
+        let jac_point = jac.as_mut_ptr();
+        let jac_axis = jac_point.add(3 * nv);
+        mujoco_sys::mj_jacPointAxis(data.model.as_ptr(), data.as_mut_ptr(), jac_point, jac_axis, point.as_ptr(), axis.as_ptr(), body);
+    }}
+    jac
 }}""",
     "mj_jacDot": lambda f: f"""
 /// {f.doc}
-pub fn mj_jac_dot(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], point: &[f64; 3], body: i32) {{
-    unsafe {{ mujoco_sys::mj_jacDot(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), point.as_ptr(), body) }}
+/// Returns a 6×nv Jacobian time derivative matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_dot(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {{
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    unsafe {{
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacDot(data.model.as_ptr(), data.as_ptr(), jacp, jacr, point.as_ptr(), body);
+    }}
+    jac
 }}""",
     "mj_angmomMat": lambda f: f"""
 /// {f.doc}
-pub fn mj_angmom_mat(data: &mut crate::Data, mat: &mut [f64], body: i32) {{
-    unsafe {{ mujoco_sys::mj_angmomMat(data.model.as_ptr(), data.as_mut_ptr(), mat.as_mut_ptr(), body) }}
+/// Returns a 3×nv angular momentum matrix.
+pub fn mj_angmom_mat(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {{
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut mat = crate::Jacobian3xN::zeros(nv);
+    unsafe {{
+        mujoco_sys::mj_angmomMat(data.model.as_ptr(), data.as_mut_ptr(), mat.as_mut_ptr(), body);
+    }}
+    mat
 }}""",
 }
 
@@ -580,246 +833,6 @@ with open(output_path, "a") as f:
         if func_name in functions.FUNCTIONS:
             f.write(generator(functions.FUNCTIONS[func_name]))
             f.write("\n")
-
-
-# =============================================================================
-# Math utility functions (mju_* and mjd_*)
-# =============================================================================
-
-# In-place modify functions (use &mut for first param, don't return)
-IN_PLACE_FUNCTIONS = {
-    "mju_normalize3",
-    "mju_normalize4",
-    "mju_quatIntegrate",
-    "mju_zero3",
-    "mju_zero4",
-    "mju_unit4",
-}
-
-MATH_TYPE_MAP = {
-    "mjtNum": "f64",
-    "int": "i32",
-    "float": "f32",
-    "double": "f64",
-    "mjtByte": "u8",
-    "size_t": "usize",
-}
-
-# Rust reserved keywords that need escaping
-RUST_KEYWORDS = {
-    "type",
-}
-
-
-def escape_keyword(name):
-    """Escape Rust keywords with r# prefix."""
-    if name in RUST_KEYWORDS:
-        return f"r#{name}"
-    return name
-
-
-def is_array_type(param_type):
-    return isinstance(param_type, structs.ArrayType)
-
-
-def is_value_type(param_type):
-    return isinstance(param_type, structs.ValueType)
-
-
-def is_pointer_type(param_type):
-    return isinstance(param_type, structs.PointerType)
-
-
-def get_array_info(param_type):
-    """Returns (inner_type, size) for array types."""
-    if is_array_type(param_type):
-        return param_type.inner_type.name, param_type.extents[0]
-    return None, None
-
-
-def get_pointer_info(param_type):
-    """Returns inner type name for pointer types."""
-    if is_pointer_type(param_type):
-        return param_type.inner_type.name, param_type.inner_type.is_const
-    return None, None
-
-
-def is_runtime_sized_function(params):
-    """Check if function uses runtime-sized arrays (pointer + n pattern)."""
-    has_pointer = False
-    has_n_param = False
-    for param in params:
-        if is_pointer_type(param.type):
-            inner = param.type.inner_type.name
-            if inner in ("mjtNum", "int", "float", "double"):
-                has_pointer = True
-        if is_value_type(param.type) and param.name in ("n", "nr", "nc"):
-            has_n_param = True
-    return has_pointer and has_n_param
-
-
-def generate_math_function(func_name, function):
-    """Generate a math utility function binding."""
-    params = function.parameters
-    rust_name = camel_to_snake(func_name)
-    doc = function.doc
-
-    # Check if first param is output array (non-const)
-    first_param = params[0] if params else None
-    is_in_place = func_name in IN_PLACE_FUNCTIONS
-
-    # Determine if this returns a value or has output param
-    has_output_param = False
-    output_type = None
-    output_size = None
-
-    if first_param and is_array_type(first_param.type):
-        inner_type, size = get_array_info(first_param.type)
-        if not first_param.type.inner_type.is_const:
-            has_output_param = True
-            output_type = MATH_TYPE_MAP.get(inner_type, inner_type)
-            output_size = size
-
-    # Build parameter list and call arguments
-    rust_params = []
-    call_args = []
-
-    for i, param in enumerate(params):
-        pname = escape_keyword(param.name)
-        ptype = param.type
-
-        if i == 0 and has_output_param:
-            if is_in_place:
-                # In-place: &mut [f64; N]
-                rust_params.append(f"{pname}: &mut [{output_type}; {output_size}]")
-                call_args.append(f"{pname}.as_mut_ptr()")
-            else:
-                # Output param handled separately (we create local array)
-                call_args.append("res.as_mut_ptr()")
-            continue
-
-        if is_array_type(ptype):
-            inner_type, size = get_array_info(ptype)
-            rust_type = MATH_TYPE_MAP.get(inner_type, inner_type)
-            is_const = ptype.inner_type.is_const
-            if is_const:
-                rust_params.append(f"{pname}: &[{rust_type}; {size}]")
-                call_args.append(f"{pname}.as_ptr()")
-            else:
-                rust_params.append(f"{pname}: &mut [{rust_type}; {size}]")
-                call_args.append(f"{pname}.as_mut_ptr()")
-        elif is_value_type(ptype):
-            rust_type = MATH_TYPE_MAP.get(ptype.name, ptype.name)
-            rust_params.append(f"{pname}: {rust_type}")
-            call_args.append(pname)
-        elif is_pointer_type(ptype):
-            inner_type, is_const = get_pointer_info(ptype)
-            # Handle const char* as &str
-            if inner_type == "char" and is_const:
-                rust_params.append(f"{pname}: &str")
-                call_args.append(f"std::ffi::CString::new({pname}).unwrap().as_ptr()")
-            # Skip non-numeric pointer types (structs, etc.)
-            elif inner_type not in ("mjtNum", "int", "float", "double"):
-                return None
-            else:
-                rust_type = MATH_TYPE_MAP.get(inner_type, inner_type)
-                if is_const:
-                    rust_params.append(f"{pname}: &[{rust_type}]")
-                    call_args.append(f"{pname}.as_ptr()")
-                else:
-                    rust_params.append(f"{pname}: &mut [{rust_type}]")
-                    call_args.append(f"{pname}.as_mut_ptr()")
-        else:
-            return None
-
-    params_str = ", ".join(rust_params)
-    args_str = ", ".join(call_args)
-
-    # Handle return type
-    ret_type = function.return_type
-    has_return = is_value_type(ret_type) and ret_type.name != "void"
-    rust_ret_type = (
-        MATH_TYPE_MAP.get(ret_type.name, ret_type.name) if has_return else None
-    )
-
-    # Generate function body
-    if is_in_place:
-        # In-place modification
-        if has_return:
-            return f"""
-/// {doc}
-pub fn {rust_name}({params_str}) -> {rust_ret_type} {{
-    unsafe {{ mujoco_sys::{func_name}({args_str}) }}
-}}"""
-        else:
-            return f"""
-/// {doc}
-pub fn {rust_name}({params_str}) {{
-    unsafe {{ mujoco_sys::{func_name}({args_str}); }}
-}}"""
-    elif has_output_param:
-        # Return array style
-        if has_return:
-            # Has both output array and return value - rare case
-            return f"""
-/// {doc}
-pub fn {rust_name}({params_str}) -> ([{output_type}; {output_size}], {rust_ret_type}) {{
-    let mut res = [0.0; {output_size}];
-    let ret = unsafe {{ mujoco_sys::{func_name}({args_str}) }};
-    (res, ret)
-}}"""
-        else:
-            return f"""
-/// {doc}
-pub fn {rust_name}({params_str}) -> [{output_type}; {output_size}] {{
-    let mut res = [0.0; {output_size}];
-    unsafe {{ mujoco_sys::{func_name}({args_str}); }}
-    res
-}}"""
-    else:
-        # No output param, just return value or void
-        if has_return:
-            return f"""
-/// {doc}
-pub fn {rust_name}({params_str}) -> {rust_ret_type} {{
-    unsafe {{ mujoco_sys::{func_name}({args_str}) }}
-}}"""
-        else:
-            return f"""
-/// {doc}
-pub fn {rust_name}({params_str}) {{
-    unsafe {{ mujoco_sys::{func_name}({args_str}); }}
-}}"""
-
-
-math_functions = []
-
-for func_name, function in functions.FUNCTIONS.items():
-    if func_name in SKIP_FUNCTIONS:
-        continue
-
-    # Only process mju_* and mjd_* functions (mj_* handled separately)
-    if not (func_name.startswith("mju_") or func_name.startswith("mjd_")):
-        continue
-
-    result = generate_math_function(func_name, function)
-    if result:
-        math_functions.append(result)
-    else:
-        print(f"Skipping math function {function} - unsupported signature")
-
-math_functions_header = """//! Auto-generated math utility functions
-//! Generated by generate_from_introspect.py - DO NOT EDIT MANUALLY
-
-#![allow(non_snake_case)]
-"""
-
-# Write math functions to file
-output_path = FILE_DIR / ".." / "mujoco" / "src" / "math.rs"
-with open(output_path, "w") as f:
-    f.write(math_functions_header)
-    for func in math_functions:
-        f.write(f"{func}\n")
 
 
 # Enums
@@ -848,3 +861,6 @@ impl From<usize> for {enum_name} {{
 with (FILE_DIR / "src" / "lib.rs").open("a") as f:
     f.write(generate_from_trait("mjtGeom", "mjGEOM_"))
     f.write(generate_from_trait("mjtJoint", "mjJNT_"))
+
+# Generate math.rs with nalgebra type aliases
+generate_math_rs()

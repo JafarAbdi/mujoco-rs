@@ -13,7 +13,7 @@ bindgen $SCRIPT_DIR/binding.h -o $SCRIPT_DIR/src/lib.rs \
   --allowlist-function="(mj).*" \
   --allowlist-type="(mj).*" \
   --allowlist-var="mj.*" \
-  -- -I$SCRIPT_DIR/mujoco/include
+  -- -I$SCRIPT_DIR/mujoco/include -target x86_64-linux-gnu
 
 # Remove prefixes from enums
 prefixes=(

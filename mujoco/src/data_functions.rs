@@ -45,6 +45,13 @@ pub fn mj_reset_data(data: &mut Data) {
     }
 }
 
+/// Run all kinematics-like computations (kinematics, comPos, camlight, flex, tendon).
+pub fn mj_fwd_kinematics(data: &mut Data) {
+    unsafe {
+        mujoco_sys::mj_fwdKinematics(data.model.as_ptr(), data.as_mut_ptr());
+    }
+}
+
 /// Run position-dependent computations.
 pub fn mj_fwd_position(data: &mut Data) {
     unsafe {
@@ -318,13 +325,13 @@ pub fn mj_version_string() -> &'static str {
     }
 }
 
-/// Get id of object with the specified mjtObj type and name, returns -1 if id not found.
+/// Get id of object with the specified mjtObj type and name; return -1 if id not found.
 pub fn mj_name2id(model: &crate::Model, obj_type: i32, name: &str) -> i32 {
     let name_cstr = std::ffi::CString::new(name).unwrap();
     unsafe { mujoco_sys::mj_name2id(model.as_ptr(), obj_type, name_cstr.as_ptr()) }
 }
 
-/// Get name of object with the specified mjtObj type and id, returns NULL if name not found.
+/// Get name of object with the specified mjtObj type and id; return NULL if name not found.
 pub fn mj_id2name(model: &crate::Model, obj_type: i32, id: i32) -> &'static str {
     unsafe {
         let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type, id);
@@ -376,8 +383,8 @@ pub fn mj_object_velocity(
     objtype: i32,
     objid: i32,
     flg_local: i32,
-) -> [f64; 6] {
-    let mut res = [0.0; 6];
+) -> crate::Vec6 {
+    let mut res = crate::Vec6::zeros();
     unsafe {
         mujoco_sys::mj_objectVelocity(
             data.model.as_ptr(),
@@ -397,8 +404,8 @@ pub fn mj_object_acceleration(
     objtype: i32,
     objid: i32,
     flg_local: i32,
-) -> [f64; 6] {
-    let mut res = [0.0; 6];
+) -> crate::Vec6 {
+    let mut res = crate::Vec6::zeros();
     unsafe {
         mujoco_sys::mj_objectAcceleration(
             data.model.as_ptr(),
@@ -413,20 +420,20 @@ pub fn mj_object_acceleration(
 }
 
 /// Extract 6D force:torque given contact id, in the contact frame.
-pub fn mj_contact_force(data: &crate::Data, id: i32) -> [f64; 6] {
-    let mut res = [0.0; 6];
+pub fn mj_contact_force(data: &crate::Data, id: i32) -> crate::Vec6 {
+    let mut res = crate::Vec6::zeros();
     unsafe { mujoco_sys::mj_contactForce(data.model.as_ptr(), data.as_ptr(), id, res.as_mut_ptr()) }
     res
 }
 
-/// Returns smallest signed distance between two geoms and optionally segment from geom1 to geom2.
+/// Return smallest signed distance between two geoms and optionally segment from geom1 to geom2.
 pub fn mj_geom_distance(
     data: &crate::Data,
     geom1: i32,
     geom2: i32,
     distmax: f64,
-) -> (f64, [f64; 6]) {
-    let mut fromto = [0.0; 6];
+) -> (f64, crate::Vec6) {
+    let mut fromto = crate::Vec6::zeros();
     let dist = unsafe {
         mujoco_sys::mj_geomDistance(
             data.model.as_ptr(),
@@ -441,133 +448,205 @@ pub fn mj_geom_distance(
 }
 
 /// Compute 3/6-by-nv end-effector Jacobian of global point attached to given body.
-pub fn mj_jac(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], point: &[f64; 3], body: i32) {
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {} out of bounds (nbody = {})",
+        body,
+        data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
     unsafe {
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
         mujoco_sys::mj_jac(
             data.model.as_ptr(),
             data.as_ptr(),
-            jacp.as_mut_ptr(),
-            jacr.as_mut_ptr(),
+            jacp,
+            jacr,
             point.as_ptr(),
             body,
-        )
+        );
     }
+    jac
 }
 
 /// Compute body frame end-effector Jacobian.
-pub fn mj_jac_body(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_body(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {} out of bounds (nbody = {})",
+        body,
+        data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
     unsafe {
-        mujoco_sys::mj_jacBody(
-            data.model.as_ptr(),
-            data.as_ptr(),
-            jacp.as_mut_ptr(),
-            jacr.as_mut_ptr(),
-            body,
-        )
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacBody(data.model.as_ptr(), data.as_ptr(), jacp, jacr, body);
     }
+    jac
 }
 
 /// Compute body center-of-mass end-effector Jacobian.
-pub fn mj_jac_body_com(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], body: i32) {
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_body_com(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {} out of bounds (nbody = {})",
+        body,
+        data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
     unsafe {
-        mujoco_sys::mj_jacBodyCom(
-            data.model.as_ptr(),
-            data.as_ptr(),
-            jacp.as_mut_ptr(),
-            jacr.as_mut_ptr(),
-            body,
-        )
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacBodyCom(data.model.as_ptr(), data.as_ptr(), jacp, jacr, body);
     }
+    jac
 }
 
 /// Compute subtree center-of-mass end-effector Jacobian.
-pub fn mj_jac_subtree_com(data: &mut crate::Data, jacp: &mut [f64], body: i32) {
+/// Returns a 3×nv position Jacobian matrix.
+pub fn mj_jac_subtree_com(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {} out of bounds (nbody = {})",
+        body,
+        data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian3xN::zeros(nv);
     unsafe {
         mujoco_sys::mj_jacSubtreeCom(
             data.model.as_ptr(),
             data.as_mut_ptr(),
-            jacp.as_mut_ptr(),
+            jac.as_mut_ptr(),
             body,
-        )
+        );
     }
+    jac
 }
 
 /// Compute geom end-effector Jacobian.
-pub fn mj_jac_geom(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], geom: i32) {
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_geom(data: &crate::Data, geom: i32) -> crate::Jacobian6xN {
+    debug_assert!(
+        (geom as usize) < data.model.ngeom(),
+        "geom index {} out of bounds (ngeom = {})",
+        geom,
+        data.model.ngeom()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
     unsafe {
-        mujoco_sys::mj_jacGeom(
-            data.model.as_ptr(),
-            data.as_ptr(),
-            jacp.as_mut_ptr(),
-            jacr.as_mut_ptr(),
-            geom,
-        )
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacGeom(data.model.as_ptr(), data.as_ptr(), jacp, jacr, geom);
     }
+    jac
 }
 
 /// Compute site end-effector Jacobian.
-pub fn mj_jac_site(data: &crate::Data, jacp: &mut [f64], jacr: &mut [f64], site: i32) {
+/// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_site(data: &crate::Data, site: i32) -> crate::Jacobian6xN {
+    debug_assert!(
+        (site as usize) < data.model.nsite(),
+        "site index {} out of bounds (nsite = {})",
+        site,
+        data.model.nsite()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
     unsafe {
-        mujoco_sys::mj_jacSite(
-            data.model.as_ptr(),
-            data.as_ptr(),
-            jacp.as_mut_ptr(),
-            jacr.as_mut_ptr(),
-            site,
-        )
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
+        mujoco_sys::mj_jacSite(data.model.as_ptr(), data.as_ptr(), jacp, jacr, site);
     }
+    jac
 }
 
 /// Compute translation end-effector Jacobian of point, and rotation Jacobian of axis.
+/// Returns a 6×nv Jacobian matrix (top 3 rows: point translation, bottom 3 rows: axis rotation).
 pub fn mj_jac_point_axis(
     data: &mut crate::Data,
-    jac_point: &mut [f64],
-    jac_axis: &mut [f64],
-    point: &[f64; 3],
-    axis: &[f64; 3],
+    point: &crate::Vec3,
+    axis: &crate::Vec3,
     body: i32,
-) {
+) -> crate::Jacobian6xN {
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {} out of bounds (nbody = {})",
+        body,
+        data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
     unsafe {
+        let jac_point = jac.as_mut_ptr();
+        let jac_axis = jac_point.add(3 * nv);
         mujoco_sys::mj_jacPointAxis(
             data.model.as_ptr(),
             data.as_mut_ptr(),
-            jac_point.as_mut_ptr(),
-            jac_axis.as_mut_ptr(),
+            jac_point,
+            jac_axis,
             point.as_ptr(),
             axis.as_ptr(),
             body,
-        )
+        );
     }
+    jac
 }
 
 /// Compute 3/6-by-nv Jacobian time derivative of global point attached to given body.
-pub fn mj_jac_dot(
-    data: &crate::Data,
-    jacp: &mut [f64],
-    jacr: &mut [f64],
-    point: &[f64; 3],
-    body: i32,
-) {
+/// Returns a 6×nv Jacobian time derivative matrix (top 3 rows: position, bottom 3 rows: rotation).
+pub fn mj_jac_dot(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {} out of bounds (nbody = {})",
+        body,
+        data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut jac = crate::Jacobian6xN::zeros(nv);
     unsafe {
+        let jacp = jac.as_mut_ptr();
+        let jacr = jacp.add(3 * nv);
         mujoco_sys::mj_jacDot(
             data.model.as_ptr(),
             data.as_ptr(),
-            jacp.as_mut_ptr(),
-            jacr.as_mut_ptr(),
+            jacp,
+            jacr,
             point.as_ptr(),
             body,
-        )
+        );
     }
+    jac
 }
 
 /// Compute subtree angular momentum matrix.
-pub fn mj_angmom_mat(data: &mut crate::Data, mat: &mut [f64], body: i32) {
+/// Returns a 3×nv angular momentum matrix.
+pub fn mj_angmom_mat(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {
+    debug_assert!(
+        (body as usize) < data.model.nbody(),
+        "body index {} out of bounds (nbody = {})",
+        body,
+        data.model.nbody()
+    );
+    let nv = data.model.nv();
+    let mut mat = crate::Jacobian3xN::zeros(nv);
     unsafe {
         mujoco_sys::mj_angmomMat(
             data.model.as_ptr(),
             data.as_mut_ptr(),
             mat.as_mut_ptr(),
             body,
-        )
+        );
     }
+    mat
 }
