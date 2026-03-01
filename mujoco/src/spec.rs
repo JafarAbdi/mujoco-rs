@@ -40,7 +40,7 @@ impl Spec {
         Ok(Spec { ptr })
     }
 
-    pub fn from_str(xml: &str) -> Result<Self, String> {
+    pub fn parse(xml: &str) -> Result<Self, String> {
         let c_xml = std::ffi::CString::new(xml)
             .map_err(|e| format!("Failed to convert XML to CString: '{e}'"))?;
 
@@ -100,7 +100,7 @@ mod tests {
 
     #[test]
     fn test_spec_from_str() {
-        let spec = Spec::from_str(crate::tests::test_xml_str());
+        let spec = Spec::parse(crate::tests::test_xml_str());
         assert!(spec.is_ok());
         let model = spec.unwrap().compile();
         assert_ne!(model.as_ptr(), std::ptr::null());
@@ -110,7 +110,7 @@ mod tests {
 
     #[test]
     fn test_spec_from_str_invalid() {
-        let spec = Spec::from_str("<mujoco></mujoco");
+        let spec = Spec::parse("<mujoco></mujoco");
         assert!(spec.is_err());
     }
 

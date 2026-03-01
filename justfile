@@ -12,9 +12,9 @@ build:
 test:
     cargo test
 
-# Run clippy with pedantic lints, treating warnings as errors.
+# Run clippy treating warnings as errors (skip generated FFI crate).
 lint:
-    cargo clippy --all-targets -- -D warnings
+    cargo clippy --all-targets -p mujoco -- -D warnings
 
 # Format all code.
 fmt:

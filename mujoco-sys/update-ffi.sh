@@ -8,6 +8,7 @@ bindgen $SCRIPT_DIR/binding.h -o $SCRIPT_DIR/src/lib.rs \
   --raw-line "#![allow(non_camel_case_types)]" \
   --raw-line "#![allow(non_snake_case)]" \
   --raw-line "#![allow(non_upper_case_globals)]" \
+  --raw-line "#![allow(clippy::approx_constant)]" \
   --default-enum-style rust \
   --generate=functions,types,vars \
   --allowlist-function="(mj).*" \

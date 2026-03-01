@@ -333,11 +333,7 @@ pub fn name2id(model: &crate::Model, obj_type: mujoco_sys::mjtObj, name: &str) -
 }
 
 /// Get name of object with the specified mjtObj type and id; return NULL if name not found.
-pub fn id2name<'a>(
-    model: &'a crate::Model,
-    obj_type: mujoco_sys::mjtObj,
-    id: i32,
-) -> Option<&'a str> {
+pub fn id2name(model: &crate::Model, obj_type: mujoco_sys::mjtObj, id: i32) -> Option<&str> {
     unsafe {
         let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type as i32, id);
         if ptr.is_null() {

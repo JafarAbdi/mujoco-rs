@@ -4,7 +4,7 @@
 use crate::Data;
 use mujoco_sys::{mjContact, mjSolverStat, mjTimerStat, mjWarningStat, mjtNum};
 
-#[allow(non_snake_case)]
+#[allow(non_snake_case, clippy::unnecessary_cast)]
 impl<'a> Data<'a> {
     pub fn narena(&self) -> usize {
         self.raw().narena as usize

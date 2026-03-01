@@ -4,7 +4,7 @@
 use crate::Model;
 use mujoco_sys::{mjOption, mjStatistic, mjVisual, mjtNum};
 
-#[allow(non_snake_case)]
+#[allow(non_snake_case, clippy::unnecessary_cast)]
 impl Model {
     pub fn nq(&self) -> usize {
         self.raw().nq as usize

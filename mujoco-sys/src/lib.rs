@@ -3,6 +3,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
+#![allow(clippy::approx_constant)]
 
 pub const mjVERSION_HEADER: u32 = 3005000;
 pub const mjMINVAL: f64 = 0.000000000000001;

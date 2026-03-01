@@ -442,7 +442,7 @@ model_header = f"""//! Auto-generated Model accessor functions
 use crate::Model;
 use mujoco_sys::{{{', '.join(sorted(model_includes))}}};
 
-#[allow(non_snake_case)]
+#[allow(non_snake_case, clippy::unnecessary_cast)]
 impl Model {{
 """
 footer = "}\n"
@@ -532,7 +532,7 @@ data_header = f"""//! Auto-generated Data accessor functions
 use crate::Data;
 use mujoco_sys::{{{', '.join(sorted(data_includes))}}};
 
-#[allow(non_snake_case)]
+#[allow(non_snake_case, clippy::unnecessary_cast)]
 impl<'a> Data<'a> {{
 """
 
@@ -567,7 +567,7 @@ pub fn name2id(model: &crate::Model, obj_type: mujoco_sys::mjtObj, name: &str) -
 }}""",
     "mj_id2name": lambda f: f"""
 /// {f.doc}
-pub fn id2name<'a>(model: &'a crate::Model, obj_type: mujoco_sys::mjtObj, id: i32) -> Option<&'a str> {{
+pub fn id2name(model: &crate::Model, obj_type: mujoco_sys::mjtObj, id: i32) -> Option<&str> {{
     unsafe {{
         let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type as i32, id);
         if ptr.is_null() {{
