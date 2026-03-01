@@ -73,17 +73,21 @@ fn main() {
         "mujoco/src/user/user_cache.cc",
         "mujoco/src/user/user_composite.cc",
         "mujoco/src/user/user_flexcomp.cc",
-        "mujoco/src/user/user_init.c",
         "mujoco/src/user/user_mesh.cc",
         "mujoco/src/user/user_model.cc",
         "mujoco/src/user/user_objects.cc",
         "mujoco/src/user/user_resource.cc",
         "mujoco/src/user/user_util.cc",
         "mujoco/src/user/user_vfs.cc",
+        "mujoco/src/user/user_threadpool.cc",
         "mujoco/src/thread/thread_pool.cc",
         "mujoco/src/thread/thread_task.cc",
+        // Engine C++ files (need C++20)
+        "mujoco/src/engine/engine_crossplatform.cc",
+        "mujoco/src/engine/engine_plugin.cc",
     ]);
     cfg.cpp(true);
+    cfg.std("c++20");
     cfg.warnings(false);
     cfg.compile("mujoco_cpp");
 
@@ -111,16 +115,17 @@ fn main() {
         "mujoco/src/engine/engine_collision_sdf.c",
         "mujoco/src/engine/engine_core_constraint.c",
         "mujoco/src/engine/engine_core_smooth.c",
-        "mujoco/src/engine/engine_crossplatform.cc",
+        "mujoco/src/engine/engine_core_util.c",
         "mujoco/src/engine/engine_derivative.c",
         "mujoco/src/engine/engine_derivative_fd.c",
         "mujoco/src/engine/engine_forward.c",
+        "mujoco/src/engine/engine_init.c",
         "mujoco/src/engine/engine_inverse.c",
         "mujoco/src/engine/engine_island.c",
         "mujoco/src/engine/engine_io.c",
+        "mujoco/src/engine/engine_memory.c",
         "mujoco/src/engine/engine_name.c",
         "mujoco/src/engine/engine_passive.c",
-        "mujoco/src/engine/engine_plugin.cc",
         "mujoco/src/engine/engine_print.c",
         "mujoco/src/engine/engine_ray.c",
         "mujoco/src/engine/engine_sensor.c",
@@ -135,7 +140,10 @@ fn main() {
         "mujoco/src/engine/engine_util_spatial.c",
         "mujoco/src/engine/engine_vis_init.c",
         "mujoco/src/engine/engine_vis_interact.c",
+        "mujoco/src/engine/engine_sleep.c",
+        "mujoco/src/engine/engine_util_container.c",
         "mujoco/src/engine/engine_vis_visualize.c",
+        "mujoco/src/user/user_init.c",
     ]);
 
     c_cfg.warnings(false);
