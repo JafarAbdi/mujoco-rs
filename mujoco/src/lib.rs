@@ -13,7 +13,7 @@ pub use data::Data;
 pub use data_functions::*;
 pub use math::*;
 pub use model::{Model, joint_nq, joint_nv};
-pub use spec::Spec;
+pub use spec::{ParseError, Spec};
 
 #[cfg(test)]
 mod tests {

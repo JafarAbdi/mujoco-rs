@@ -32,19 +32,18 @@ The crate will automatically build MuJoCo and its dependencies from source when 
 
 ## Updating submodules
 
-After updating the `mujoco` submodule to a new version, run the sync script to update all other submodules to the versions pinned in MuJoCo's `cmake/MujocoDependencies.cmake`:
+After updating the `mujoco` submodule to a new version, sync all other submodules to the versions pinned in MuJoCo's `cmake/MujocoDependencies.cmake`:
 
 ```bash
-./update-submodules.sh
+just update-submodules
 ```
 
 The script parses the commit hashes from the CMake file and checks out each submodule to the matching version. It will fetch from origin if needed.
 
 ## Update FFI bindings
 
-To update the FFI bindings, run the provided script:
+Regenerate the FFI bindings (requires `bindgen-cli`: `cargo install bindgen-cli`):
 
 ```bash
-# Make sure you have bindgen (Install with `cargo install bindgen-cli`)
-./update-ffi.sh
+just update-ffi
 ```

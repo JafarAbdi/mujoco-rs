@@ -20,13 +20,21 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 ## Development
 
-Clone the repository and run:
+Clone the repository and build:
 
 ```bash
 git clone --recurse-submodules https://github.com/JafarAbdi/mujoco-rs.git
 cd mujoco-rs
-cargo build
+just build
 ```
+
+Run all checks (format, lint, test):
+
+```bash
+just check
+```
+
+See all available tasks with `just --list`.
 
 ## Acknowledgements
 
