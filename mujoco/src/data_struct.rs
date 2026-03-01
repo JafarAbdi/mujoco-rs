@@ -558,14 +558,6 @@ impl<'a> Data<'a> {
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cam_xpos, self.model.ncam() * 3) }
     }
 
-    /// Get cam_xpos at index as Vec3
-    pub fn get_cam_xpos(&self, idx: usize) -> crate::Vec3 {
-        debug_assert!(idx < self.model.ncam(), "cam_xpos index out of bounds");
-        let data = self.cam_xpos();
-        let i = idx * 3;
-        crate::Vec3::new(data[i], data[i + 1], data[i + 2])
-    }
-
     /// Cartesian camera orientation
     pub fn cam_xmat(&self) -> &[mjtNum] {
         unsafe { std::slice::from_raw_parts(self.raw().cam_xmat, self.model.ncam() * 9) }
@@ -574,15 +566,6 @@ impl<'a> Data<'a> {
     /// Cartesian camera orientation
     pub fn cam_xmat_mut(&mut self) -> &mut [mjtNum] {
         unsafe { std::slice::from_raw_parts_mut(self.raw_mut().cam_xmat, self.model.ncam() * 9) }
-    }
-
-    /// Get cam_xmat at index as Mat3
-    pub fn get_cam_xmat(&self, idx: usize) -> crate::Mat3 {
-        debug_assert!(idx < self.model.ncam(), "cam_xmat index out of bounds");
-        let data = self.cam_xmat();
-        let i = idx * 9;
-        // MuJoCo stores row-major, nalgebra is column-major
-        crate::Mat3::from_row_slice(&data[i..i + 9])
     }
 
     /// Cartesian light position
@@ -597,14 +580,6 @@ impl<'a> Data<'a> {
         }
     }
 
-    /// Get light_xpos at index as Vec3
-    pub fn get_light_xpos(&self, idx: usize) -> crate::Vec3 {
-        debug_assert!(idx < self.model.nlight(), "light_xpos index out of bounds");
-        let data = self.light_xpos();
-        let i = idx * 3;
-        crate::Vec3::new(data[i], data[i + 1], data[i + 2])
-    }
-
     /// Cartesian light direction
     pub fn light_xdir(&self) -> &[mjtNum] {
         unsafe { std::slice::from_raw_parts(self.raw().light_xdir, self.model.nlight() * 3) }
@@ -615,14 +590,6 @@ impl<'a> Data<'a> {
         unsafe {
             std::slice::from_raw_parts_mut(self.raw_mut().light_xdir, self.model.nlight() * 3)
         }
-    }
-
-    /// Get light_xdir at index as Vec3
-    pub fn get_light_xdir(&self, idx: usize) -> crate::Vec3 {
-        debug_assert!(idx < self.model.nlight(), "light_xdir index out of bounds");
-        let data = self.light_xdir();
-        let i = idx * 3;
-        crate::Vec3::new(data[i], data[i + 1], data[i + 2])
     }
 
     /// center of mass of each subtree

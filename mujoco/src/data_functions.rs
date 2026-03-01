@@ -4,320 +4,320 @@
 use crate::Data;
 
 /// Advance simulation, use control callback to obtain external force and control.
-pub fn mj_step(data: &mut Data) {
+pub fn step(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_step(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Advance simulation in two steps: before external force and control is set by user.
-pub fn mj_step1(data: &mut Data) {
+pub fn step1(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_step1(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Advance simulation in two steps: after external force and control is set by user.
-pub fn mj_step2(data: &mut Data) {
+pub fn step2(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_step2(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Forward dynamics: same as mj_step but do not integrate in time.
-pub fn mj_forward(data: &mut Data) {
+pub fn forward(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_forward(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Inverse dynamics: qacc must be set before calling.
-pub fn mj_inverse(data: &mut Data) {
+pub fn inverse(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_inverse(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Reset data to defaults.
-pub fn mj_reset_data(data: &mut Data) {
+pub fn reset_data(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_resetData(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run all kinematics-like computations (kinematics, comPos, camlight, flex, tendon).
-pub fn mj_fwd_kinematics(data: &mut Data) {
+pub fn fwd_kinematics(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_fwdKinematics(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run position-dependent computations.
-pub fn mj_fwd_position(data: &mut Data) {
+pub fn fwd_position(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_fwdPosition(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run velocity-dependent computations.
-pub fn mj_fwd_velocity(data: &mut Data) {
+pub fn fwd_velocity(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_fwdVelocity(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute actuator force qfrc_actuator.
-pub fn mj_fwd_actuation(data: &mut Data) {
+pub fn fwd_actuation(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_fwdActuation(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Add up all non-constraint forces, compute qacc_smooth.
-pub fn mj_fwd_acceleration(data: &mut Data) {
+pub fn fwd_acceleration(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_fwdAcceleration(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run selected constraint solver.
-pub fn mj_fwd_constraint(data: &mut Data) {
+pub fn fwd_constraint(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_fwdConstraint(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Euler integrator, semi-implicit in velocity.
-pub fn mj_euler(data: &mut Data) {
+pub fn euler(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_Euler(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Implicit-in-velocity integrators.
-pub fn mj_implicit(data: &mut Data) {
+pub fn implicit(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_implicit(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run position-dependent computations in inverse dynamics.
-pub fn mj_inv_position(data: &mut Data) {
+pub fn inv_position(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_invPosition(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run velocity-dependent computations in inverse dynamics.
-pub fn mj_inv_velocity(data: &mut Data) {
+pub fn inv_velocity(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_invVelocity(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Apply the analytical formula for inverse constraint dynamics.
-pub fn mj_inv_constraint(data: &mut Data) {
+pub fn inv_constraint(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_invConstraint(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compare forward and inverse dynamics, save results in fwdinv.
-pub fn mj_compare_fwd_inv(data: &mut Data) {
+pub fn compare_fwd_inv(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_compareFwdInv(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Evaluate position-dependent sensors.
-pub fn mj_sensor_pos(data: &mut Data) {
+pub fn sensor_pos(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_sensorPos(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Evaluate velocity-dependent sensors.
-pub fn mj_sensor_vel(data: &mut Data) {
+pub fn sensor_vel(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_sensorVel(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Evaluate acceleration and force-dependent sensors.
-pub fn mj_sensor_acc(data: &mut Data) {
+pub fn sensor_acc(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_sensorAcc(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Evaluate position-dependent energy (potential).
-pub fn mj_energy_pos(data: &mut Data) {
+pub fn energy_pos(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_energyPos(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Evaluate velocity-dependent energy (kinetic).
-pub fn mj_energy_vel(data: &mut Data) {
+pub fn energy_vel(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_energyVel(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Check qpos, reset if any element is too big or nan.
-pub fn mj_check_pos(data: &mut Data) {
+pub fn check_pos(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_checkPos(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Check qvel, reset if any element is too big or nan.
-pub fn mj_check_vel(data: &mut Data) {
+pub fn check_vel(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_checkVel(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Check qacc, reset if any element is too big or nan.
-pub fn mj_check_acc(data: &mut Data) {
+pub fn check_acc(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_checkAcc(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run forward kinematics.
-pub fn mj_kinematics(data: &mut Data) {
+pub fn kinematics(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_kinematics(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Map inertias and motion dofs to global frame centered at CoM.
-pub fn mj_com_pos(data: &mut Data) {
+pub fn com_pos(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_comPos(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute camera and light positions and orientations.
-pub fn mj_camlight(data: &mut Data) {
+pub fn camlight(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_camlight(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute flex-related quantities.
-pub fn mj_flex(data: &mut Data) {
+pub fn flex(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_flex(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute tendon lengths, velocities and moment arms.
-pub fn mj_tendon(data: &mut Data) {
+pub fn tendon(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_tendon(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute actuator transmission lengths and moments.
-pub fn mj_transmission(data: &mut Data) {
+pub fn transmission(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_transmission(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run composite rigid body inertia algorithm (CRB).
-pub fn mj_crb(data: &mut Data) {
+pub fn crb(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_crb(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Make inertia matrix.
-pub fn mj_make_m(data: &mut Data) {
+pub fn make_m(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_makeM(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute sparse L'*D*L factorizaton of inertia matrix.
-pub fn mj_factor_m(data: &mut Data) {
+pub fn factor_m(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_factorM(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute cvel, cdof_dot.
-pub fn mj_com_vel(data: &mut Data) {
+pub fn com_vel(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_comVel(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute qfrc_passive from spring-dampers, gravity compensation and fluid forces.
-pub fn mj_passive(data: &mut Data) {
+pub fn passive(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_passive(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Sub-tree linear velocity and angular momentum: compute subtree_linvel, subtree_angmom.
-pub fn mj_subtree_vel(data: &mut Data) {
+pub fn subtree_vel(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_subtreeVel(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// RNE with complete data: compute cacc, cfrc_ext, cfrc_int.
-pub fn mj_rne_post_constraint(data: &mut Data) {
+pub fn rne_post_constraint(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_rnePostConstraint(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Run collision detection.
-pub fn mj_collision(data: &mut Data) {
+pub fn collision(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_collision(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Construct constraints.
-pub fn mj_make_constraint(data: &mut Data) {
+pub fn make_constraint(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_makeConstraint(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Find constraint islands.
-pub fn mj_island(data: &mut Data) {
+pub fn island(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_island(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute inverse constraint inertia efc_AR.
-pub fn mj_project_constraint(data: &mut Data) {
+pub fn project_constraint(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_projectConstraint(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Compute efc_vel, efc_aref.
-pub fn mj_reference_constraint(data: &mut Data) {
+pub fn reference_constraint(data: &mut Data) {
     unsafe {
         mujoco_sys::mj_referenceConstraint(data.model.as_ptr(), data.as_mut_ptr());
     }
 }
 
 /// Return version number: 1.0.2 is encoded as 102.
-pub fn mj_version() -> i32 {
+pub fn version() -> i32 {
     unsafe { mujoco_sys::mj_version() }
 }
 
 /// Return the current version of MuJoCo as a null-terminated string.
-pub fn mj_version_string() -> &'static str {
+pub fn version_string() -> &'static str {
     unsafe {
         std::ffi::CStr::from_ptr(mujoco_sys::mj_versionString())
             .to_str()
@@ -326,30 +326,35 @@ pub fn mj_version_string() -> &'static str {
 }
 
 /// Get id of object with the specified mjtObj type and name; return -1 if id not found.
-pub fn mj_name2id(model: &crate::Model, obj_type: i32, name: &str) -> i32 {
+pub fn name2id(model: &crate::Model, obj_type: mujoco_sys::mjtObj, name: &str) -> Option<i32> {
     let name_cstr = std::ffi::CString::new(name).unwrap();
-    unsafe { mujoco_sys::mj_name2id(model.as_ptr(), obj_type, name_cstr.as_ptr()) }
+    let id = unsafe { mujoco_sys::mj_name2id(model.as_ptr(), obj_type as i32, name_cstr.as_ptr()) };
+    if id >= 0 { Some(id) } else { None }
 }
 
 /// Get name of object with the specified mjtObj type and id; return NULL if name not found.
-pub fn mj_id2name(model: &crate::Model, obj_type: i32, id: i32) -> &'static str {
+pub fn id2name(
+    model: &crate::Model,
+    obj_type: mujoco_sys::mjtObj,
+    id: i32,
+) -> Option<&'static str> {
     unsafe {
-        let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type, id);
+        let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type as i32, id);
         if ptr.is_null() {
-            ""
+            None
         } else {
-            std::ffi::CStr::from_ptr(ptr).to_str().unwrap_or("")
+            Some(std::ffi::CStr::from_ptr(ptr).to_str().unwrap_or(""))
         }
     }
 }
 
 /// Reset data. If 0 <= key < nkey, set fields from specified keyframe.
-pub fn mj_reset_data_keyframe(data: &mut crate::Data, key: i32) {
+pub fn reset_data_keyframe(data: &mut crate::Data, key: i32) {
     unsafe { mujoco_sys::mj_resetDataKeyframe(data.model.as_ptr(), data.as_mut_ptr(), key) }
 }
 
 /// Compute velocity by finite-differencing two positions.
-pub fn mj_differentiate_pos(
+pub fn differentiate_pos(
     model: &crate::Model,
     qvel: &mut [f64],
     dt: f64,
@@ -368,17 +373,17 @@ pub fn mj_differentiate_pos(
 }
 
 /// Integrate position with given velocity.
-pub fn mj_integrate_pos(model: &crate::Model, qpos: &mut [f64], qvel: &[f64], dt: f64) {
+pub fn integrate_pos(model: &crate::Model, qpos: &mut [f64], qvel: &[f64], dt: f64) {
     unsafe { mujoco_sys::mj_integratePos(model.as_ptr(), qpos.as_mut_ptr(), qvel.as_ptr(), dt) }
 }
 
 /// Normalize all quaternions in qpos-type vector.
-pub fn mj_normalize_quat(model: &crate::Model, qpos: &mut [f64]) {
+pub fn normalize_quat(model: &crate::Model, qpos: &mut [f64]) {
     unsafe { mujoco_sys::mj_normalizeQuat(model.as_ptr(), qpos.as_mut_ptr()) }
 }
 
 /// Compute object 6D velocity (rot:lin) in object-centered frame, world/local orientation.
-pub fn mj_object_velocity(
+pub fn object_velocity(
     data: &crate::Data,
     objtype: i32,
     objid: i32,
@@ -399,7 +404,7 @@ pub fn mj_object_velocity(
 }
 
 /// Compute object 6D acceleration (rot:lin) in object-centered frame, world/local orientation.
-pub fn mj_object_acceleration(
+pub fn object_acceleration(
     data: &crate::Data,
     objtype: i32,
     objid: i32,
@@ -420,14 +425,14 @@ pub fn mj_object_acceleration(
 }
 
 /// Extract 6D force:torque given contact id, in the contact frame.
-pub fn mj_contact_force(data: &crate::Data, id: i32) -> crate::Vec6 {
+pub fn contact_force(data: &crate::Data, id: i32) -> crate::Vec6 {
     let mut res = crate::Vec6::zeros();
     unsafe { mujoco_sys::mj_contactForce(data.model.as_ptr(), data.as_ptr(), id, res.as_mut_ptr()) }
     res
 }
 
 /// Return smallest signed distance between two geoms and optionally segment from geom1 to geom2.
-pub fn mj_geom_distance(
+pub fn geom_distance(
     data: &crate::Data,
     geom1: i32,
     geom2: i32,
@@ -449,7 +454,7 @@ pub fn mj_geom_distance(
 
 /// Compute 3/6-by-nv end-effector Jacobian of global point attached to given body.
 /// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
-pub fn mj_jac(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {
+pub fn jac(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {
     debug_assert!(
         (body as usize) < data.model.nbody(),
         "body index {} out of bounds (nbody = {})",
@@ -475,7 +480,7 @@ pub fn mj_jac(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jaco
 
 /// Compute body frame end-effector Jacobian.
 /// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
-pub fn mj_jac_body(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
+pub fn jac_body(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
     debug_assert!(
         (body as usize) < data.model.nbody(),
         "body index {} out of bounds (nbody = {})",
@@ -494,7 +499,7 @@ pub fn mj_jac_body(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
 
 /// Compute body center-of-mass end-effector Jacobian.
 /// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
-pub fn mj_jac_body_com(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
+pub fn jac_body_com(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
     debug_assert!(
         (body as usize) < data.model.nbody(),
         "body index {} out of bounds (nbody = {})",
@@ -513,7 +518,7 @@ pub fn mj_jac_body_com(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
 
 /// Compute subtree center-of-mass end-effector Jacobian.
 /// Returns a 3×nv position Jacobian matrix.
-pub fn mj_jac_subtree_com(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {
+pub fn jac_subtree_com(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {
     debug_assert!(
         (body as usize) < data.model.nbody(),
         "body index {} out of bounds (nbody = {})",
@@ -535,7 +540,7 @@ pub fn mj_jac_subtree_com(data: &mut crate::Data, body: i32) -> crate::Jacobian3
 
 /// Compute geom end-effector Jacobian.
 /// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
-pub fn mj_jac_geom(data: &crate::Data, geom: i32) -> crate::Jacobian6xN {
+pub fn jac_geom(data: &crate::Data, geom: i32) -> crate::Jacobian6xN {
     debug_assert!(
         (geom as usize) < data.model.ngeom(),
         "geom index {} out of bounds (ngeom = {})",
@@ -554,7 +559,7 @@ pub fn mj_jac_geom(data: &crate::Data, geom: i32) -> crate::Jacobian6xN {
 
 /// Compute site end-effector Jacobian.
 /// Returns a 6×nv Jacobian matrix (top 3 rows: position, bottom 3 rows: rotation).
-pub fn mj_jac_site(data: &crate::Data, site: i32) -> crate::Jacobian6xN {
+pub fn jac_site(data: &crate::Data, site: i32) -> crate::Jacobian6xN {
     debug_assert!(
         (site as usize) < data.model.nsite(),
         "site index {} out of bounds (nsite = {})",
@@ -573,7 +578,7 @@ pub fn mj_jac_site(data: &crate::Data, site: i32) -> crate::Jacobian6xN {
 
 /// Compute translation end-effector Jacobian of point, and rotation Jacobian of axis.
 /// Returns a 6×nv Jacobian matrix (top 3 rows: point translation, bottom 3 rows: axis rotation).
-pub fn mj_jac_point_axis(
+pub fn jac_point_axis(
     data: &mut crate::Data,
     point: &crate::Vec3,
     axis: &crate::Vec3,
@@ -605,7 +610,7 @@ pub fn mj_jac_point_axis(
 
 /// Compute 3/6-by-nv Jacobian time derivative of global point attached to given body.
 /// Returns a 6×nv Jacobian time derivative matrix (top 3 rows: position, bottom 3 rows: rotation).
-pub fn mj_jac_dot(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {
+pub fn jac_dot(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobian6xN {
     debug_assert!(
         (body as usize) < data.model.nbody(),
         "body index {} out of bounds (nbody = {})",
@@ -631,7 +636,7 @@ pub fn mj_jac_dot(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::
 
 /// Compute subtree angular momentum matrix.
 /// Returns a 3×nv angular momentum matrix.
-pub fn mj_angmom_mat(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {
+pub fn angmom_mat(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {
     debug_assert!(
         (body as usize) < data.model.nbody(),
         "body index {} out of bounds (nbody = {})",

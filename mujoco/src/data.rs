@@ -62,11 +62,11 @@ mod tests {
         let model = crate::Model::from_file(crate::tests::test_xml_path()).unwrap();
         let mut data = Data::new(&model);
         assert_ne!(data.ptr, std::ptr::null_mut());
-        crate::mj_forward(&mut data);
-        crate::mj_step(&mut data);
+        crate::forward(&mut data);
+        crate::step(&mut data);
         data.qpos_mut()[0] += 0.1;
-        crate::mj_forward(&mut data);
-        crate::mj_step(&mut data);
+        crate::forward(&mut data);
+        crate::step(&mut data);
         let mut data2 = data.clone();
         assert_eq!(data2.qpos(), data.qpos());
         data2.qpos_mut()[0] += 0.1;
