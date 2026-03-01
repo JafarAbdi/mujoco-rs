@@ -333,11 +333,11 @@ pub fn name2id(model: &crate::Model, obj_type: mujoco_sys::mjtObj, name: &str) -
 }
 
 /// Get name of object with the specified mjtObj type and id; return NULL if name not found.
-pub fn id2name(
-    model: &crate::Model,
+pub fn id2name<'a>(
+    model: &'a crate::Model,
     obj_type: mujoco_sys::mjtObj,
     id: i32,
-) -> Option<&'static str> {
+) -> Option<&'a str> {
     unsafe {
         let ptr = mujoco_sys::mj_id2name(model.as_ptr(), obj_type as i32, id);
         if ptr.is_null() {
@@ -385,19 +385,19 @@ pub fn normalize_quat(model: &crate::Model, qpos: &mut [f64]) {
 /// Compute object 6D velocity (rot:lin) in object-centered frame, world/local orientation.
 pub fn object_velocity(
     data: &crate::Data,
-    objtype: i32,
+    objtype: mujoco_sys::mjtObj,
     objid: i32,
-    flg_local: i32,
+    flg_local: bool,
 ) -> crate::Vec6 {
     let mut res = crate::Vec6::zeros();
     unsafe {
         mujoco_sys::mj_objectVelocity(
             data.model.as_ptr(),
             data.as_ptr(),
-            objtype,
+            objtype as i32,
             objid,
             res.as_mut_ptr(),
-            flg_local,
+            flg_local as i32,
         )
     }
     res
@@ -406,19 +406,19 @@ pub fn object_velocity(
 /// Compute object 6D acceleration (rot:lin) in object-centered frame, world/local orientation.
 pub fn object_acceleration(
     data: &crate::Data,
-    objtype: i32,
+    objtype: mujoco_sys::mjtObj,
     objid: i32,
-    flg_local: i32,
+    flg_local: bool,
 ) -> crate::Vec6 {
     let mut res = crate::Vec6::zeros();
     unsafe {
         mujoco_sys::mj_objectAcceleration(
             data.model.as_ptr(),
             data.as_ptr(),
-            objtype,
+            objtype as i32,
             objid,
             res.as_mut_ptr(),
-            flg_local,
+            flg_local as i32,
         )
     }
     res
@@ -462,20 +462,19 @@ pub fn jac(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobia
         data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx6::zeros(nv);
     unsafe {
-        let jacp = jac.as_mut_ptr();
-        let jacr = jacp.add(3 * nv);
+        let ptr = jac_t.as_mut_ptr();
         mujoco_sys::mj_jac(
             data.model.as_ptr(),
             data.as_ptr(),
-            jacp,
-            jacr,
+            ptr,
+            ptr.add(3 * nv),
             point.as_ptr(),
             body,
         );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute body frame end-effector Jacobian.
@@ -488,13 +487,18 @@ pub fn jac_body(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
         data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx6::zeros(nv);
     unsafe {
-        let jacp = jac.as_mut_ptr();
-        let jacr = jacp.add(3 * nv);
-        mujoco_sys::mj_jacBody(data.model.as_ptr(), data.as_ptr(), jacp, jacr, body);
+        let ptr = jac_t.as_mut_ptr();
+        mujoco_sys::mj_jacBody(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            ptr,
+            ptr.add(3 * nv),
+            body,
+        );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute body center-of-mass end-effector Jacobian.
@@ -507,13 +511,18 @@ pub fn jac_body_com(data: &crate::Data, body: i32) -> crate::Jacobian6xN {
         data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx6::zeros(nv);
     unsafe {
-        let jacp = jac.as_mut_ptr();
-        let jacr = jacp.add(3 * nv);
-        mujoco_sys::mj_jacBodyCom(data.model.as_ptr(), data.as_ptr(), jacp, jacr, body);
+        let ptr = jac_t.as_mut_ptr();
+        mujoco_sys::mj_jacBodyCom(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            ptr,
+            ptr.add(3 * nv),
+            body,
+        );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute subtree center-of-mass end-effector Jacobian.
@@ -526,16 +535,16 @@ pub fn jac_subtree_com(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN 
         data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian3xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx3::zeros(nv);
     unsafe {
         mujoco_sys::mj_jacSubtreeCom(
             data.model.as_ptr(),
             data.as_mut_ptr(),
-            jac.as_mut_ptr(),
+            jac_t.as_mut_ptr(),
             body,
         );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute geom end-effector Jacobian.
@@ -548,13 +557,18 @@ pub fn jac_geom(data: &crate::Data, geom: i32) -> crate::Jacobian6xN {
         data.model.ngeom()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx6::zeros(nv);
     unsafe {
-        let jacp = jac.as_mut_ptr();
-        let jacr = jacp.add(3 * nv);
-        mujoco_sys::mj_jacGeom(data.model.as_ptr(), data.as_ptr(), jacp, jacr, geom);
+        let ptr = jac_t.as_mut_ptr();
+        mujoco_sys::mj_jacGeom(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            ptr,
+            ptr.add(3 * nv),
+            geom,
+        );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute site end-effector Jacobian.
@@ -567,13 +581,18 @@ pub fn jac_site(data: &crate::Data, site: i32) -> crate::Jacobian6xN {
         data.model.nsite()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx6::zeros(nv);
     unsafe {
-        let jacp = jac.as_mut_ptr();
-        let jacr = jacp.add(3 * nv);
-        mujoco_sys::mj_jacSite(data.model.as_ptr(), data.as_ptr(), jacp, jacr, site);
+        let ptr = jac_t.as_mut_ptr();
+        mujoco_sys::mj_jacSite(
+            data.model.as_ptr(),
+            data.as_ptr(),
+            ptr,
+            ptr.add(3 * nv),
+            site,
+        );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute translation end-effector Jacobian of point, and rotation Jacobian of axis.
@@ -591,21 +610,20 @@ pub fn jac_point_axis(
         data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx6::zeros(nv);
     unsafe {
-        let jac_point = jac.as_mut_ptr();
-        let jac_axis = jac_point.add(3 * nv);
+        let ptr = jac_t.as_mut_ptr();
         mujoco_sys::mj_jacPointAxis(
             data.model.as_ptr(),
             data.as_mut_ptr(),
-            jac_point,
-            jac_axis,
+            ptr,
+            ptr.add(3 * nv),
             point.as_ptr(),
             axis.as_ptr(),
             body,
         );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute 3/6-by-nv Jacobian time derivative of global point attached to given body.
@@ -618,20 +636,19 @@ pub fn jac_dot(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jac
         data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jac_t = crate::JacobianNx6::zeros(nv);
     unsafe {
-        let jacp = jac.as_mut_ptr();
-        let jacr = jacp.add(3 * nv);
+        let ptr = jac_t.as_mut_ptr();
         mujoco_sys::mj_jacDot(
             data.model.as_ptr(),
             data.as_ptr(),
-            jacp,
-            jacr,
+            ptr,
+            ptr.add(3 * nv),
             point.as_ptr(),
             body,
         );
     }
-    jac
+    jac_t.transpose()
 }
 
 /// Compute subtree angular momentum matrix.
@@ -644,14 +661,14 @@ pub fn angmom_mat(data: &mut crate::Data, body: i32) -> crate::Jacobian3xN {
         data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut mat = crate::Jacobian3xN::zeros(nv);
+    let mut mat_t = crate::JacobianNx3::zeros(nv);
     unsafe {
         mujoco_sys::mj_angmomMat(
             data.model.as_ptr(),
             data.as_mut_ptr(),
-            mat.as_mut_ptr(),
+            mat_t.as_mut_ptr(),
             body,
         );
     }
-    mat
+    mat_t.transpose()
 }
