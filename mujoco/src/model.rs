@@ -97,6 +97,10 @@ impl Drop for Model {
 impl Clone for Model {
     fn clone(&self) -> Self {
         let ptr = unsafe { mujoco_sys::mj_copyModel(std::ptr::null_mut(), self.ptr) };
+        assert!(
+            !ptr.is_null(),
+            "mj_copyModel failed: allocation returned null"
+        );
         Self { ptr }
     }
 }

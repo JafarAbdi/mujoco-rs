@@ -30,10 +30,20 @@ All dependency versions are locked to those used by the corresponding MuJoCo rel
 
 The crate will automatically build MuJoCo and its dependencies from source when using the vendored-mujoco feature. No additional system dependencies are required.
 
-## Update FFI bindings
+## Updating submodules
 
-To update the FFI bindings, run the provided script:
+After updating the `mujoco` submodule to a new version, sync all other submodules to the versions pinned in MuJoCo's `cmake/MujocoDependencies.cmake`:
 
 ```bash
-./update-ffi.sh
+just update-submodules
+```
+
+The script parses the commit hashes from the CMake file and checks out each submodule to the matching version. It will fetch from origin if needed.
+
+## Update FFI bindings
+
+Regenerate the FFI bindings (requires `bindgen-cli`: `cargo install bindgen-cli`):
+
+```bash
+just update-ffi
 ```

@@ -8,12 +8,13 @@ bindgen $SCRIPT_DIR/binding.h -o $SCRIPT_DIR/src/lib.rs \
   --raw-line "#![allow(non_camel_case_types)]" \
   --raw-line "#![allow(non_snake_case)]" \
   --raw-line "#![allow(non_upper_case_globals)]" \
+  --raw-line "#![allow(clippy::approx_constant)]" \
   --default-enum-style rust \
   --generate=functions,types,vars \
   --allowlist-function="(mj).*" \
   --allowlist-type="(mj).*" \
   --allowlist-var="mj.*" \
-  -- -I$SCRIPT_DIR/mujoco/include
+  -- -I$SCRIPT_DIR/mujoco/include -target x86_64-linux-gnu
 
 # Remove prefixes from enums
 prefixes=(

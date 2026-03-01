@@ -10,3 +10,4 @@ default         = ["vendored-mujoco"]
 
 [dependencies]
 mujoco-sys = { version = "3.3.5", path = "../mujoco-sys", default-features = false }
+nalgebra = "0.34.1"

@@ -4,14 +4,16 @@ pub use mujoco_sys as sys;
 pub mod data;
 pub mod data_functions;
 pub mod data_struct;
+pub mod math;
 pub mod model;
 pub mod model_struct;
 pub mod spec;
 
 pub use data::Data;
 pub use data_functions::*;
+pub use math::*;
 pub use model::{Model, joint_nq, joint_nv};
-pub use spec::Spec;
+pub use spec::{ParseError, Spec};
 
 #[cfg(test)]
 mod tests {
