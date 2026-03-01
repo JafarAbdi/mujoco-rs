@@ -628,11 +628,18 @@ pub fn jac(data: &crate::Data, point: &crate::Vec3, body: i32) -> crate::Jacobia
         "body index {{}} out of bounds (nbody = {{}})", body, data.model.nbody()
     );
     let nv = data.model.nv();
-    let mut jac = crate::Jacobian6xN::zeros(nv);
+    let mut jacp = vec![0.0f64; 3 * nv];
+    let mut jacr = vec![0.0f64; 3 * nv];
     unsafe {{
-        let jacp = jac.as_mut_ptr();
-        let jacr = jacp.add(3 * nv);
-        mujoco_sys::mj_jac(data.model.as_ptr(), data.as_ptr(), jacp, jacr, point.as_ptr(), body);
+        mujoco_sys::mj_jac(data.model.as_ptr(), data.as_ptr(), jacp.as_mut_ptr(), jacr.as_mut_ptr(), point.as_ptr(), body);
+    }}
+    // MuJoCo writes row-major; nalgebra stores column-major
+    let mut jac = crate::Jacobian6xN::zeros(nv);
+    for col in 0..nv {{
+        for row in 0..3 {{
+            jac[(row, col)] = jacp[row * nv + col];
+            jac[(row + 3, col)] = jacr[row * nv + col];
+        }}
     }}
     jac
 }}""",

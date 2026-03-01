@@ -72,4 +72,63 @@ mod tests {
         data2.qpos_mut()[0] += 0.1;
         assert_ne!(data2.qpos(), data.qpos());
     }
+
+    /// Verify the Jacobian wrapper produces correct element values by comparing
+    /// against raw FFI output. MuJoCo writes row-major 3×nv matrices; nalgebra
+    /// stores column-major. This test catches any layout mismatch.
+    #[test]
+    fn jacobian_layout_matches_raw_ffi() {
+        let model = crate::Model::from_file(crate::tests::test_xml_path()).unwrap();
+        let mut data = Data::new(&model);
+
+        // Non-trivial configuration so the Jacobian has interesting values
+        data.qpos_mut()[0] = 0.5;
+        data.qpos_mut()[1] = 0.3;
+        data.qpos_mut()[2] = -0.2;
+        crate::forward(&mut data);
+
+        let nv = model.nv();
+        let body = 4; // end_effector (base_link=0, link1=1, link2=2, link3=3, end_effector=4)
+
+        // Get Jacobian via our wrapper
+        let jac = crate::jac_body(&data, body);
+
+        // Get Jacobian via raw FFI into separate flat buffers
+        let mut jacp_raw = vec![0.0f64; 3 * nv];
+        let mut jacr_raw = vec![0.0f64; 3 * nv];
+        unsafe {
+            mujoco_sys::mj_jacBody(
+                model.as_ptr(),
+                data.as_ptr(),
+                jacp_raw.as_mut_ptr(),
+                jacr_raw.as_mut_ptr(),
+                body,
+            );
+        }
+
+        // jacp_raw is 3×nv row-major: element (row, col) = jacp_raw[row * nv + col]
+        // jac rows 0-2 should be the position Jacobian (jacp)
+        for row in 0..3 {
+            for col in 0..nv {
+                let wrapper_val = jac[(row, col)];
+                let raw_val = jacp_raw[row * nv + col];
+                assert!(
+                    (wrapper_val - raw_val).abs() < 1e-10,
+                    "jacp mismatch at ({row}, {col}): wrapper={wrapper_val}, raw={raw_val}"
+                );
+            }
+        }
+        // jac rows 3-5 should be the rotation Jacobian (jacr)
+        for row in 0..3 {
+            for col in 0..nv {
+                let wrapper_val = jac[(row + 3, col)];
+                let raw_val = jacr_raw[row * nv + col];
+                assert!(
+                    (wrapper_val - raw_val).abs() < 1e-10,
+                    "jacr mismatch at ({}, {col}): wrapper={wrapper_val}, raw={raw_val}",
+                    row + 3
+                );
+            }
+        }
+    }
 }

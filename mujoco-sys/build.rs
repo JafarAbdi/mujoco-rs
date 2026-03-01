@@ -64,6 +64,7 @@ fn main() {
         "mujoco/src/xml/xml_api.cc",
         "mujoco/src/xml/xml_base.cc",
         "mujoco/src/xml/xml.cc",
+        "mujoco/src/xml/xml_global.cc",
         "mujoco/src/xml/xml_native_reader.cc",
         "mujoco/src/xml/xml_numeric_format.cc",
         "mujoco/src/xml/xml_native_writer.cc",
